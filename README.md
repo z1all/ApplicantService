@@ -1,2 +1,2 @@
 Репозиторий для выполнения задания по дисциплине Advanced Backend  
-https://docs.google.com/document/d/1zzG605ATbEeBQG4iJzCY8D-JS_mtqAzFhRDnc9j6AcE/edit?usp=sharing
+https://docs.google.com/document/d/1i4Q7iNdLtNwDvDZK8zDLleK7dQ1OMNDieZ6CjhoEfNQ
