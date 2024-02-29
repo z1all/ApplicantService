@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="app.diagrams.net" modified="2024-02-29T13:29:35.314Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 OPR/107.0.0.0 (Edition Yx GX 03)" etag="sJGufcbEvq1DJe-v_B3M" version="23.1.7" type="google">
+<mxfile host="app.diagrams.net" modified="2024-02-29T18:50:16.034Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 OPR/107.0.0.0 (Edition Yx GX 03)" etag="eIl5a8kXm8y-QahteIKN" version="23.1.7" type="google">
   <diagram name="Страница — 1" id="SprfVkq62UVqcSE8c1ks">
-    <mxGraphModel dx="9409" dy="6794" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="17153" dy="11053" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <object label="" id="0">
           <mxCell />
@@ -125,7 +125,7 @@
         <mxCell id="fIOQybDgUpcTpjAJ-6Sh-32" value="Создано,&lt;br&gt;На рассмотрении,&lt;br&gt;Подтверждено,&lt;br&gt;Отклонено,&lt;br&gt;Закрыто" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" parent="fIOQybDgUpcTpjAJ-6Sh-31" vertex="1">
           <mxGeometry y="40" width="140" height="94" as="geometry" />
         </mxCell>
-        <mxCell id="fIOQybDgUpcTpjAJ-6Sh-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;endSize=12;" parent="1" source="fIOQybDgUpcTpjAJ-6Sh-34" target="fIOQybDgUpcTpjAJ-6Sh-62" edge="1">
+        <mxCell id="fIOQybDgUpcTpjAJ-6Sh-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;" parent="1" source="fIOQybDgUpcTpjAJ-6Sh-34" target="fIOQybDgUpcTpjAJ-6Sh-62" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="-1949" y="153" />
@@ -258,7 +258,7 @@
         <mxCell id="fIOQybDgUpcTpjAJ-6Sh-66" value="- Роль" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" parent="fIOQybDgUpcTpjAJ-6Sh-62" vertex="1">
           <mxGeometry y="104" width="140" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="fIOQybDgUpcTpjAJ-6Sh-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;endSize=12;" parent="1" source="fIOQybDgUpcTpjAJ-6Sh-68" target="fIOQybDgUpcTpjAJ-6Sh-62" edge="1">
+        <mxCell id="fIOQybDgUpcTpjAJ-6Sh-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;" parent="1" source="fIOQybDgUpcTpjAJ-6Sh-68" target="fIOQybDgUpcTpjAJ-6Sh-62" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-2469" y="-118" as="sourcePoint" />
             <mxPoint x="-2319" y="335" as="targetPoint" />
@@ -1216,24 +1216,24 @@
             <mxGeometry x="1876.25" y="2912" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
-        <object placeholders="1" c4Type="Service bus" c4Container="Container" c4Technology="Rabbit" c4Description="Description of message bus type container role/responsibility." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-42">
+        <object placeholders="1" c4Type="Service bus" c4Container="Container" c4Technology="Rabbit" c4Description="Топики:&#xa;1. Обновление справочника (Pub)" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-42">
           <mxCell style="shape=cylinder3;size=15;direction=south;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
-            <mxGeometry x="2164" y="3506" width="240" height="120" as="geometry" />
+            <mxGeometry x="2205" y="3485" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
         <object placeholders="1" c4Name="Dictionary Service" c4Type="ContainerScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-43">
           <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="1793.75" y="3124" width="431" height="280" as="geometry" />
+            <mxGeometry x="1442" y="3116" width="1086" height="280" as="geometry" />
           </mxCell>
         </object>
         <object placeholders="1" c4Type="Dictionary Store" c4Container="Container" c4Technology="Postgres" c4Description="Хранит факультеты, программы, уровни образования и типы документов" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-44">
           <mxCell style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
-            <mxGeometry x="1607.75" y="3500" width="240" height="120" as="geometry" />
+            <mxGeometry x="1876.25" y="3491" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
         <object placeholders="1" c4Name="Applicant&#39;s personal account" c4Type="SystemScopeBoundary" c4Application="Containers" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-45">
           <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="-2935" y="2812" width="1277.75" height="872" as="geometry" />
+            <mxGeometry x="-2935" y="2812" width="1277.75" height="959" as="geometry" />
           </mxCell>
         </object>
         <object placeholders="1" c4Name="API Gateway" c4Type="Container" c4Technology="asp.net core" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-46">
@@ -1241,29 +1241,29 @@
             <mxGeometry x="-2409.75" y="2912" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
-        <object placeholders="1" c4Type="Service bus" c4Container="Container" c4Technology="Rabbit" c4Description="Description of message bus type container role/responsibility." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-47">
-          <mxCell style="shape=cylinder3;size=15;direction=south;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
-            <mxGeometry x="-2122" y="3506" width="240" height="120" as="geometry" />
+        <object placeholders="1" c4Type="Service bus" c4Container="Container" c4Technology="Rabbit" c4Description="Топики:&#xa;1. Изменение статуса поступления (Pub)&#xa;2. Обновление справочников (Sub)&#xa;3. Создание/Обновление абитуриентов (Sub)&#xa;4. Создание/Обновление пользователей с ролью менеджера (Sub)&#xa;5. Назначение менеджера (Pub)" label="&lt;font style=&quot;font-size: 9px;&quot;&gt;&lt;b style=&quot;font-size: 9px;&quot;&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;font-size: 9px;&quot;&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br style=&quot;font-size: 9px;&quot;&gt;&lt;div style=&quot;font-size: 9px;&quot;&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;&lt;font color=&quot;#E6E6E6&quot; style=&quot;font-size: 9px;&quot;&gt;%c4Description%&lt;/font&gt;&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-47">
+          <mxCell style="shape=cylinder3;size=15;direction=south;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=9;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
+            <mxGeometry x="-2412" y="3637" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
         <object placeholders="1" c4Name="Admissioning Service" c4Type="ContainerScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-48">
           <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="-2651" y="3124" width="760" height="280" as="geometry" />
+            <mxGeometry x="-2839.25" y="3126" width="1080.25" height="280" as="geometry" />
           </mxCell>
         </object>
-        <object placeholders="1" c4Type="Admissioning Store" c4Container="Container" c4Technology="Postgres" c4Description="Хранит заявки (поступления) абитуриентов" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-49">
-          <mxCell style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
-            <mxGeometry x="-2653" y="3500" width="240" height="120" as="geometry" />
+        <object placeholders="1" c4Type="Admissioning Store" c4Container="Container" c4Technology="Postgres" c4Description="Хранит поступления абитуриентов, выбранные программы и менеджеров, а также некоторые закэшированные данные" label="&lt;font style=&quot;font-size: 11px;&quot;&gt;&lt;b style=&quot;font-size: 11px;&quot;&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;font-size: 11px;&quot;&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br style=&quot;font-size: 11px;&quot;&gt;&lt;div style=&quot;font-size: 11px;&quot;&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot; style=&quot;font-size: 11px;&quot;&gt;%c4Description%&lt;/font&gt;&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-49">
+          <mxCell style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=11;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
+            <mxGeometry x="-2409.75" y="3487" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
         <mxCell id="A1jyMqXop2kC6SkWD6L6-50" value="" style="html=1;whiteSpace=wrap;fillColor=#FF0000;strokeColor=none;shadow=1;glass=0;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="906.8800000000001" y="3368" width="20" height="19" as="geometry" />
+          <mxGeometry x="956.0000000000001" y="3364" width="20" height="19" as="geometry" />
         </mxCell>
         <mxCell id="A1jyMqXop2kC6SkWD6L6-51" value="" style="html=1;whiteSpace=wrap;fillColor=#FF9933;strokeColor=none;shadow=1;glass=0;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="2164" y="3361" width="20" height="19" as="geometry" />
+          <mxGeometry x="2488" y="3364" width="20" height="19" as="geometry" />
         </mxCell>
         <mxCell id="A1jyMqXop2kC6SkWD6L6-52" value="" style="html=1;whiteSpace=wrap;fillColor=#FFFF66;strokeColor=none;shadow=1;glass=0;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="-1933" y="3366" width="20" height="19" as="geometry" />
+          <mxGeometry x="-1803" y="3371" width="20" height="19" as="geometry" />
         </mxCell>
         <object placeholders="1" c4Type="Session Store" c4Container="Container" c4Technology="Redis" c4Description="Хранит данные о сессии" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-53">
           <mxCell style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
@@ -1285,14 +1285,14 @@
             <mxGeometry x="1876.25" y="3209" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
-        <object placeholders="1" c4Name="Admissioning Component " c4Type="Component" c4Technology="e.g. Spring Service" c4Description="Отвечает за добавление программ в список поступления, изменение приоритета программы, удаление программы, изменение статуса поступления, отправку уведомления на email об изменении статуса" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-58">
+        <object placeholders="1" c4Name="Admissioning Component " c4Type="Component" c4Technology="e.g. Spring Service" c4Description="Отвечает за добавление программ в список поступления, изменение приоритета программы, удаление программы, изменение статуса поступления" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-58">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#63BEF2;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="-2588" y="3203" width="240" height="120" as="geometry" />
+            <mxGeometry x="-2768.5" y="3206" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
-        <object placeholders="1" c4Name="Application Component " c4Type="Component" c4Technology="e.g. Spring Service" c4Description="Взятие/Отказ от поступления абитуриента, просмотр заявок абитуриентов, назначение абитуриента менеджеру" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-59">
+        <object placeholders="1" c4Name="Manager Component " c4Type="Component" c4Technology="e.g. Spring Service" c4Description="Взятие/Отказ от поступления абитуриента, просмотр заявок абитуриентов, назначение абитуриента менеджеру" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-59">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#63BEF2;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="-2204" y="3200" width="240" height="120" as="geometry" />
+            <mxGeometry x="-2409.75" y="3209" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
         <object placeholders="1" c4Name="Applicant Component " c4Type="Component" c4Technology="e.g. Spring Service" c4Description="Отвечает за просмотр и обновления(кроме пароля, ФИО и email) личных данных абитуриента" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-60">
@@ -1319,36 +1319,31 @@
           <mxGeometry x="-969" y="226.5" width="19" height="19" as="geometry" />
         </mxCell>
         <mxCell id="A1jyMqXop2kC6SkWD6L6-85" value="" style="html=1;whiteSpace=wrap;fillColor=#33FF33;strokeColor=none;shadow=1;glass=0;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="8.899999999999977" y="4518" width="19" height="19" as="geometry" />
+          <mxGeometry x="309" y="4420" width="19" height="19" as="geometry" />
         </mxCell>
         <object placeholders="1" c4Name="Applicant&#39;s personal account" c4Type="SystemScopeBoundary" c4Application="Containers" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-86">
           <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="-829" y="3962" width="1277.75" height="872" as="geometry" />
+            <mxGeometry x="-819" y="3864" width="1277.75" height="872" as="geometry" />
           </mxCell>
         </object>
         <object placeholders="1" c4Name="API Gateway" c4Type="Container" c4Technology="asp.net core" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-87">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#23A2D9;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="-303.75" y="4062" width="240" height="120" as="geometry" />
+            <mxGeometry x="-338" y="3963" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
-        <object placeholders="1" c4Type="Service bus" c4Container="Container" c4Technology="Rabbit" c4Description="Description of message bus type container role/responsibility." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-88">
-          <mxCell style="shape=cylinder3;size=15;direction=south;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
-            <mxGeometry x="-16" y="4656" width="240" height="120" as="geometry" />
+        <object placeholders="1" c4Type="Service bus" c4Container="Container" c4Technology="Rabbit" c4Description="Топики:&#xa;1. Изменение статуса поступления (Sub)&#xa;2. Назначение менеджера (Sub)&#xa;3. Создание нового пользователя c ролью менеджера (Sub)" label="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;b style=&quot;font-size: 10px;&quot;&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot; color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-88">
+          <mxCell style="shape=cylinder3;size=15;direction=south;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=10;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
+            <mxGeometry x="-338" y="4556" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
         <object placeholders="1" c4Name="Notification Service" c4Type="ContainerScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-89">
           <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="-386.25" y="4274" width="431" height="280" as="geometry" />
-          </mxCell>
-        </object>
-        <object placeholders="1" c4Type="Dictionary Store" c4Container="Container" c4Technology="Postgres" c4Description="Хранит факультеты, программы, уровни образования и типы документов" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Type%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Container%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-90">
-          <mxCell style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
-            <mxGeometry x="-572.25" y="4650" width="240" height="120" as="geometry" />
+            <mxGeometry x="-730" y="4174" width="1086" height="280" as="geometry" />
           </mxCell>
         </object>
         <object placeholders="1" c4Name="Dictionary Component " c4Type="Component" c4Technology="e.g. Spring Service" c4Description="Отвечает за показ справочника и обновления данных в нем" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-92">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#63BEF2;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="-303.75" y="4359" width="240" height="120" as="geometry" />
+            <mxGeometry x="-338" y="4260" width="240" height="120" as="geometry" />
           </mxCell>
         </object>
         <mxCell id="A1jyMqXop2kC6SkWD6L6-95" value="Подумать, как будет происходить проверка на то, что выбираемые программы относятся к доступным уровням поданных документов" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f8cecc;strokeColor=#b85450;fontSize=23;" parent="1" vertex="1">
@@ -1393,8 +1388,8 @@
         <mxCell id="A1jyMqXop2kC6SkWD6L6-111" value="&lt;span style=&quot;border-color: var(--border-color); color: rgb(0, 0, 0); font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: justify; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: transparent; text-decoration: none; font-size: 11pt; font-family: Arial, sans-serif; vertical-align: baseline;&quot;&gt;Абитуриент не может редактировать данные (&lt;/span&gt;&lt;span style=&quot;border-color: var(--border-color); color: rgb(0, 0, 0); font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: justify; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration: none; font-size: 11pt; font-family: Arial, sans-serif; background-color: rgb(0, 255, 255); vertical-align: baseline;&quot;&gt;личные данные, документы, сканы,&lt;/span&gt;&lt;span style=&quot;border-color: var(--border-color); color: rgb(0, 0, 0); font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: justify; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: transparent; text-decoration: none; font-size: 11pt; font-family: Arial, sans-serif; vertical-align: baseline;&quot;&gt;&lt;span&gt;&amp;nbsp;&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;border-color: var(--border-color); color: rgb(0, 0, 0); font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: justify; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration: none; font-size: 11pt; font-family: Arial, sans-serif; background-color: rgb(255, 255, 0); vertical-align: baseline;&quot;&gt;программы), если статус у его поступления “Закрыто”.&amp;nbsp;&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="545.0011764705896" y="-1103.9970588235296" width="550" height="57" as="geometry" />
         </mxCell>
-        <mxCell id="A1jyMqXop2kC6SkWD6L6-112" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Вопросы&lt;/span&gt;&lt;/div&gt;&lt;ol&gt;&lt;li&gt;Как делать историю изменения?&lt;/li&gt;&lt;li&gt;Как делать трассировку запросов?&lt;/li&gt;&lt;li&gt;Как делать сбор лого?&lt;/li&gt;&lt;li&gt;Если на этапе проектирования не задумываться о бонусах, то на этапе разработки их можно будет выполнить?&lt;/li&gt;&lt;li&gt;Пояснить связь между поступление абитуриента и абитуриентом&lt;/li&gt;&lt;li&gt;Как решать конфликты при обновлении справочников? Дропать связанные сущности, запрещать или не дропать и ставить статус типа измените свой выбор (помечать как Deprecation в тех сервисах, где запись удалилась или изменилась(сделать сущности в справочниках имутабельными, добавлением двух ключей (первый соотносить со внешним сервисом, второй со внутренними)))?&lt;/li&gt;&lt;/ol&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#ffcccc;strokeColor=#36393d;fontSize=32;" parent="1" vertex="1">
-          <mxGeometry x="-3319" y="1361" width="1428" height="456" as="geometry" />
+        <mxCell id="A1jyMqXop2kC6SkWD6L6-112" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Вопросы&lt;/span&gt;&lt;/div&gt;&lt;ol&gt;&lt;li&gt;Как делать историю изменения?&lt;/li&gt;&lt;li&gt;Как делать трассировку запросов?&lt;/li&gt;&lt;li&gt;Как делать сбор лого?&lt;/li&gt;&lt;li&gt;Если на этапе проектирования не задумываться о бонусах, то на этапе разработки их можно будет выполнить?&lt;/li&gt;&lt;li&gt;Пояснить связь между поступление абитуриента и абитуриентом, почему композиция?&lt;/li&gt;&lt;li&gt;Как решать конфликты при обновлении справочников? Дропать связанные сущности, запрещать или не дропать и ставить статус типа измените свой выбор (помечать как Deprecation в тех сервисах, где запись удалилась или изменилась(сделать сущности в справочниках имутабельными, добавлением двух ключей (первый соотносить со внешним сервисом, второй со внутренними)))?&lt;/li&gt;&lt;li&gt;Вебсокеты как и куда можно прикрутить?&lt;/li&gt;&lt;/ol&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#ffcccc;strokeColor=#36393d;fontSize=32;" parent="1" vertex="1">
+          <mxGeometry x="-3319" y="1361" width="1428" height="638" as="geometry" />
         </mxCell>
         <mxCell id="A1jyMqXop2kC6SkWD6L6-113" value="" style="whiteSpace=wrap;html=1;aspect=fixed;container=0;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="1166" y="-1783" width="519" height="519" as="geometry" />
@@ -1488,7 +1483,7 @@
         </object>
         <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/HTTP" c4Description="e.g. Makes API calls" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-141">
           <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="A1jyMqXop2kC6SkWD6L6-36" target="A1jyMqXop2kC6SkWD6L6-55" edge="1">
-            <mxGeometry x="0.7609" width="240" relative="1" as="geometry">
+            <mxGeometry x="0.3855" y="2" width="240" relative="1" as="geometry">
               <mxPoint x="534" y="3098" as="sourcePoint" />
               <mxPoint x="296" y="3337" as="targetPoint" />
               <Array as="points">
@@ -1529,7 +1524,7 @@
         </object>
         <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/TCP" c4Description="Запись данных нового пользователя и&#xa;обновление данных старого пользователя" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="A1jyMqXop2kC6SkWD6L6-146">
           <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;" parent="1" source="A1jyMqXop2kC6SkWD6L6-55" target="A1jyMqXop2kC6SkWD6L6-39" edge="1">
-            <mxGeometry x="0.4999" y="-3" width="240" relative="1" as="geometry">
+            <mxGeometry x="0.359" width="240" relative="1" as="geometry">
               <mxPoint x="492.5" y="3349" as="sourcePoint" />
               <mxPoint x="492.5" y="3543" as="targetPoint" />
               <mxPoint as="offset" />
@@ -1570,11 +1565,11 @@
         </mxCell>
         <mxCell id="A1jyMqXop2kC6SkWD6L6-155" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=none;endFill=0;" parent="1" source="A1jyMqXop2kC6SkWD6L6-87" target="A1jyMqXop2kC6SkWD6L6-156" edge="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="-67" y="4092" as="sourcePoint" />
+            <mxPoint x="-57" y="3994" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="A1jyMqXop2kC6SkWD6L6-156" value="API Gateway изображен для уменьшения количества связей, на самом деле его не существует и клиенты напрямую общаются с микросервисами" style="shape=note;size=20;whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="-24" y="3998" width="278" height="66" as="geometry" />
+          <mxGeometry x="-14" y="3900" width="278" height="66" as="geometry" />
         </mxCell>
         <mxCell id="A1jyMqXop2kC6SkWD6L6-157" value="" style="html=1;whiteSpace=wrap;fillColor=#66FFFF;strokeColor=none;shadow=1;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="-434.38" y="3371" width="19" height="19" as="geometry" />
@@ -1613,7 +1608,7 @@
               <mxPoint as="offset" />
               <Array as="points">
                 <mxPoint x="-1082" y="3263" />
-                <mxPoint x="-1082" y="3533" />
+                <mxPoint x="-1082" y="3511" />
               </Array>
             </mxGeometry>
           </mxCell>
@@ -1626,7 +1621,7 @@
               <mxPoint as="offset" />
               <Array as="points">
                 <mxPoint x="-763" y="3262" />
-                <mxPoint x="-763" y="3533" />
+                <mxPoint x="-763" y="3511" />
               </Array>
             </mxGeometry>
           </mxCell>
@@ -1663,297 +1658,27 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <mxCell id="lHlg124HXbQ6Yes707RB-2" value="Доделать контейнеры" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f8cecc;strokeColor=#b85450;fontSize=23;" parent="1" vertex="1">
-          <mxGeometry x="844" y="3910" width="384" height="176" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-1" value="Уведомление" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="985" y="4628" width="140" height="52" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-2" value="- Сообщение" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-1">
-          <mxGeometry y="26" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-66" target="aJ9y3KqXz4tGXJmlmQ3W-7">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1055" y="4497" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-5" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" connectable="0" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-4">
-          <mxGeometry x="0.1052" y="3" relative="1" as="geometry">
-            <mxPoint x="-17" y="-18" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-6" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" connectable="0" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-4">
-          <mxGeometry x="-0.5365" y="3" relative="1" as="geometry">
-            <mxPoint x="-17" y="1" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-7" value="Факультет" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="985" y="4317" width="140" height="52" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-8" value="- Название" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-7">
-          <mxGeometry y="26" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-11" target="aJ9y3KqXz4tGXJmlmQ3W-16">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamondThin;endFill=1;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-11" target="aJ9y3KqXz4tGXJmlmQ3W-7">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-11" value="Программа" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="1215" y="4278" width="140" height="130" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-12" value="- Название" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-11">
-          <mxGeometry y="26" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-13" value="- Код специальности" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-11">
-          <mxGeometry y="52" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-14" value="- Язык обучения" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-11">
-          <mxGeometry y="78" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-15" value="- Форма обучения" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-11">
-          <mxGeometry y="104" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-16" value="Уровень образования" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="1435" y="4310" width="140" height="66" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-17" value="- Наименование" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-16">
-          <mxGeometry y="40" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-19" target="aJ9y3KqXz4tGXJmlmQ3W-16">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1965" y="4357" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-19" value="Тип документа об образовании" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="1920" y="4475" width="140" height="52" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-20" value="- Наименование" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-19">
-          <mxGeometry y="26" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-67" target="aJ9y3KqXz4tGXJmlmQ3W-11">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1281" y="4515" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-22" value="0..N" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" connectable="0" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-21">
-          <mxGeometry x="0.4311" y="4" relative="1" as="geometry">
-            <mxPoint x="24" y="-12" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-23" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" connectable="0" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-21">
-          <mxGeometry x="-0.4392" y="1" relative="1" as="geometry">
-            <mxPoint x="21" y="6" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;dashed=1;strokeColor=default;strokeWidth=2;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-67" target="aJ9y3KqXz4tGXJmlmQ3W-30">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1285" y="4561" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamondThin;endFill=1;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-67" target="aJ9y3KqXz4tGXJmlmQ3W-33">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1340" y="4536" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-66" target="aJ9y3KqXz4tGXJmlmQ3W-67">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1125" y="4536" as="sourcePoint" />
-            <mxPoint x="1230" y="4536" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;endSize=6;targetPerimeterSpacing=0;strokeWidth=2;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-28">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1285" y="4441" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-28" value="Программа поступления" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="1435" y="4415" width="140" height="52" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-29" value="- Приоритет" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-28">
-          <mxGeometry y="26" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-30" value="&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;br&gt;Статус поступления" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="1215" y="4605" width="140" height="134" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-31" value="Создано,&lt;br&gt;На рассмотрении,&lt;br&gt;Подтверждено,&lt;br&gt;Отклонено,&lt;br&gt;Закрыто" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-30">
-          <mxGeometry y="40" width="140" height="94" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-33" target="aJ9y3KqXz4tGXJmlmQ3W-60">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1505" y="4807" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-33" value="Абитуриент" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#d5e8d4;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="1435" y="4537" width="140" height="130" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-34" value="- Дата рождения" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-33">
-          <mxGeometry y="26" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-35" value="- Пол" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-33">
-          <mxGeometry y="52" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-36" value="- Гражданство" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-33">
-          <mxGeometry y="78" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-37" value="- Номер телефона" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-33">
-          <mxGeometry y="104" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-38" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-1" target="aJ9y3KqXz4tGXJmlmQ3W-60">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1065" y="4707" as="sourcePoint" />
-            <mxPoint x="1065" y="4585" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-39" value="&amp;lt;&amp;lt;abstract&amp;gt;&amp;gt;&lt;br&gt;Документ" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#d5e8d4;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="1695" y="4574" width="140" height="56" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-40" value="- Тип документа" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-39">
-          <mxGeometry y="30" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-42" target="aJ9y3KqXz4tGXJmlmQ3W-39">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-42" value="Паспорт" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#d5e8d4;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="1605" y="4687" width="140" height="130" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-43" value="- Серия/Номер" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-42">
-          <mxGeometry y="26" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-44" value="- Место рождения" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-42">
-          <mxGeometry y="52" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-45" value="- Когда выдан" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-42">
-          <mxGeometry y="78" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-46" value="- Кем выдан" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-42">
-          <mxGeometry y="104" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-48" target="aJ9y3KqXz4tGXJmlmQ3W-19">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1990" y="4713" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-48" value="Документ об образовании" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#d5e8d4;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="1785" y="4687" width="140" height="52" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-49" value="- Название" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-48">
-          <mxGeometry y="26" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-50" value="Файл" style="html=1;whiteSpace=wrap;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="1710" y="4477" width="110" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamondThin;endFill=1;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-39" target="aJ9y3KqXz4tGXJmlmQ3W-33">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1350" y="4546" as="sourcePoint" />
-            <mxPoint x="1445" y="4612" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-48" target="aJ9y3KqXz4tGXJmlmQ3W-39">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1685" y="4697" as="sourcePoint" />
-            <mxPoint x="1775" y="4640" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamondThin;endFill=1;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-50" target="aJ9y3KqXz4tGXJmlmQ3W-39">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1705" y="4612" as="sourcePoint" />
-            <mxPoint x="1585" y="4612" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-19" target="aJ9y3KqXz4tGXJmlmQ3W-16">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1975" y="4485" as="sourcePoint" />
-            <mxPoint x="1585" y="4367" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="2015" y="4327" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-55" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" connectable="0" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-54">
-          <mxGeometry x="0.1499" y="-4" relative="1" as="geometry">
-            <mxPoint x="-230" y="-6" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-56" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" connectable="0" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-54">
-          <mxGeometry x="0.198" y="-2" relative="1" as="geometry">
-            <mxPoint x="224" y="132" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-57" value="Доступные &lt;br&gt;уровни обучения" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" connectable="0" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-54">
-          <mxGeometry x="-0.6973" y="-3" relative="1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;strokeWidth=2;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-59">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1055" y="4436" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-59" value="0 - Главный менеджер&lt;br&gt;1 - Менеджер факультета" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="785" y="4408" width="180" height="56" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-60" value="Пользователь" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#d5e8d4;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="985" y="4747" width="140" height="130" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-61" value="- ФИО" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-60">
-          <mxGeometry y="26" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-62" value="- Email" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-60">
-          <mxGeometry y="52" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-63" value="- Пароль" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-60">
-          <mxGeometry y="78" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-64" value="- Роль" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-60">
-          <mxGeometry y="104" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-66" target="aJ9y3KqXz4tGXJmlmQ3W-60">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="985" y="4536" as="sourcePoint" />
-            <mxPoint x="1135" y="4989" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="885" y="4536" />
-              <mxPoint x="885" y="4807" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-66" value="Менеджер" style="html=1;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="1000" y="4511" width="110" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-67" value="Поступление абитуриента" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=32;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="1216.5" y="4499" width="137" height="74" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-68" value="- Дата последнего изменения" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-67">
-          <mxGeometry y="32" width="137" height="42" as="geometry" />
-        </mxCell>
-        <object placeholders="1" c4Name="User Service" c4Type="SystemScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-69">
+        <object placeholders="1" c4Name="User Service" c4Type="SystemScopeBoundary" c4Application="Service&#39;s entitys" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-69">
           <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
             <mxGeometry x="-240" y="5070" width="1029" height="604" as="geometry" />
           </mxCell>
         </object>
-        <object placeholders="1" c4Name="Applicant Service" c4Type="SystemScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-70">
+        <object placeholders="1" c4Name="Applicant Service" c4Type="SystemScopeBoundary" c4Application="Service&#39;s entitys" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-70">
           <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
             <mxGeometry x="-1414.25" y="5065" width="1028" height="603" as="geometry" />
           </mxCell>
         </object>
-        <object placeholders="1" c4Name="Admissioning Service" c4Type="SystemScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-71">
+        <object placeholders="1" c4Name="Admissioning Service" c4Type="SystemScopeBoundary" c4Application="Service&#39;s entitys" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-71">
           <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
             <mxGeometry x="-2741" y="5065" width="1199" height="603" as="geometry" />
           </mxCell>
         </object>
-        <object placeholders="1" c4Name="Dictionary Service" c4Type="SystemScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-72">
+        <object placeholders="1" c4Name="Dictionary Service" c4Type="SystemScopeBoundary" c4Application="Service&#39;s entitys" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-72">
           <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
             <mxGeometry x="919" y="5070" width="1028" height="603" as="geometry" />
           </mxCell>
         </object>
-        <object placeholders="1" c4Name="Notification Service" c4Type="SystemScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-73">
+        <object placeholders="1" c4Name="Notification Service" c4Type="SystemScopeBoundary" c4Application="Service&#39;s entitys" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-73">
           <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
             <mxGeometry x="-777.75" y="5803" width="1028" height="603" as="geometry" />
           </mxCell>
@@ -2052,7 +1777,7 @@
             <mxPoint x="-947" y="5435" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-102" value="Пользователь" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-102" value="Пользователь" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;fillColor=#BFBEB6;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="-1312" y="5380" width="140" height="78" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-103" value="- ФИО" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-102">
@@ -2064,10 +1789,10 @@
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-117" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=none;endFill=0;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-107" target="aJ9y3KqXz4tGXJmlmQ3W-74">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-107" value="User Service будет хранить данные пользователя. При создании новых или обновлении старых пользователей будут создаваться уведомления об этом и отправляться в Notification Service, Applicant Service и&amp;nbsp;Admissioning Service, чтобы в них обновились или создались нужные сущности" style="shape=note;size=20;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-107" value="User Service будет хранить данные пользователя. При создании новых или обновлении старых пользователей будут создаваться уведомления об этом и отправляться в Applicant Service и&amp;nbsp;Admissioning Service, чтобы в них обновились или создались нужные сущности" style="shape=note;size=20;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="102" y="5126" width="330" height="108" as="geometry" />
         </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-108" value="Уровень образования" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-108" value="Уровень образования" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;fillColor=#BFBEB6;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="-837" y="5175.5" width="140" height="92" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-109" value="- Наименование" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-108">
@@ -2083,7 +1808,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-111" value="Тип документа об образовании" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-111" value="Тип документа об образовании" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;fillColor=#BFBEB6;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="-609" y="5357" width="140" height="78" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-112" value="- Наименование" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-111">
@@ -2143,7 +1868,7 @@
             <mxPoint x="-17" y="15" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-155" value="Факультет" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-155" value="Факультет" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;fillColor=#BFBEB6;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="-2488" y="5130" width="140" height="78" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-156" value="- Название" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-155">
@@ -2160,7 +1885,7 @@
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-158" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamondThin;endFill=1;endSize=12;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-159" target="aJ9y3KqXz4tGXJmlmQ3W-155">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-159" value="Программа" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-159" value="Программа" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;fillColor=#BFBEB6;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="-2258" y="5091" width="140" height="156" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-160" value="- Название" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-159">
@@ -2226,7 +1951,7 @@
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-176" value="Создано,&lt;br&gt;На рассмотрении,&lt;br&gt;Подтверждено,&lt;br&gt;Отклонено,&lt;br&gt;Закрыто" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-175">
           <mxGeometry y="40" width="140" height="94" as="geometry" />
         </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-177" value="Абитуриент" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-177" value="Абитуриент" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;fillColor=#BFBEB6;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="-2038" y="5340" width="140" height="182" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-192" value="- ФИО" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-177">
@@ -2283,7 +2008,7 @@
             <mxPoint x="-2541" y="5464" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-199" value="Уровень образования" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-199" value="Уровень образования" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;fillColor=#BFBEB6;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="-2038" y="5123" width="140" height="92" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-200" value="- Наименование" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-199">
@@ -2299,7 +2024,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-202" value="Тип документа об образовании" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-202" value="Тип документа об образовании" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;fillColor=#BFBEB6;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="-1873" y="5289" width="140" height="78" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-203" value="- Наименование" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-202">
@@ -2467,10 +2192,10 @@
           <mxGeometry x="-2719" y="5095" width="183" height="83" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-247" value="Applicant Service слушает уведомления от Dictionary Service об обновлении справочников" style="shape=note;size=10;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-590" y="5083" width="183" height="83" as="geometry" />
+          <mxGeometry x="-1030.38" y="5078" width="183" height="83" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-248" value="Applicant Service отправляет сообщения о добавлении/удалении документов абитуриента" style="shape=note;size=10;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-565.75" y="5562" width="158.75" height="83" as="geometry" />
+          <mxGeometry x="-565.75" y="5548.75" width="158.75" height="83" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-249" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;exitX=0.879;exitY=1.115;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-216" target="aJ9y3KqXz4tGXJmlmQ3W-248">
           <mxGeometry relative="1" as="geometry">
@@ -2503,28 +2228,184 @@
           <mxGeometry x="1338" y="5117" width="302" height="82" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-264" value="Уведомление" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-357" y="5995" width="140" height="52" as="geometry" />
+          <mxGeometry x="-352.88" y="6044" width="140" height="78" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-265" value="- Сообщение" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-264">
           <mxGeometry y="26" width="140" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-267" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-264" target="aJ9y3KqXz4tGXJmlmQ3W-268">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="-277" y="6069" as="sourcePoint" />
-            <mxPoint x="-277" y="5947" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-268" value="Пользователь" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#d5e8d4;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="-357" y="6109" width="140" height="78" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-269" value="- ФИО" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-268">
-          <mxGeometry y="26" width="140" height="26" as="geometry" />
-        </mxCell>
-        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-270" value="- Email" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-268">
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-285" value="- Email" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-264">
           <mxGeometry y="52" width="140" height="26" as="geometry" />
         </mxCell>
         <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-273" value="Notification Service слушает уведомления от других сервисов об отправке сообщений нужному пользователю" style="shape=note;size=10;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="-36" y="5862" width="219" height="83" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/AMQP" c4Description="Отправляет уведомления об &#xa;изменении статуса поступления. &#xa;Слушает уведомления об &#xa;изменении справочников.&#xa;Слушает уведомления об &#xa;добавлении/обновлении абитуриента.&#xa;Слушает уведомления об &#xa;добавлении/удалении документов абитуриента." label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-275">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;startArrow=blockThin;startFill=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-58" target="A1jyMqXop2kC6SkWD6L6-47">
+            <mxGeometry x="-0.2757" width="240" relative="1" as="geometry">
+              <mxPoint x="-2598" y="3387" as="sourcePoint" />
+              <mxPoint x="-2355" y="3735" as="targetPoint" />
+              <mxPoint as="offset" />
+              <Array as="points">
+                <mxPoint x="-2648" y="3697" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-276" value="Admissioning Service отправляет уведомления об&amp;nbsp;&lt;div&gt;изменении статуса поступления&lt;/div&gt;" style="shape=note;size=10;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-2473" y="5553" width="168" height="74.5" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-277" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;" edge="1" parent="1" source="aJ9y3KqXz4tGXJmlmQ3W-276" target="aJ9y3KqXz4tGXJmlmQ3W-175">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-2285" y="5586" as="sourcePoint" />
+            <mxPoint x="-2232" y="5633" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/HTTP" c4Description="e.g. Makes API calls" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-278">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-46" target="A1jyMqXop2kC6SkWD6L6-58">
+            <mxGeometry x="0.8138" width="240" relative="1" as="geometry">
+              <mxPoint x="-2462" y="2944" as="sourcePoint" />
+              <mxPoint x="-2694" y="3170" as="targetPoint" />
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/HTTP" c4Description="e.g. Makes API calls" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-279">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-46" target="A1jyMqXop2kC6SkWD6L6-59">
+            <mxGeometry x="0.506" width="240" relative="1" as="geometry">
+              <mxPoint x="-2400" y="2982" as="sourcePoint" />
+              <mxPoint x="-2638" y="3216" as="targetPoint" />
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/TCP" c4Description="RU заявок абитуриентов" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-280">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-59" target="A1jyMqXop2kC6SkWD6L6-49">
+            <mxGeometry x="0.3671" width="240" relative="1" as="geometry">
+              <mxPoint x="-2245.5" y="3326" as="sourcePoint" />
+              <mxPoint x="-2126.5" y="3596" as="targetPoint" />
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/TCP" c4Description="CRU заявок абитуриентов" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-281">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-58" target="A1jyMqXop2kC6SkWD6L6-49">
+            <mxGeometry x="0.1632" width="240" relative="1" as="geometry">
+              <mxPoint x="-2477" y="3327" as="sourcePoint" />
+              <mxPoint x="-2477" y="3485" as="targetPoint" />
+              <mxPoint as="offset" />
+              <Array as="points">
+                <mxPoint x="-2466" y="3266" />
+                <mxPoint x="-2466" y="3547" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/AMQP" c4Description="Отправляет уведомления о&#xa;назначении менеджера абитуриента &#xa;(менеджеру и абитуриенту).&#xa;Слушает уведомления об &#xa;создании/изменении пользователей." label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-283">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;startArrow=blockThin;startFill=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-59" target="A1jyMqXop2kC6SkWD6L6-47">
+            <mxGeometry x="-0.0004" y="2" width="240" relative="1" as="geometry">
+              <mxPoint x="-2033" y="3290" as="sourcePoint" />
+              <mxPoint x="-2033" y="3451" as="targetPoint" />
+              <mxPoint as="offset" />
+              <Array as="points">
+                <mxPoint x="-2040" y="3269" />
+                <mxPoint x="-2040" y="3697" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-284" value="Вынести прослушивание уведомлений об изменении записей в отдельный компонент" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f8cecc;strokeColor=#b85450;fontSize=23;" vertex="1" parent="1">
+          <mxGeometry x="-2511" y="3842" width="384" height="176" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-286" value="Кэшируемые сущности" style="html=1;whiteSpace=wrap;fillColor=#BFBEB6;shadow=1;glass=0;rounded=0;verticalAlign=top;spacingTop=15;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="-1683" y="5090" width="19" height="19" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-288" value="Кэшируемые сущности" style="html=1;whiteSpace=wrap;fillColor=#BFBEB6;shadow=1;glass=0;rounded=0;verticalAlign=top;spacingTop=15;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="-465" y="5095" width="19" height="19" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-290" value="" style="html=1;whiteSpace=wrap;fillColor=#33FF33;strokeColor=none;shadow=1;glass=0;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="196.99999999999997" y="6363" width="19" height="19" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-291" value="" style="html=1;whiteSpace=wrap;fillColor=#FF0000;strokeColor=none;shadow=1;glass=0;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="739.5000000000001" y="5634" width="20" height="19" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-292" value="" style="html=1;whiteSpace=wrap;fillColor=#FF9933;strokeColor=none;shadow=1;glass=0;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1897" y="5631" width="20" height="19" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-293" value="" style="html=1;whiteSpace=wrap;fillColor=#FFFF66;strokeColor=none;shadow=1;glass=0;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-1577" y="5637" width="20" height="19" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-294" value="" style="html=1;whiteSpace=wrap;fillColor=#66FFFF;strokeColor=none;shadow=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-423" y="5637" width="19" height="19" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-298" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=12;" edge="1" parent="1" target="aJ9y3KqXz4tGXJmlmQ3W-299" source="fIOQybDgUpcTpjAJ-6Sh-62">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-2393" y="226.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-299" value="&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;br&gt;Роль" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-2469" y="267" width="140" height="114" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-300" value="Абитуриент&lt;br&gt;Менеджер&lt;br&gt;Главный менеджер&lt;br&gt;Админ" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="aJ9y3KqXz4tGXJmlmQ3W-299">
+          <mxGeometry y="40" width="140" height="74" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/HTTP" c4Description="e.g. Makes API calls" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-301">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-41" target="A1jyMqXop2kC6SkWD6L6-57">
+            <mxGeometry x="0.3855" y="2" width="240" relative="1" as="geometry">
+              <mxPoint x="2012" y="3039" as="sourcePoint" />
+              <mxPoint x="2012" y="3221" as="targetPoint" />
+              <Array as="points" />
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-302" value="Описать, как будет происходить обновление справочников в других сервисах с идеей&amp;nbsp;Deprecation&amp;nbsp;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f8cecc;strokeColor=#b85450;fontSize=23;" vertex="1" parent="1">
+          <mxGeometry x="1821" y="3776" width="384" height="176" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/AMQP" c4Description="Отправляет уведомления о &#xa;изменениях справочников " label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-303">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;startArrow=none;startFill=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-57" target="A1jyMqXop2kC6SkWD6L6-42">
+            <mxGeometry x="0.4469" width="240" relative="1" as="geometry">
+              <mxPoint x="2241" y="3245" as="sourcePoint" />
+              <mxPoint x="2469" y="3459" as="targetPoint" />
+              <mxPoint as="offset" />
+              <Array as="points">
+                <mxPoint x="2323" y="3269" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/TCP" c4Description="CRUD справочников" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-304">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-57" target="A1jyMqXop2kC6SkWD6L6-44">
+            <mxGeometry x="0.359" width="240" relative="1" as="geometry">
+              <mxPoint x="2012" y="3351" as="sourcePoint" />
+              <mxPoint x="2013" y="3507" as="targetPoint" />
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/HTTP" c4Description="e.g. Makes API calls" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-305">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-87" target="A1jyMqXop2kC6SkWD6L6-92">
+            <mxGeometry x="0.3855" y="2" width="240" relative="1" as="geometry">
+              <mxPoint x="-210.83000000000004" y="4114" as="sourcePoint" />
+              <mxPoint x="-210.83000000000004" y="4293" as="targetPoint" />
+              <Array as="points" />
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Type="Relationship" c4Technology="e.g. JSON/AMQP" c4Description="Слушает уведомления" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="aJ9y3KqXz4tGXJmlmQ3W-308">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;startArrow=none;startFill=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="A1jyMqXop2kC6SkWD6L6-88" target="A1jyMqXop2kC6SkWD6L6-92">
+            <mxGeometry x="-0.2614" width="240" relative="1" as="geometry">
+              <mxPoint x="-55" y="4653" as="sourcePoint" />
+              <mxPoint x="-283" y="4439" as="targetPoint" />
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-309" value="Подумать о сохранении истории уведомлений (для websoket)?" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f8cecc;strokeColor=#b85450;fontSize=23;" vertex="1" parent="1">
+          <mxGeometry x="-395" y="4778" width="384" height="176" as="geometry" />
+        </mxCell>
+        <mxCell id="aJ9y3KqXz4tGXJmlmQ3W-310" value="Подумать о сохранении истории уведомлений (для websoket)?" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f8cecc;strokeColor=#b85450;fontSize=23;" vertex="1" parent="1">
+          <mxGeometry x="-401" y="6454" width="384" height="176" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
