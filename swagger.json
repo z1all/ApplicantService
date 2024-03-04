@@ -1,0 +1,147 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Applicant's personal account - OpenAPI 3.0",
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "localhost:8080"
+    }
+  ],
+  "tags": [
+    {
+      "name": "AdmissioningService",
+      "description": "Служит для работы c поступлениями абитуриентов"
+    },
+    {
+      "name": "ApplicantService",
+      "description": "Служит для работы с личными данными абитуриента и их документами"
+    },
+    {
+      "name": "UserService",
+      "description": "Служит для работы с аккаунтами пользователями, в том числе авторизация/аутентификация и регистрация"
+    },
+    {
+      "name": "DictionaryService",
+      "description": "Служит для работы с факультетами, программами и уровнями образования"
+    }
+  ],
+  "paths": {
+    "/auth/registration": {
+      "post": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Регистрация абитуриентов",
+        "operationId": "createApplicant"
+      }
+    },
+    "/auth/registration/admin": {
+      "post": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Регистрация для админинстраторов",
+        "operationId": "createAdmin"
+      }
+    },
+    "/auth/login/manager": {
+      "post": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Вход для менеджеров",
+        "operationId": "loginManager"
+      }
+    },
+    "/auth/login/applicant": {
+      "post": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Вход для абитуриентов",
+        "operationId": "loginApplicant"
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Выход из аккаунта",
+        "operationId": "logout"
+      }
+    },
+    "/auth/access/update": {
+      "post": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Обновление access токена",
+        "operationId": "accessUpdate"
+      }
+    },
+    "/user/create": {
+      "post": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Создание новых менеджеров",
+        "operationId": "createManager"
+      }
+    },
+    "/user/manager": {
+      "delete": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Удаление менеджера",
+        "operationId": "deleteManager"
+      }
+    },
+    "/user/change/email": {
+      "patch": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Смена email",
+        "operationId": "changeEmail"
+      }
+    },
+    "/user/change/password": {
+      "patch": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Смена пароля",
+        "operationId": "changePassword"
+      }
+    },
+    "/user/profile": {
+      "get": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Просмотр профиля пользователя",
+        "operationId": "getProfile"
+      },
+      "patch": {
+        "tags": [
+          "UserService"
+        ],
+        "summary": "Обновление профиля пользователя",
+        "operationId": "changeProfile"
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}
