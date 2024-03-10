@@ -14,67 +14,136 @@ tags:
   - name: DictionaryService
     description: Служит для работы с факультетами, программами и уровнями образования
 paths:
-  /auth/registration:
+# AdmissioningService
+  /api/admissioning:
+    get:
+      tags:
+        - AdmissioningService
+      summary: Просмотр поступления пользователя
+      operationId: getApplicantPrograms
+  /api/admissioning/{id}:
+    post:
+      tags:
+        - AdmissioningService
+      summary: Добавление программы в выбранные
+      operationId: addApplicantProgram
+    patch:
+      tags:
+        - AdmissioningService
+      summary: Изменение приоритета программы
+      operationId: changePriorityApplicantProgram
+    delete:
+      tags:
+        - AdmissioningService
+      summary: Удаление программы из выбранных пользователя
+      operationId: deleteApplicantProgram
+# ApplicantService
+  /api/applicant/profile:
+    get:
+      tags:
+        - ApplicantService
+      summary: Просмотр профиля абитуриента
+      operationId: getApplicantProfile
+    patch:
+      tags:
+        - ApplicantService
+      summary: Обновление профиля пользователя
+      operationId: changeApplicantProfile
+  /api/document:
+    get:
+      tags:
+        - ApplicantService
+      summary: Просмотр всех документов пользователя
+      operationId: getDocuments
+  /api/document/{id}:
+    get:
+      tags:
+        - ApplicantService
+      summary: Просмотр документа пользователя
+      operationId: getDocument
+    delete:
+      tags:
+        - ApplicantService
+      summary: Удаление документа пользователя
+      operationId: deleteDocument
+  /api/document/download/{id}:
+    get:
+      tags:
+        - ApplicantService
+      summary: Загрузка документа пользователя
+      operationId: downloadDocument
+  /api/document/passport:
+    post:
+      tags:
+        - ApplicantService
+      summary: Добавление паспорта пользователя
+      operationId: addPassport
+    put:
+      tags:
+        - ApplicantService
+      summary: Редактирование данных паспорта пользователя
+      operationId: changePassport
+  /api/document/education:
+    post:
+      tags:
+        - ApplicantService
+      summary: Добавление документа об образовании пользователя
+      operationId: addEducationDocument
+    put:
+      tags:
+        - ApplicantService
+      summary: Редактирование документа об образовании пользователя
+      operationId: changeEducationDocument
+  /api/document/{id}/scan/{id}:
+    delete:
+      tags:
+        - ApplicantService
+      summary: Удаление скана документа
+      operationId: deleteDocumentScan
+  /api/document/{id}/scan:
+    put:
+      tags:
+        - ApplicantService
+      summary: Добавление скана документа
+      operationId: addDocumentScan
+# UserService
+  /api/auth/registration:
     post:
       tags:
         - UserService
       summary: Регистрация абитуриентов
       operationId: createApplicant
-  /auth/registration/admin:
-    post:
-      tags:
-        - UserService
-      summary: Регистрация для админинстраторов
-      operationId: createAdmin
-  /auth/login/manager:
-    post:
-      tags:
-        - UserService
-      summary: Вход для менеджеров
-      operationId: loginManager
-  /auth/login/applicant:
+  /api/auth/login/applicant:
     post:
       tags:
         - UserService
       summary: Вход для абитуриентов
       operationId: loginApplicant
-  /auth/logout:
+  /api/auth/logout:
     post:
       tags:
         - UserService
       summary: Выход из аккаунта
       operationId: logout
-  /auth/access/update:
+  /api/auth/access/update:
     post:
       tags:
         - UserService
       summary: Обновление access токена
       operationId: accessUpdate
-  /user/create:
-    post:
-      tags:
-        - UserService
-      summary: Создание новых менеджеров
-      operationId: createManager
-  /user/manager:
-    delete:
-      tags:
-        - UserService
-      summary: Удаление менеджера
-      operationId: deleteManager
-  /user/change/email:
+  /api/user/change/email:
     patch:
       tags:
         - UserService
       summary: Смена email
       operationId: changeEmail
-  /user/change/password:
+  /api/user/change/password:
     patch:
       tags:
         - UserService
       summary: Смена пароля
       operationId: changePassword
-  /user/profile:
+  /api/user/profile:
     get:
       tags:
         - UserService
@@ -85,6 +154,19 @@ paths:
         - UserService
       summary: Обновление профиля пользователя
       operationId: changeProfile
+# DictionaryService
+  /api/dictionary/programs:
+    get:
+      tags:
+        - DictionaryService
+      summary: Просмотр списка программ
+      operationId: getPrograms
+  /api/dictionary/document_types:
+    get:
+      tags:
+        - DictionaryService
+      summary: Просмотр списка типов документа
+      operationId: getDocumentTypes
 components:
   securitySchemes:
     api_key:
