@@ -21,22 +21,30 @@ paths:
         - AdmissioningService
       summary: Просмотр поступления пользователя
       operationId: getApplicantPrograms
+      security:
+        - Bearer_token: []
   /api/admissioning/{id}:
     post:
       tags:
         - AdmissioningService
       summary: Добавление программы в выбранные
       operationId: addApplicantProgram
+      security:
+        - Bearer_token: []
     patch:
       tags:
         - AdmissioningService
       summary: Изменение приоритета программы
       operationId: changePriorityApplicantProgram
+      security:
+        - Bearer_token: []
     delete:
       tags:
         - AdmissioningService
       summary: Удаление программы из выбранных пользователя
       operationId: deleteApplicantProgram
+      security:
+        - Bearer_token: []
 # ApplicantService
   /api/applicant/profile:
     get:
@@ -44,68 +52,92 @@ paths:
         - ApplicantService
       summary: Просмотр профиля абитуриента
       operationId: getApplicantProfile
+      security:
+        - Bearer_token: []
     patch:
       tags:
         - ApplicantService
-      summary: Обновление профиля пользователя
+      summary: Обновление личных данных абитуриента
       operationId: changeApplicantProfile
-  /api/document:
+      security:
+        - Bearer_token: []
+  /api/document/documents:
     get:
       tags:
         - ApplicantService
       summary: Просмотр всех документов пользователя
       operationId: getDocuments
+      security:
+        - Bearer_token: []
   /api/document/{id}:
     get:
       tags:
         - ApplicantService
       summary: Просмотр документа пользователя
       operationId: getDocument
+      security:
+        - Bearer_token: []
     delete:
       tags:
         - ApplicantService
       summary: Удаление документа пользователя
       operationId: deleteDocument
+      security:
+        - Bearer_token: []
   /api/document/download/{id}:
     get:
       tags:
         - ApplicantService
       summary: Загрузка документа пользователя
       operationId: downloadDocument
+      security:
+        - Bearer_token: []
   /api/document/passport:
     post:
       tags:
         - ApplicantService
       summary: Добавление паспорта пользователя
       operationId: addPassport
+      security:
+        - Bearer_token: []
     put:
       tags:
         - ApplicantService
       summary: Редактирование данных паспорта пользователя
       operationId: changePassport
+      security:
+        - Bearer_token: []
   /api/document/education:
     post:
       tags:
         - ApplicantService
       summary: Добавление документа об образовании пользователя
       operationId: addEducationDocument
+      security:
+        - Bearer_token: []
     put:
       tags:
         - ApplicantService
       summary: Редактирование документа об образовании пользователя
       operationId: changeEducationDocument
+      security:
+        - Bearer_token: []
   /api/document/{id}/scan/{id}:
     delete:
       tags:
         - ApplicantService
       summary: Удаление скана документа
       operationId: deleteDocumentScan
+      security:
+        - Bearer_token: []
   /api/document/{id}/scan:
     put:
       tags:
         - ApplicantService
       summary: Добавление скана документа
       operationId: addDocumentScan
+      security:
+        - Bearer_token: []
 # UserService
   /api/auth/registration:
     post:
@@ -113,47 +145,167 @@ paths:
         - UserService
       summary: Регистрация абитуриентов
       operationId: createApplicant
-  /api/auth/login/applicant:
+      requestBody:
+        description: Форма регистрации пользователя с ролью абитуриента
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserApplicant'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokensResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/login:
     post:
       tags:
         - UserService
       summary: Вход для абитуриентов
       operationId: loginApplicant
+      requestBody:
+        description: Форма входа пользователя с ролью абитуриента
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokensResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/auth/logout:
     post:
       tags:
         - UserService
       summary: Выход из аккаунта
       operationId: logout
+      responses:
+        204:
+          description: No Content
+        401:
+          description: Unauthorized
+      security:
+        - Bearer_token: []
   /api/auth/access/update:
     post:
       tags:
         - UserService
       summary: Обновление access токена
       operationId: accessUpdate
+      requestBody:
+        description: Форма обновления токена
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenUpdate'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokensResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+      security:
+        - Bearer_token: []
   /api/user/change/email:
     patch:
       tags:
         - UserService
       summary: Смена email
       operationId: changeEmail
+      requestBody:
+        description: Форма обновления email
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailChange'
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+      security:
+        - Bearer_token: []  
   /api/user/change/password:
     patch:
       tags:
         - UserService
       summary: Смена пароля
       operationId: changePassword
+      requestBody:
+        description: Форма обновления пароля
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+      security:
+        - Bearer_token: []
   /api/user/profile:
-    get:
-      tags:
-        - UserService
-      summary: Просмотр профиля пользователя
-      operationId: getProfile
     patch:
       tags:
         - UserService
       summary: Обновление профиля пользователя
       operationId: changeProfile
+      requestBody:
+        description: Форма обновления пароля
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileChange'
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+      security:
+        - Bearer_token: []
 # DictionaryService
   /api/dictionary/programs:
     get:
@@ -161,15 +313,251 @@ paths:
         - DictionaryService
       summary: Просмотр списка программ
       operationId: getPrograms
+      parameters:
+        - name: facultyName
+          in: query
+          description: Фильтрация по имени факультета
+          required: false
+          schema:
+            type: string
+        - name: educationLevel
+          in: query
+          description: Фильтрация по уровням образования
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int32
+        - name: educationForm
+          in: query
+          description: Фильтрация по форме обучения
+          required: false
+          schema:
+            type: string
+        - name: language
+          in: query
+          description: Фильтрация по форме обучения
+          required: false
+          schema:
+            type: string
+        - name: codeOrNameProgram
+          in: query
+          description: Фильтрация по коду или названию программы
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramPaged'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+      security:
+        - Bearer_token: []
+  /api/dictionary/education_levels:
+    get:
+      tags:
+        - DictionaryService
+      summary: Просмотр уровней образования
+      operationId: getEducationLevels
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EducationLevel'
+      security:
+        - Bearer_token: []
   /api/dictionary/document_types:
     get:
       tags:
         - DictionaryService
       summary: Просмотр списка типов документа
       operationId: getDocumentTypes
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EducationDocumentType'
+      security:
+        - Bearer_token: []
 components:
+  schemas:
+  # UserService
+    UserApplicant:
+      type: object
+      properties:
+        fullName:
+          type: string
+          example: 'Иван Иванович Иванов'
+        email:
+          type: string
+          example: 'applicant@email.com'
+        password:
+          type: string
+          example: 'String1'
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          example: 'applicant@email.com'
+        password:
+          type: string
+          example: 'String1'
+    TokenUpdate: 
+      type: object
+      properties:
+        refresh:
+          type: string
+          example: '3EF07447F93CAFB40E667F48F3334649'
+    EmailChange: 
+      type: object
+      properties:
+        newEmail:
+          type: string
+          example: 'newApplicant@email.com'
+    PasswordChange: 
+      type: object
+      properties:
+        newPassword:
+          type: string
+          example: 'newString1'
+    UserProfileChange: 
+      type: object
+      properties:
+        newFullName:
+          type: string
+          example: 'Иван Иванович Иванов'
+    TokensResponse: 
+      type: object
+      properties:
+        refresh:
+          type: string
+          example: '3EF07447F93CAFB40E667F48F3334649'
+        access:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjoi0JLQvtC_0YDQvtGBLCDQl9CQ0KfQldCcPz8_In0.lyOs-Vq66shvnDET9eAQ_9pjhxhwkqf8B_9hhOuq8Yc'
+  # DictionaryService
+    PageInfo:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int32
+        count:
+          type: integer
+          format: int32
+        current:
+          type: integer
+          format: int32
+    EducationLevel:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          minLength: 1
+    Faculty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createTime:
+          type: string
+          format: date-time
+        name:
+          type: string
+          minLength: 1
+    EducationProgram:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createTime:
+          type: string
+          format: date-time
+        name:
+          type: string
+          minLength: 1
+        code:
+          type: string
+          nullable: true
+        language:
+          type: string
+          minLength: 1
+        educationForm:
+          type: string
+          minLength: 1
+        faculty:
+          $ref: '#/components/schemas/Faculty'
+        educationLevel:
+          $ref: '#/components/schemas/EducationLevel'
+    EducationDocumentType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createTime:
+          type: string
+          format: date-time
+        name:
+          type: string
+          minLength: 1
+        educationLevel:
+          $ref: '#/components/schemas/EducationLevel'
+        nextEducationLevels:
+          type: array
+          items:
+            $ref: '#/components/schemas/EducationLevel'
+    ProgramPaged:
+      type: object
+      properties:
+        programs:
+          type: array
+          items:
+            $ref: '#/components/schemas/EducationProgram'
+        pagination:
+          type: array
+          items:
+            $ref: '#/components/schemas/PageInfo'
+  # Share
+    ErrorResponse: 
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'short_description'
+        error_description:
+          type: string
+          example: 'longer description, human-readable'
   securitySchemes:
-    api_key:
+    Bearer_token:
       type: apiKey
-      name: api_key
+      name: Bearer_token
       in: header
+
+
