@@ -28,13 +28,53 @@
     }
   ],
   "paths": {
-    "/api/admissioning": {
+    "/api/admissioning/{admissionId}": {
       "get": {
         "tags": [
           "AdmissioningService"
         ],
         "summary": "Просмотр поступления пользователя",
         "operationId": "getApplicantPrograms",
+        "parameters": [
+          {
+            "name": "admissionId",
+            "in": "path",
+            "description": "Идентификатор поступления абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdmissionProgram"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer_token": []
@@ -42,25 +82,126 @@
         ]
       }
     },
-    "/api/admissioning/{id}": {
+    "/api/admissioning/{admissionId}/program/{programId}": {
       "post": {
         "tags": [
           "AdmissioningService"
         ],
         "summary": "Добавление программы в выбранные",
         "operationId": "addApplicantProgram",
+        "parameters": [
+          {
+            "name": "admissionId",
+            "in": "path",
+            "description": "Идентификатор поступления абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "programId",
+            "in": "path",
+            "description": "Идентификатор программы",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer_token": []
           }
         ]
       },
-      "patch": {
+      "put": {
         "tags": [
           "AdmissioningService"
         ],
         "summary": "Изменение приоритета программы",
+        "description": "При смене приоритета программы, нужно указать новый приоритет. Тогда приоритет смениться на указанный, а у другой программы, которая имела указанный приоритет, он сменится на приоритет указанной программы. То есть эти программы поменяются своими приоритетами.",
         "operationId": "changePriorityApplicantProgram",
+        "parameters": [
+          {
+            "name": "admissionId",
+            "in": "path",
+            "description": "Идентификатор поступления абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "programId",
+            "in": "path",
+            "description": "Идентификатор программы",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Форма изменения приоритета",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePriorityApplicantProgram"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer_token": []
@@ -73,6 +214,46 @@
         ],
         "summary": "Удаление программы из выбранных пользователя",
         "operationId": "deleteApplicantProgram",
+        "parameters": [
+          {
+            "name": "admissionId",
+            "in": "path",
+            "description": "Идентификатор поступления абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "programId",
+            "in": "path",
+            "description": "Идентификатор программы",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer_token": []
@@ -87,18 +268,62 @@
         ],
         "summary": "Просмотр профиля абитуриента",
         "operationId": "getApplicantProfile",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantProfile"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
         "security": [
           {
             "Bearer_token": []
           }
         ]
       },
-      "patch": {
+      "put": {
         "tags": [
           "ApplicantService"
         ],
         "summary": "Обновление личных данных абитуриента",
+        "description": "Для изменения email и ФИО нужно использовать сервис User",
         "operationId": "changeApplicantProfile",
+        "requestBody": {
+          "description": "Форма редактирования личных данных абитуриента",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditApplicantProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
         "security": [
           {
             "Bearer_token": []
@@ -111,8 +336,26 @@
         "tags": [
           "ApplicantService"
         ],
-        "summary": "Просмотр всех документов пользователя",
+        "summary": "Просмотр всех документов абитуриента",
         "operationId": "getDocuments",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentShortInfo"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
         "security": [
           {
             "Bearer_token": []
@@ -120,39 +363,156 @@
         ]
       }
     },
-    "/api/document/{id}": {
+    "/api/document/{documentId}": {
+      "delete": {
+        "tags": [
+          "ApplicantService"
+        ],
+        "summary": "Удаление документа абитуриента",
+        "operationId": "deleteDocument",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "description": "Идентификатор документа абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer_token": []
+          }
+        ]
+      }
+    },
+    "/api/document/passport/{documentId}": {
       "get": {
         "tags": [
           "ApplicantService"
         ],
-        "summary": "Просмотр документа пользователя",
-        "operationId": "getDocument",
+        "summary": "Просмотр паспорта абитуриента",
+        "operationId": "getPassport",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "description": "Идентификатор документа абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PassportInfo"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer_token": []
           }
         ]
       },
-      "delete": {
+      "put": {
         "tags": [
           "ApplicantService"
         ],
-        "summary": "Удаление документа пользователя",
-        "operationId": "deleteDocument",
-        "security": [
+        "summary": "Редактирование данных паспорта абитуриента",
+        "operationId": "changePassport",
+        "parameters": [
           {
-            "Bearer_token": []
+            "name": "documentId",
+            "in": "path",
+            "description": "Идентификатор документа абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
-        ]
-      }
-    },
-    "/api/document/download/{id}": {
-      "get": {
-        "tags": [
-          "ApplicantService"
         ],
-        "summary": "Загрузка документа пользователя",
-        "operationId": "downloadDocument",
+        "requestBody": {
+          "description": "Форма редактирования паспорта абитуриента",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Passport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer_token": []
@@ -165,8 +525,87 @@
         "tags": [
           "ApplicantService"
         ],
-        "summary": "Добавление паспорта пользователя",
+        "summary": "Добавление паспорта абитуриента",
         "operationId": "addPassport",
+        "requestBody": {
+          "description": "Форма добавления паспорта абитуриента",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Passport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer_token": []
+          }
+        ]
+      }
+    },
+    "/api/document/education/{documentId}": {
+      "get": {
+        "tags": [
+          "ApplicantService"
+        ],
+        "summary": "Просмотр документа об образовании абитуриента",
+        "operationId": "getDocument",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "description": "Идентификатор документа абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EducationDocumentInfo"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer_token": []
@@ -177,8 +616,58 @@
         "tags": [
           "ApplicantService"
         ],
-        "summary": "Редактирование данных паспорта пользователя",
-        "operationId": "changePassport",
+        "summary": "Редактирование документа об образовании абитуриента",
+        "operationId": "changeEducationDocument",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "description": "Идентификатор документа абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Форма редактирования документа об образовании абитуриента",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EducationDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer_token": []
@@ -191,20 +680,46 @@
         "tags": [
           "ApplicantService"
         ],
-        "summary": "Добавление документа об образовании пользователя",
+        "summary": "Добавление документа об образовании абитуриента",
         "operationId": "addEducationDocument",
-        "security": [
-          {
-            "Bearer_token": []
+        "requestBody": {
+          "description": "Форма добавления документа об образовании абитуриента",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EducationDocument"
+              }
+            }
           }
-        ]
-      },
-      "put": {
-        "tags": [
-          "ApplicantService"
-        ],
-        "summary": "Редактирование документа об образовании пользователя",
-        "operationId": "changeEducationDocument",
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer_token": []
@@ -212,27 +727,183 @@
         ]
       }
     },
-    "/api/document/{id}/scan/{id}": {
+    "/api/document/{documentId}/scan/{scanId}/download": {
+      "get": {
+        "tags": [
+          "ApplicantService"
+        ],
+        "summary": "Загрузка скана документа абитуриента",
+        "description": "Идентификаторы сканов приходят вместе с паспортом и документом об образовании",
+        "operationId": "downloadDocument",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "description": "Идентификатор документа абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "scanId",
+            "in": "path",
+            "description": "Идентификатор скана документа абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer_token": []
+          }
+        ]
+      }
+    },
+    "/api/document/{documentId}/scan": {
+      "put": {
+        "tags": [
+          "ApplicantService"
+        ],
+        "summary": "Добавление скана документа абитуриента",
+        "description": "Идентификаторы сканов приходят вместе с паспортом и документом об образовании",
+        "operationId": "addDocumentScan",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "description": "Идентификатор документа абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Форма добавления скана документа абитуриента",
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer_token": []
+          }
+        ]
+      }
+    },
+    "/api/document/{documentId}/scan/{scanId}": {
       "delete": {
         "tags": [
           "ApplicantService"
         ],
-        "summary": "Удаление скана документа",
+        "summary": "Удаление скана документа абитуриента",
+        "description": "Идентификаторы сканов приходят вместе с паспортом и документом об образовании",
         "operationId": "deleteDocumentScan",
-        "security": [
+        "parameters": [
           {
-            "Bearer_token": []
+            "name": "documentId",
+            "in": "path",
+            "description": "Идентификатор документа абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "scanId",
+            "in": "path",
+            "description": "Идентификатор скана документа абитуриента",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
-        ]
-      }
-    },
-    "/api/document/{id}/scan": {
-      "put": {
-        "tags": [
-          "ApplicantService"
         ],
-        "summary": "Добавление скана документа",
-        "operationId": "addDocumentScan",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer_token": []
@@ -269,7 +940,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -310,7 +981,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -373,7 +1044,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -415,7 +1086,7 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -457,7 +1128,7 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -499,7 +1170,7 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -590,7 +1261,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -671,6 +1342,220 @@
   },
   "components": {
     "schemas": {
+      "AdmissionProgram": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "program": {
+            "$ref": "#/components/schemas/EducationProgram"
+          }
+        }
+      },
+      "ChangePriorityApplicantProgram": {
+        "type": "object",
+        "properties": {
+          "newPriority": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ApplicantProfile": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "example": "Иван Иванович Иванов"
+          },
+          "email": {
+            "type": "string",
+            "example": "applicant@email.com"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date"
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "citizenship": {
+            "type": "string",
+            "example": "РФ"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+71234567890"
+          }
+        }
+      },
+      "EditApplicantProfile": {
+        "type": "object",
+        "properties": {
+          "birthday": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "citizenship": {
+            "type": "string",
+            "example": "РФ"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+71234567890"
+          }
+        }
+      },
+      "Gender": {
+        "type": "string",
+        "enum": [
+          "male",
+          "female"
+        ]
+      },
+      "DocumentShortInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "example": "Passport"
+          }
+        }
+      },
+      "ScanInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "example": "png"
+          },
+          "name": {
+            "type": "string",
+            "example": "scanOfMyDocument"
+          }
+        }
+      },
+      "PassportInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "example": "Passport"
+          },
+          "series_number": {
+            "type": "string",
+            "example": "9229 333134"
+          },
+          "birth_place": {
+            "type": "string",
+            "example": "some place"
+          },
+          "issue_year": {
+            "type": "string",
+            "format": "date"
+          },
+          "issued_by_whom": {
+            "type": "string",
+            "example": "MIA RF"
+          },
+          "scans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScanInfo"
+            }
+          }
+        }
+      },
+      "Passport": {
+        "type": "object",
+        "properties": {
+          "series_number": {
+            "type": "string",
+            "example": "9229 333134"
+          },
+          "birth_place": {
+            "type": "string",
+            "example": "some place"
+          },
+          "issue_year": {
+            "type": "string",
+            "format": "date"
+          },
+          "issued_by_whom": {
+            "type": "string",
+            "example": "MIA RF"
+          }
+        }
+      },
+      "EducationDocumentTypeShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "EducationDocumentInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "example": "EducationDocument"
+          },
+          "name": {
+            "type": "string",
+            "example": "Some name"
+          },
+          "educationDocumentType": {
+            "$ref": "#/components/schemas/EducationDocumentTypeShort"
+          },
+          "scans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScanInfo"
+            }
+          }
+        }
+      },
+      "EducationDocument": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Some name"
+          },
+          "educationDocumentTypeId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
       "UserApplicant": {
         "type": "object",
         "properties": {
@@ -891,9 +1776,9 @@
     },
     "securitySchemes": {
       "Bearer_token": {
-        "type": "apiKey",
-        "name": "Bearer_token",
-        "in": "header"
+        "type": "http",
+        "description": "Please enter token",
+        "scheme": "Bearer"
       }
     }
   }
