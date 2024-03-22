@@ -19,13 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{A0D351A2-D4D1-43B5-B084-D60614E9A788}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Domain", "UserService.Domain\UserService.Domain.csproj", "{62F03032-C92C-464F-8099-D5C0501A29C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Core.Domain", "UserService.Core.Domain\UserService.Core.Domain.csproj", "{62F03032-C92C-464F-8099-D5C0501A29C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Application", "UserService.Application\UserService.Application.csproj", "{C8BCF98A-0A9A-4016-8C77-6A6143278E1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Core.Application", "UserService.Core.Application\UserService.Core.Application.csproj", "{C8BCF98A-0A9A-4016-8C77-6A6143278E1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Persistence", "UserService.Persistence\UserService.Persistence.csproj", "{25D63D1A-0CC9-4999-9A09-18D57D829CD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Infrastructure.Persistence", "UserService.Infrastructure.Persistence\UserService.Infrastructure.Persistence.csproj", "{25D63D1A-0CC9-4999-9A09-18D57D829CD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Web", "UserService.Web\UserService.Web.csproj", "{AAD2AFD9-2A8D-4598-8B58-9013A409C755}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Presentation.Web", "UserService.Presentation.Web\UserService.Presentation.Web.csproj", "{AAD2AFD9-2A8D-4598-8B58-9013A409C755}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
