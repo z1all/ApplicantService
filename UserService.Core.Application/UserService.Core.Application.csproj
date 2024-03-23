@@ -10,9 +10,4 @@
     <ProjectReference Include="..\UserService.Core.Domain\UserService.Core.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\Services\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

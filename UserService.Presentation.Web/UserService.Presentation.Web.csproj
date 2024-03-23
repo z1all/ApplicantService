@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UserService.Infrastructure.Persistence\UserService.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\UserService.Infrastructure.Identity\UserService.Infrastructure.Identity.csproj" />
   </ItemGroup>
 
 </Project>

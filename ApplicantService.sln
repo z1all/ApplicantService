@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Core.Domain", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Core.Application", "UserService.Core.Application\UserService.Core.Application.csproj", "{C8BCF98A-0A9A-4016-8C77-6A6143278E1B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Infrastructure.Persistence", "UserService.Infrastructure.Persistence\UserService.Infrastructure.Persistence.csproj", "{25D63D1A-0CC9-4999-9A09-18D57D829CD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Infrastructure.Identity", "UserService.Infrastructure.Identity\UserService.Infrastructure.Identity.csproj", "{25D63D1A-0CC9-4999-9A09-18D57D829CD8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Presentation.Web", "UserService.Presentation.Web\UserService.Presentation.Web.csproj", "{AAD2AFD9-2A8D-4598-8B58-9013A409C755}"
 EndProject

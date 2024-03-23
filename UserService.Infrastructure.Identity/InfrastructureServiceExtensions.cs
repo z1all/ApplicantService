@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UserService.Core.Application.Interfaces.Repositories;
+using UserService.Core.Application.Interfaces;
 using UserService.Infrastructure.Persistence.Contexts;
-using UserService.Infrastructure.Persistence.Repositories;
+using UserService.Infrastructure.Persistence.Services;
 
 namespace UserService.Infrastructure.Persistence
 {
@@ -14,9 +14,9 @@ namespace UserService.Infrastructure.Persistence
             string? connectionString = configuration.GetConnectionString("PostgresConnection");
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
-            services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IProfileRepository, ProfileRepository>();
-
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IProfileService, ProfileService>();
+           
             return services;
         }
 
