@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UserService.Core.Application.Interfaces;
@@ -14,9 +15,12 @@ namespace UserService.Infrastructure.Persistence
             string? connectionString = configuration.GetConnectionString("PostgresConnection");
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                    .AddEntityFrameworkStores<AppDbContext>();
+
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IProfileService, ProfileService>();
-           
+
             return services;
         }
 
