@@ -11,7 +11,9 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 
 var app = builder.Build();
 
+// AppDbContext extensions
 app.Services.AddAutoMigration();
+app.Services.AddDatabaseSeed();
 
 if (app.Environment.IsDevelopment())
 {

@@ -3,7 +3,7 @@ using UserService.Core.Application.Interfaces;
 
 namespace UserService.Infrastructure.Persistence.Services
 {
-    public class ProfileService : IProfileService
+    internal class ProfileService : IProfileService
     {
         private readonly UserManager<IdentityUser> _userManager;
 

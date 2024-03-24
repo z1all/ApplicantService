@@ -4,15 +4,17 @@ using UserService.Core.Application.Interfaces;
 
 namespace UserService.Infrastructure.Persistence.Services
 {
-    public class AuthService : IAuthService
+    internal class AuthService : IAuthService
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ITokenDbService _tokenDbService;
 
-        public AuthService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AuthService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ITokenDbService tokenDbService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _tokenDbService = tokenDbService;
         }
 
         public Task<TokenResponse> LoginAsync(LoginDTO loginDTO)
