@@ -18,7 +18,7 @@ namespace UserService.Presentation.Web.Controllers
         [HttpPost("registration")]
         public async Task<ActionResult<TokenResponse>> RegistrationAsync(RegistrationDTO request)
         {
-            TokenResponse response = await _authService.RegistrationAsync(request);
+            TokenResponse response = await _authService.ApplicantRegistrationAsync(request);
 
             return Ok(response);
         }
@@ -26,7 +26,7 @@ namespace UserService.Presentation.Web.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<TokenResponse>> LoginAsync(LoginDTO request)
         {
-            TokenResponse response = await _authService.LoginAsync(request);
+            TokenResponse response = await _authService.ApplicantLoginAsync(request);
 
             return Ok(response);
         }
