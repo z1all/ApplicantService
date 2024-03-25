@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 using UserService.Core.Application.Interfaces;
+using UserService.Core.Domain.Entities;
 using UserService.Infrastructure.Identity;
 using UserService.Infrastructure.Identity.Configurations;
 using UserService.Infrastructure.Identity.Services;
@@ -47,7 +48,7 @@ namespace UserService.Infrastructure.Persistence
             string? postgreConnectionString = configuration.GetConnectionString("PostgreConnection");
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(postgreConnectionString!));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<CustomUser, IdentityRole>()
                     .AddEntityFrameworkStores<AppDbContext>();
         }
 

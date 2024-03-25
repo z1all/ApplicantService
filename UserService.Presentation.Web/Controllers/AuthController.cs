@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
+using UserService.Core.Application.Models;
+using UserService.Presentation.Web.Attributes;
 
 namespace UserService.Presentation.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ValidateModelState]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -18,15 +21,25 @@ namespace UserService.Presentation.Web.Controllers
         [HttpPost("registration")]
         public async Task<ActionResult<TokenResponse>> RegistrationAsync(RegistrationDTO request)
         {
-            TokenResponse response = await _authService.ApplicantRegistrationAsync(request);
+            ExecutionResult<TokenResponse> response = await _authService.ApplicantRegistrationAsync(request);
 
-            return Ok(response);
+            if(!response.IsSuccess)
+            {
+                return BadRequest(new ErrorResponse()
+                {
+                    Title = "One or more errors occurred.",
+                    Status = 400,
+                    Errors = response.Errors,
+                });
+            }
+
+            return Ok(response.Result!);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<TokenResponse>> LoginAsync(LoginDTO request)
         {
-            TokenResponse response = await _authService.ApplicantLoginAsync(request);
+            ExecutionResult<TokenResponse> response = await _authService.ApplicantLoginAsync(request);
 
             return Ok(response);
         }

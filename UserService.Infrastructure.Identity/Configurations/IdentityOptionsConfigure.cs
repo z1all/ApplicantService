@@ -7,12 +7,14 @@ namespace UserService.Infrastructure.Identity.Configurations
     {
         public void Configure(IdentityOptions options)
         {
-            options.Password.RequireDigit = true; // Требование использования цифр
-            options.Password.RequireLowercase = true; // Требование использования символов в нижнем регистре
-            options.Password.RequireUppercase = true; // Требование использования символов в верхнем регистре
-            options.Password.RequireNonAlphanumeric = false; // Требование использования специальных символов
-            options.Password.RequiredLength = 6; // Минимальная длина пароля
-            options.Password.RequiredUniqueChars = 0; // Минимальное количество уникальных символов
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequiredUniqueChars = 0;
+
+            options.User.RequireUniqueEmail = true;
         }
     }
 }

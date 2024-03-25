@@ -1,42 +1,46 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Enums;
+using UserService.Core.Application.Extensions;
 using UserService.Core.Application.Interfaces;
+using UserService.Core.Application.Models;
+using UserService.Core.Domain.Entities;
 using UserService.Infrastructure.Identity.Services;
 
 namespace UserService.Infrastructure.Persistence.Services
 {
     internal class AuthService : IAuthService
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<CustomUser> _userManager;
         private readonly ITokenDbService _tokenDbService;
         private readonly TokenHelperService _tokenHelperService;
 
-        public AuthService(UserManager<IdentityUser> userManager, ITokenDbService tokenDbService, TokenHelperService tokenHelperService)
+        public AuthService(UserManager<CustomUser> userManager, ITokenDbService tokenDbService, TokenHelperService tokenHelperService)
         {
             _userManager = userManager;
             _tokenDbService = tokenDbService;
             _tokenHelperService = tokenHelperService;
         }
 
-        public async Task<TokenResponse> ApplicantRegistrationAsync(RegistrationDTO registrationDTO)
+        public async Task<ExecutionResult<TokenResponse>> ApplicantRegistrationAsync(RegistrationDTO registrationDTO)
         {
-            IdentityUser user = new()
+            CustomUser user = new()
             {
-                UserName = registrationDTO.FullName,
+                FullName = registrationDTO.FullName,
                 Email = registrationDTO.Email,
+                UserName = $"{registrationDTO.FullName}_{Guid.NewGuid()}",
             };
 
             IdentityResult result = await _userManager.CreateAsync(user, registrationDTO.Password);
             if (!result.Succeeded)
             {
-                throw new NotImplementedException();
+                return new(){ Errors = result.Errors.ToErrorDictionary() };
             }
 
             result = await _userManager.AddToRoleAsync(user, Role.Applicant.ToString());
             if (!result.Succeeded)
             {
-                throw new NotImplementedException();
+                return new() { Errors = result.Errors.ToErrorDictionary() };
             }
 
             (string accessToken, Guid tokenJTI) = await _tokenHelperService.GenerateJWTTokenAsync(user);
@@ -45,27 +49,30 @@ namespace UserService.Infrastructure.Persistence.Services
             bool saveTokenResult = await _tokenDbService.SaveTokens(refreshToken, tokenJTI);
             if (!saveTokenResult)
             {
-                throw new NotImplementedException();
+                return new("unknowError", "Unknown error");
             }
 
-            return new TokenResponse()
+            return new()
             {
-                Access = accessToken,
-                Refresh = refreshToken
+                Result = new TokenResponse()
+                {
+                    Access = accessToken,
+                    Refresh = refreshToken
+                }
             };
         }
 
-        public async Task<TokenResponse> ApplicantLoginAsync(LoginDTO loginDTO)
+        public async Task<ExecutionResult<TokenResponse>> ApplicantLoginAsync(LoginDTO loginDTO)
         {
             throw new NotImplementedException();
         }
 
-        public async Task LogoutAsync(Guid userId, Guid tokenJTI)
+        public async Task<ExecutionResult> LogoutAsync(Guid userId, Guid tokenJTI)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<TokenResponse> UpdateAccessTokenAsync(string refresh, string access)
+        public async Task<ExecutionResult<TokenResponse>> UpdateAccessTokenAsync(string refresh, string access)
         {
             throw new NotImplementedException();
         }

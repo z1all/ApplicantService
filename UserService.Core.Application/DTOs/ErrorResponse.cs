@@ -1,8 +1,11 @@
-﻿namespace UserService.Core.Application.DTOs
+﻿using System.Collections.Immutable;
+
+namespace UserService.Core.Application.DTOs
 {
     public class ErrorResponse
     {
-        public string Error { get; set; } = null!;
-        public string? Error_description { get; set; }
+        public string Title { get; set; } = null!;
+        public int Status { get; set; }
+        public ImmutableDictionary<string, List<string>> Errors { get; set; } = null!;
     }
 }

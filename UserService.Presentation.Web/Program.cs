@@ -1,4 +1,5 @@
 using UserService.Infrastructure.Persistence;
+using UserService.Presentation.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddPresentationWebService();
 
 var app = builder.Build();
 

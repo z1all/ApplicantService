@@ -5,17 +5,18 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using UserService.Core.Domain.Entities;
 using UserService.Infrastructure.Identity.Configurations;
 
 namespace UserService.Infrastructure.Identity.Services
 {
-    internal class TokenHelperService(IOptions<JwtOptions> options, UserManager<IdentityUser> userManager)
+    internal class TokenHelperService(IOptions<JwtOptions> options, UserManager<CustomUser> userManager)
     {
         private readonly JwtOptions jwtOptions = options.Value;
         private readonly JwtSecurityTokenHandler _tokenHandler = new();
-        private readonly UserManager<IdentityUser> _userManager = userManager;
+        private readonly UserManager<CustomUser> _userManager = userManager;
 
-        public async Task<(string token, Guid JTI)> GenerateJWTTokenAsync(IdentityUser user)
+        public async Task<(string token, Guid JTI)> GenerateJWTTokenAsync(CustomUser user)
         {
             byte[] key = Encoding.ASCII.GetBytes(jwtOptions.SecretKey);
             (List <Claim> claims, Guid JTI) = await GetClaims(user);
@@ -34,7 +35,7 @@ namespace UserService.Infrastructure.Identity.Services
             return (_tokenHandler.WriteToken(token), JTI);
         }
 
-        private async Task<(List<Claim> claims, Guid JTI)> GetClaims(IdentityUser user)
+        private async Task<(List<Claim> claims, Guid JTI)> GetClaims(CustomUser user)
         {
             Guid JTI = Guid.NewGuid();
 
