@@ -5,7 +5,7 @@ using System.Text;
 
 namespace UserService.Infrastructure.Identity.Configurations
 {
-    internal class JwtAuthorizeOptionsConfigure(IOptions<JwtOptions> _jwtOptions) : IConfigureNamedOptions<JwtBearerOptions> 
+    internal class JwtBearerOptionsConfigure(IOptions<JwtOptions> _jwtOptions) : IConfigureNamedOptions<JwtBearerOptions> 
     {
         private readonly JwtOptions jwtOptions = _jwtOptions.Value;
 

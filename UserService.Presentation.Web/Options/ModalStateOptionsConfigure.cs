@@ -7,7 +7,8 @@ namespace UserService.Presentation.Web.Options
     {
         public void Configure(ApiBehaviorOptions options)
         {
-            options.SuppressModelStateInvalidFilter = true; // Отключаем автоматическую проверку ModelState.IsValid
+            // Отключение автоматической проверки ModelState.IsValid
+            options.SuppressModelStateInvalidFilter = true; 
         }
     }
 }

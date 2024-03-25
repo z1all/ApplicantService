@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Application.Models;
@@ -6,7 +7,7 @@ using UserService.Presentation.Web.Attributes;
 
 namespace UserService.Presentation.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     [ValidateModelState]
     public class AuthController : ControllerBase
@@ -41,16 +42,28 @@ namespace UserService.Presentation.Web.Controllers
         {
             ExecutionResult<TokenResponse> response = await _authService.ApplicantLoginAsync(request);
 
-            return Ok(response);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(new ErrorResponse()
+                {
+                    Title = "One or more errors occurred.",
+                    Status = 400,
+                    Errors = response.Errors,
+                });
+            }
+
+            return Ok(response.Result!);
         }
 
         [HttpPost("logout")]
+        [Authorize]
         public async Task<ActionResult> LogoutAsync()
         {
             throw new NotImplementedException();
         }
 
         [HttpPost("access")]
+        [Authorize]
         public async Task<ActionResult<TokenResponse>> UpdateAccessTokenAsync(UpdateAccessRequest request)
         {
             throw new NotImplementedException();

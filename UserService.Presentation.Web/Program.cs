@@ -17,6 +17,9 @@ var app = builder.Build();
 app.Services.AddAutoMigration();
 app.Services.AddDatabaseSeed();
 
+// Exceptions handler
+app.UseExceptionsHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -39,8 +39,7 @@ namespace UserService.Infrastructure.Persistence
 
         private static void AddJwtAuthorize(this IServiceCollection services)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
         }
 
         private static void AddEntityFrameworkDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -60,9 +59,10 @@ namespace UserService.Infrastructure.Persistence
 
         private static void AddOptions(this IServiceCollection services)
         {
-            services.ConfigureOptions<JwtAuthorizeOptionsConfigure>();
+            services.ConfigureOptions<JwtBearerOptionsConfigure>();
             services.ConfigureOptions<JwtOptionsConfigure>();
             services.ConfigureOptions<IdentityOptionsConfigure>();
+            services.ConfigureOptions<AuthorizationOptionsConfigure>();
         }
 
         public static void AddAutoMigration(this IServiceProvider services)

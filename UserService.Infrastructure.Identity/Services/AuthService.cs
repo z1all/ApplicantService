@@ -12,14 +12,17 @@ namespace UserService.Infrastructure.Persistence.Services
     internal class AuthService : IAuthService
     {
         private readonly UserManager<CustomUser> _userManager;
+        private readonly SignInManager<CustomUser> _signInManager;
         private readonly ITokenDbService _tokenDbService;
         private readonly TokenHelperService _tokenHelperService;
 
-        public AuthService(UserManager<CustomUser> userManager, ITokenDbService tokenDbService, TokenHelperService tokenHelperService)
+
+        public AuthService(UserManager<CustomUser> userManager, ITokenDbService tokenDbService, TokenHelperService tokenHelperService, SignInManager<CustomUser> signInManager)
         {
             _userManager = userManager;
             _tokenDbService = tokenDbService;
             _tokenHelperService = tokenHelperService;
+            _signInManager = signInManager;
         }
 
         public async Task<ExecutionResult<TokenResponse>> ApplicantRegistrationAsync(RegistrationDTO registrationDTO)
@@ -43,28 +46,24 @@ namespace UserService.Infrastructure.Persistence.Services
                 return new() { Errors = result.Errors.ToErrorDictionary() };
             }
 
-            (string accessToken, Guid tokenJTI) = await _tokenHelperService.GenerateJWTTokenAsync(user);
-            string refreshToken = _tokenHelperService.GenerateRefreshToken();
-
-            bool saveTokenResult = await _tokenDbService.SaveTokens(refreshToken, tokenJTI);
-            if (!saveTokenResult)
-            {
-                return new("unknowError", "Unknown error");
-            }
-
-            return new()
-            {
-                Result = new TokenResponse()
-                {
-                    Access = accessToken,
-                    Refresh = refreshToken
-                }
-            };
+            return await GetTokensAsync(user);
         }
 
         public async Task<ExecutionResult<TokenResponse>> ApplicantLoginAsync(LoginDTO loginDTO)
         {
-            throw new NotImplementedException();
+            CustomUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
+            if(user == null)
+            {
+                return new("LoginFail", "Invalid email or password");
+            }
+            
+            SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
+            if (!signInResult.Succeeded)
+            {
+                return new("LoginFail", "Invalid email or password");
+            }
+
+            return await GetTokensAsync(user);
         }
 
         public async Task<ExecutionResult> LogoutAsync(Guid userId, Guid tokenJTI)
@@ -75,6 +74,27 @@ namespace UserService.Infrastructure.Persistence.Services
         public async Task<ExecutionResult<TokenResponse>> UpdateAccessTokenAsync(string refresh, string access)
         {
             throw new NotImplementedException();
+        }
+
+        private async Task<ExecutionResult<TokenResponse>> GetTokensAsync(CustomUser user)
+        {
+            (string accessToken, Guid tokenJTI) = await _tokenHelperService.GenerateJWTTokenAsync(user);
+            string refreshToken = _tokenHelperService.GenerateRefreshToken();
+
+            bool saveTokenResult = await _tokenDbService.SaveTokens(refreshToken, tokenJTI);
+            if (!saveTokenResult)
+            {
+                return new("UnknowError", "Unknown error");
+            }
+
+            return new()
+            {
+                Result = new TokenResponse()
+                {
+                    Access = accessToken,
+                    Refresh = refreshToken,
+                }
+            };
         }
     }
 }
