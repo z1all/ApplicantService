@@ -18,11 +18,29 @@ namespace UserService.Infrastructure.Identity.Services
             expiration = new TimeSpan(timeLifeDays, 0, 0, 0);
         }
 
-        public async Task<bool> SaveTokens(string refreshToken, Guid accessTokenJTI)
+        public async Task<bool> RemoveTokensAsync(Guid accessTokenJTI)
         {
-            bool result = await _redis.StringSetAsync(refreshToken, accessTokenJTI.ToString(), expiration);
+            bool result = await _redis.KeyDeleteAsync(accessTokenJTI.ToString());
+
+            return result;
+        }
+
+        public async Task<bool> SaveTokensAsync(string refreshToken, Guid accessTokenJTI)
+        {
+            bool keyExists = await _redis.KeyExistsAsync(accessTokenJTI.ToString());
+            if (keyExists) return false;
+            
+            bool result = await _redis.StringSetAsync(accessTokenJTI.ToString(), refreshToken, expiration);
 
             return result;  
+        }
+
+        public async Task<bool> TokensExist(string refresh, Guid accessTokenJTI)
+        {
+            RedisValue result = await _redis.StringGetAsync(accessTokenJTI.ToString());
+
+            if (result.IsNullOrEmpty) return false;
+            return result == refresh;
         }
     }
 }

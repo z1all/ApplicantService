@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System.Text;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Domain.Entities;
 using UserService.Infrastructure.Identity;
@@ -39,7 +41,9 @@ namespace UserService.Infrastructure.Persistence
 
         private static void AddJwtAuthorize(this IServiceCollection services)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+            services.AddAuthentication()
+                    .AddJwtBearer()
+                    .AddJwtBearer(CustomJwtBearerDefaults.CheckOnlySignature);
         }
 
         private static void AddEntityFrameworkDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -60,6 +64,8 @@ namespace UserService.Infrastructure.Persistence
         private static void AddOptions(this IServiceCollection services)
         {
             services.ConfigureOptions<JwtBearerOptionsConfigure>();
+            services.ConfigureOptions<CustomJwtBearerOptionsConfigure>();
+
             services.ConfigureOptions<JwtOptionsConfigure>();
             services.ConfigureOptions<IdentityOptionsConfigure>();
             services.ConfigureOptions<AuthorizationOptionsConfigure>();

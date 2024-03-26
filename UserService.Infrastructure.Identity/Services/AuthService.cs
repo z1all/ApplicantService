@@ -16,7 +16,6 @@ namespace UserService.Infrastructure.Persistence.Services
         private readonly ITokenDbService _tokenDbService;
         private readonly TokenHelperService _tokenHelperService;
 
-
         public AuthService(UserManager<CustomUser> userManager, ITokenDbService tokenDbService, TokenHelperService tokenHelperService, SignInManager<CustomUser> signInManager)
         {
             _userManager = userManager;
@@ -54,26 +53,56 @@ namespace UserService.Infrastructure.Persistence.Services
             CustomUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
             if(user == null)
             {
-                return new("LoginFail", "Invalid email or password");
+                return new("LoginFail", "Invalid email or password.");
             }
             
             SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if (!signInResult.Succeeded)
             {
-                return new("LoginFail", "Invalid email or password");
+                return new("LoginFail", "Invalid email or password.");
+            }
+
+            IList<string> userRoles =  await _userManager.GetRolesAsync(user);
+            if(!userRoles.Contains(Role.Applicant.ToString()))
+            {
+                return new("LoginFail", "Invalid email or password.");
             }
 
             return await GetTokensAsync(user);
         }
 
-        public async Task<ExecutionResult> LogoutAsync(Guid userId, Guid tokenJTI)
+        public async Task<ExecutionResult> LogoutAsync(Guid accessTokenJTI)
         {
-            throw new NotImplementedException();
+            bool result = await _tokenDbService.RemoveTokensAsync(accessTokenJTI);
+            if(!result)
+            {
+                return new("LogoutFail", "The tokens have already been deleted.");
+            }
+
+            return new(true);
         }
 
-        public async Task<ExecutionResult<TokenResponse>> UpdateAccessTokenAsync(string refresh, string access)
+        public async Task<ExecutionResult<TokenResponse>> UpdateAccessTokenAsync(string refresh, Guid accessTokenJTI, Guid userId)
         {
-            throw new NotImplementedException();
+            bool tokenExist = await _tokenDbService.TokensExist(refresh, accessTokenJTI);
+            if (!tokenExist)
+            {
+                return new("UpdateAccessTokenFail", "Tokens are not valid!");
+            }
+
+            bool removeResult = await _tokenDbService.RemoveTokensAsync(accessTokenJTI);
+            if (!removeResult)
+            {
+                return new("UpdateAccessTokenFail", "Unknow error");
+            }
+
+            CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                return new("UpdateAccessTokenFail", "Unknow error");
+            }
+
+            return await GetTokensAsync(user);
         }
 
         private async Task<ExecutionResult<TokenResponse>> GetTokensAsync(CustomUser user)
@@ -81,7 +110,7 @@ namespace UserService.Infrastructure.Persistence.Services
             (string accessToken, Guid tokenJTI) = await _tokenHelperService.GenerateJWTTokenAsync(user);
             string refreshToken = _tokenHelperService.GenerateRefreshToken();
 
-            bool saveTokenResult = await _tokenDbService.SaveTokens(refreshToken, tokenJTI);
+            bool saveTokenResult = await _tokenDbService.SaveTokensAsync(refreshToken, tokenJTI);
             if (!saveTokenResult)
             {
                 return new("UnknowError", "Unknown error");

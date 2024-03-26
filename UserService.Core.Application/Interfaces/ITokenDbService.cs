@@ -2,6 +2,8 @@
 {
     public interface ITokenDbService
     {
-        Task<bool> SaveTokens(string refreshToken, Guid accessTokenJTI);
+        Task<bool> SaveTokensAsync(string refreshToken, Guid accessTokenJTI);
+        Task<bool> RemoveTokensAsync(Guid accessTokenJTI);
+        Task<bool> TokensExist(string refresh, Guid accessTokenJTI);
     }
 }

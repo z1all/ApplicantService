@@ -9,14 +9,19 @@ namespace UserService.Core.Application.Models
         public ImmutableDictionary<string, List<string>> Errors
         {
             get { return _errors; }
-            set 
-            { 
+            set
+            {
                 _errors = value;
                 IsSuccess = false;
             }
         }
 
         public ExecutionResult() { }
+
+        public ExecutionResult(bool isSuccess) 
+        {
+            IsSuccess = isSuccess;
+        }
 
         public ExecutionResult(string keyError, string error)
         {

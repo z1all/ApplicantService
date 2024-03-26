@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Application.Models;
+using UserService.Infrastructure.Identity;
 using UserService.Presentation.Web.Attributes;
+using UserService.Presentation.Web.Helpers;
 
 namespace UserService.Presentation.Web.Controllers
 {
@@ -24,16 +26,7 @@ namespace UserService.Presentation.Web.Controllers
         {
             ExecutionResult<TokenResponse> response = await _authService.ApplicantRegistrationAsync(request);
 
-            if(!response.IsSuccess)
-            {
-                return BadRequest(new ErrorResponse()
-                {
-                    Title = "One or more errors occurred.",
-                    Status = 400,
-                    Errors = response.Errors,
-                });
-            }
-
+            if (!response.IsSuccess) return BadRequest(response);
             return Ok(response.Result!);
         }
 
@@ -42,16 +35,7 @@ namespace UserService.Presentation.Web.Controllers
         {
             ExecutionResult<TokenResponse> response = await _authService.ApplicantLoginAsync(request);
 
-            if (!response.IsSuccess)
-            {
-                return BadRequest(new ErrorResponse()
-                {
-                    Title = "One or more errors occurred.",
-                    Status = 400,
-                    Errors = response.Errors,
-                });
-            }
-
+            if (!response.IsSuccess) return BadRequest(response);
             return Ok(response.Result!);
         }
 
@@ -59,14 +43,40 @@ namespace UserService.Presentation.Web.Controllers
         [Authorize]
         public async Task<ActionResult> LogoutAsync()
         {
-            throw new NotImplementedException();
-        }
+            if (!HttpContext.TryGetAccessTokenJTI(out Guid accessTokenJTI))
+            {
+                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+            }
 
+            ExecutionResult response = await _authService.LogoutAsync(accessTokenJTI);
+
+            if (!response.IsSuccess) return BadRequest(response);
+            return NoContent();
+        }
+        
         [HttpPost("access")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CustomJwtBearerDefaults.CheckOnlySignature)]
         public async Task<ActionResult<TokenResponse>> UpdateAccessTokenAsync(UpdateAccessRequest request)
         {
-            throw new NotImplementedException();
+            if (!HttpContext.TryGetAccessTokenJTI(out Guid accessTokenJTI) || !HttpContext.TryGetUserId(out Guid userId))
+            {
+                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+            }
+
+            ExecutionResult<TokenResponse> response = await _authService.UpdateAccessTokenAsync(request.Refresh, accessTokenJTI, userId);
+
+            if (!response.IsSuccess) return BadRequest(response);
+            return Ok(response.Result!);
+        }
+
+        private BadRequestObjectResult BadRequest(ExecutionResult executionResult, string? otherMassage = null)
+        {
+            return BadRequest(new ErrorResponse()
+            {
+                Title = otherMassage ?? "One or more errors occurred.",
+                Status = 400,
+                Errors = executionResult.Errors,
+            });
         }
 
         //[HttpPatch("email")]

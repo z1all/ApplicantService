@@ -42,7 +42,7 @@ namespace UserService.Infrastructure.Identity.Services
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Jti, JTI.ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, JTI.ToString()),
             };
 
             var roles = await _userManager.GetRolesAsync(user);

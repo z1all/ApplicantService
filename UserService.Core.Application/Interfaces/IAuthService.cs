@@ -7,7 +7,7 @@ namespace UserService.Core.Application.Interfaces
     {
         Task<ExecutionResult<TokenResponse>> ApplicantRegistrationAsync(RegistrationDTO registrationDTO);
         Task<ExecutionResult<TokenResponse>> ApplicantLoginAsync(LoginDTO loginDTO);
-        Task<ExecutionResult> LogoutAsync(Guid userId, Guid tokenJTI);
-        Task<ExecutionResult<TokenResponse>> UpdateAccessTokenAsync(string refresh, string access);
+        Task<ExecutionResult> LogoutAsync(Guid accessTokenJTI);
+        Task<ExecutionResult<TokenResponse>> UpdateAccessTokenAsync(string refresh, Guid accessTokenJTI, Guid userId);
     }
 }
