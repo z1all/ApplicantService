@@ -4,12 +4,12 @@ namespace UserService.Core.Application.Models
 {
     public class ExecutionResult
     {
-        public bool IsSuccess { get; protected set; }
+        public bool IsSuccess { get; protected init; }
         private ImmutableDictionary<string, List<string>> _errors = ImmutableDictionary<string, List<string>>.Empty;
         public ImmutableDictionary<string, List<string>> Errors
         {
             get { return _errors; }
-            set
+            init
             {
                 _errors = value;
                 IsSuccess = false;
@@ -37,7 +37,7 @@ namespace UserService.Core.Application.Models
         public TSuccessResult? Result
         {
             get { return _result; }
-            set
+            init
             {
                 _result = value;
                 IsSuccess = true;

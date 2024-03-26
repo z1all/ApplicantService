@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
-using System.Text;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Domain.Entities;
 using UserService.Infrastructure.Identity;
@@ -65,7 +62,6 @@ namespace UserService.Infrastructure.Persistence
         {
             services.ConfigureOptions<JwtBearerOptionsConfigure>();
             services.ConfigureOptions<CustomJwtBearerOptionsConfigure>();
-
             services.ConfigureOptions<JwtOptionsConfigure>();
             services.ConfigureOptions<IdentityOptionsConfigure>();
             services.ConfigureOptions<AuthorizationOptionsConfigure>();
