@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.Core.Application.Interfaces;
+using UserService.Core.Domain.Entities;
 
 namespace UserService.Infrastructure.Persistence.Services
 {
-    public class ProfileService : IProfileService
+    internal class ProfileService : IProfileService
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<CustomUser> _userManager;
 
-        public ProfileService(UserManager<IdentityUser> userManager)
+        public ProfileService(UserManager<CustomUser> userManager)
         {
             _userManager = userManager;
         }
