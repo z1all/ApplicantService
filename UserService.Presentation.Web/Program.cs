@@ -26,3 +26,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// 1. Создаем IBus
+// 2. Создаем новый интерфейс IServiceBus с методами для отправки сообщений
+// 3. Добавить реализацию в infrastructure
+// 4. Создать проект common с общими моделями для общения
+// 5. Добавить использование реализации в AuthService

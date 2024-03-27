@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EasyNetQ;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UserService.Core.Application.Interfaces;
+using UserService.Infrastructure.Identity;
+using UserService.Infrastructure.Identity.Services;
 using UserService.Infrastructure.Persistence.Contexts;
 using UserService.Infrastructure.Persistence.Services;
 
@@ -15,7 +18,7 @@ namespace UserService.Infrastructure.Persistence
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IProfileService, ProfileService>(); 
            
             return services;
         }
@@ -24,6 +27,18 @@ namespace UserService.Infrastructure.Persistence
         {
             using var dbContext = services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
             dbContext.Database.Migrate();
+        }
+
+        public static void AddEasynetq(this IServiceCollection services)
+        {
+            services.ConfigureOptions<EasynetqOptionsConfigure>();
+            services.AddScoped<ISendNotification, EasynetqSendNotification>();
+            services.AddSingleton<IBus>(provider =>
+            {
+                var easynetqOptions = provider.GetRequiredService<EasynetqOptions>();
+
+                return RabbitHutch.CreateBus(easynetqOptions.ConnectionString);
+            });
         }
     }
 }
