@@ -3,15 +3,15 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace UserService.Infrastructure.Identity.Configurations
+namespace UserService.Infrastructure.Identity.Configurations.Authorization
 {
-    internal class JwtBearerOptionsConfigure(IOptions<JwtOptions> _jwtOptions) : IConfigureNamedOptions<JwtBearerOptions> 
+    internal class CustomJwtBearerOptionsConfigure(IOptions<JwtOptions> _jwtOptions) : IConfigureNamedOptions<JwtBearerOptions>
     {
         private readonly JwtOptions jwtOptions = _jwtOptions.Value;
 
         public void Configure(string? name, JwtBearerOptions options)
         {
-            if (name == JwtBearerDefaults.AuthenticationScheme)
+            if (name == CustomJwtBearerDefaults.CheckOnlySignature)
             {
                 Configure(options);
             }
@@ -23,7 +23,7 @@ namespace UserService.Infrastructure.Identity.Configurations
             {
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
                 ClockSkew = new TimeSpan(0, 0, 30),

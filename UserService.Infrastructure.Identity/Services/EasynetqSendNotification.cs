@@ -1,5 +1,8 @@
-﻿using EasyNetQ;
+﻿using Common.ServiceBusDTOs;
+using EasyNetQ;
+using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
+using UserService.Core.Application.Models;
 
 namespace UserService.Infrastructure.Identity.Services
 {
@@ -12,17 +15,24 @@ namespace UserService.Infrastructure.Identity.Services
             _bus = bus;
         }
 
-        public Task<bool> CreatedApplicant()
-        { 
-            throw new NotImplementedException();
+        public async Task<ExecutionResult> CreatedApplicant(User user)
+        {
+            bool result = await _bus.PubSub.PublishAsync<UserNotification>(new() 
+            { 
+                Id = user.Id,
+                Email = user.Email,
+                FullName = user.FullName,
+            }).ContinueWith(task => task.IsCompletedSuccessfully);
+
+            return new(result);
         }
 
-        public Task<bool> CreatedManager()
+        public Task<ExecutionResult> CreatedManager(User user)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdatedUser()
+        public Task<ExecutionResult> UpdatedUser(User user)
         {
             throw new NotImplementedException();
         }

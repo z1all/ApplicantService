@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
-namespace UserService.Infrastructure.Identity.Configurations
+namespace UserService.Infrastructure.Identity.Configurations.Authorization
 {
     internal class AuthorizationOptionsConfigure : IConfigureOptions<AuthorizationOptions>
     {

@@ -1,4 +1,4 @@
-﻿namespace UserService.Infrastructure.Identity.Configurations
+﻿namespace UserService.Infrastructure.Identity.Configurations.Authorization
 {
     public static class CustomJwtBearerDefaults
     {

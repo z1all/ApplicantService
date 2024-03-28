@@ -7,10 +7,12 @@ using StackExchange.Redis;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Domain.Entities;
 using UserService.Infrastructure.Identity;
-using UserService.Infrastructure.Identity.Configurations;
 using UserService.Infrastructure.Identity.Services;
 using UserService.Infrastructure.Persistence.Contexts;
 using UserService.Infrastructure.Persistence.Services;
+using Microsoft.Extensions.Options;
+using UserService.Infrastructure.Identity.Configurations.Authorization;
+using UserService.Infrastructure.Identity.Configurations.Other;
 
 namespace UserService.Infrastructure.Persistence
 {
@@ -30,28 +32,21 @@ namespace UserService.Infrastructure.Persistence
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<ITokenDbService, TokenRedisService>();
-            services.AddEasynetq();
-
-            // Options
-            services.AddOptions();
+            services.AddEasyNetQ();
 
             return services;
         }
 
         private static void AddJwtAuthorize(this IServiceCollection services)
         {
+            services.ConfigureOptions<JwtBearerOptionsConfigure>();
+            services.ConfigureOptions<CustomJwtBearerOptionsConfigure>();
+            services.ConfigureOptions<JwtOptionsConfigure>();
+            services.ConfigureOptions<AuthorizationOptionsConfigure>();
+
             services.AddAuthentication()
                     .AddJwtBearer()
                     .AddJwtBearer(CustomJwtBearerDefaults.CheckOnlySignature);
-        }
-
-        private static void AddEntityFrameworkDbContext(this IServiceCollection services, IConfiguration configuration)
-        {
-            string? postgreConnectionString = configuration.GetConnectionString("PostgreConnection");
-            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(postgreConnectionString!));
-
-            services.AddIdentity<CustomUser, IdentityRole>()
-                    .AddEntityFrameworkStores<AppDbContext>();
         }
 
         private static void AddRedisDb(this IServiceCollection services, IConfiguration configuration)
@@ -60,13 +55,15 @@ namespace UserService.Infrastructure.Persistence
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString!));
         }
 
-        private static void AddOptions(this IServiceCollection services)
+        private static void AddEntityFrameworkDbContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.ConfigureOptions<JwtBearerOptionsConfigure>();
-            services.ConfigureOptions<CustomJwtBearerOptionsConfigure>();
-            services.ConfigureOptions<JwtOptionsConfigure>();
             services.ConfigureOptions<IdentityOptionsConfigure>();
-            services.ConfigureOptions<AuthorizationOptionsConfigure>();
+
+            string? postgreConnectionString = configuration.GetConnectionString("PostgreConnection");
+            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(postgreConnectionString!));
+
+            services.AddIdentity<CustomUser, IdentityRole>()
+                    .AddEntityFrameworkStores<AppDbContext>();
         }
 
         public static void AddAutoMigration(this IServiceProvider services)
@@ -81,16 +78,22 @@ namespace UserService.Infrastructure.Persistence
             AppDbSeed.AddRoles(roleManager);
         }
 
-        public static void AddEasynetq(this IServiceCollection services)
+        public static void AddEasyNetQ(this IServiceCollection services)
         {
             services.ConfigureOptions<EasynetqOptionsConfigure>();
             services.AddScoped<ISendNotification, EasynetqSendNotification>();
             services.AddSingleton<IBus>(provider =>
             {
-                var easynetqOptions = provider.GetRequiredService<EasynetqOptions>();
+                var easynetqOptions = provider.GetRequiredService<IOptions<EasynetqOptions>>().Value;
 
-                return RabbitHutch.CreateBus(easynetqOptions.ConnectionString);
+                return RabbitHutch.CreateBus(easynetqOptions.ConnectionString, s => s.EnableSystemTextJson());
             });
+        }
+
+        public static void AddEasyNetQSeed(this IServiceProvider services)
+        {
+            using var bus = services.CreateScope().ServiceProvider.GetRequiredService<IBus> ();
+            EasyNetQSeed.AddQueue(bus.Advanced);
         }
     }
 }

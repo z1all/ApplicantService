@@ -1,4 +1,4 @@
-﻿namespace UserService.Infrastructure.Identity
+﻿namespace UserService.Infrastructure.Identity.Configurations.Other
 {
     internal class EasynetqOptions
     {

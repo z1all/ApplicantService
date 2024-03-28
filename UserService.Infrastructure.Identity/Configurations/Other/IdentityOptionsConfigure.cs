@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace UserService.Infrastructure.Identity.Configurations
+namespace UserService.Infrastructure.Identity.Configurations.Other
 {
     internal class IdentityOptionsConfigure : IConfigureOptions<IdentityOptions>
     {

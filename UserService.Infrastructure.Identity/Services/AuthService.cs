@@ -15,13 +15,15 @@ namespace UserService.Infrastructure.Persistence.Services
         private readonly SignInManager<CustomUser> _signInManager;
         private readonly ITokenDbService _tokenDbService;
         private readonly TokenHelperService _tokenHelperService;
+        private readonly ISendNotification _sendNotification;
 
-        public AuthService(UserManager<CustomUser> userManager, ITokenDbService tokenDbService, TokenHelperService tokenHelperService, SignInManager<CustomUser> signInManager)
+        public AuthService(UserManager<CustomUser> userManager, ITokenDbService tokenDbService, TokenHelperService tokenHelperService, SignInManager<CustomUser> signInManager, ISendNotification sendNotification)
         {
             _userManager = userManager;
             _tokenDbService = tokenDbService;
             _tokenHelperService = tokenHelperService;
             _signInManager = signInManager;
+            _sendNotification = sendNotification;
         }
 
         public async Task<ExecutionResult<TokenResponse>> ApplicantRegistrationAsync(RegistrationDTO registrationDTO)
@@ -45,30 +47,66 @@ namespace UserService.Infrastructure.Persistence.Services
                 return new() { Errors = result.Errors.ToErrorDictionary() };
             }
 
-            return await GetTokensAsync(user);
+            ExecutionResult<TokenResponse> creatingTokenResult = await GetTokensAsync(user);
+            if (!creatingTokenResult.IsSuccess)
+            {
+                return creatingTokenResult;
+            }
+
+            ExecutionResult sendingResult = await _sendNotification.CreatedApplicant(new User()
+            {
+                Id = Guid.Parse(user.Id),
+                FullName = user.FullName,
+                Email = user.Email,
+            });
+            if (!sendingResult.IsSuccess)
+            {
+                return new() { Errors = sendingResult.Errors };
+            }
+
+            return creatingTokenResult;
+        }
+
+        public async Task<ExecutionResult<TokenResponse>> ManagerLoginAsync(LoginDTO loginDTO)
+        {
+            return await LoginAsync(loginDTO, [Role.Manager, Role.MainManager]);
         }
 
         public async Task<ExecutionResult<TokenResponse>> ApplicantLoginAsync(LoginDTO loginDTO)
         {
+            return await LoginAsync(loginDTO, [Role.Applicant]);
+        }
+
+        private async Task<ExecutionResult<TokenResponse>> LoginAsync(LoginDTO loginDTO, Role[] loginFor)
+        {
             CustomUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
-            if(user == null)
+            if (user == null)
             {
                 return new("LoginFail", "Invalid email or password.");
             }
-            
+
             SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if (!signInResult.Succeeded)
             {
                 return new("LoginFail", "Invalid email or password.");
             }
 
-            IList<string> userRoles =  await _userManager.GetRolesAsync(user);
-            if(!userRoles.Contains(Role.Applicant.ToString()))
+            IList<string> userRoles = await _userManager.GetRolesAsync(user);
+            if (!UserHaveRole(userRoles, loginFor))
             {
                 return new("LoginFail", "Invalid email or password.");
             }
 
             return await GetTokensAsync(user);
+        }
+
+        private bool UserHaveRole(IList<string> userRoles, Role[] haveAnyRole)
+        {
+            foreach (Role role in haveAnyRole) 
+            {
+                if(userRoles.Contains(role.ToString())) return true;
+            }
+            return false;
         }
 
         public async Task<ExecutionResult> LogoutAsync(Guid accessTokenJTI)

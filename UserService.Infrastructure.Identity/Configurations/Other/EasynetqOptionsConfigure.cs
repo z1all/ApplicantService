@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace UserService.Infrastructure.Identity
+namespace UserService.Infrastructure.Identity.Configurations.Other
 {
     internal class EasynetqOptionsConfigure(IConfiguration configuration) : IConfigureOptions<EasynetqOptions>
     {

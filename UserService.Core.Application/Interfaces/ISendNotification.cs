@@ -1,9 +1,12 @@
-﻿namespace UserService.Core.Application.Interfaces
+﻿using UserService.Core.Application.DTOs;
+using UserService.Core.Application.Models;
+
+namespace UserService.Core.Application.Interfaces
 {
     public interface ISendNotification
     {
-        Task<bool> CreatedApplicant();
-        Task<bool> CreatedManager();
-        Task<bool> UpdatedUser();
+        Task<ExecutionResult> CreatedApplicant(User user);
+        Task<ExecutionResult> CreatedManager(User user);
+        Task<ExecutionResult> UpdatedUser(User user);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using UserService.Core.Application.Interfaces;
-using UserService.Infrastructure.Identity.Configurations;
+using UserService.Infrastructure.Identity.Configurations.Authorization;
 
 namespace UserService.Infrastructure.Identity.Services
 {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Application.Models;
-using UserService.Infrastructure.Identity.Configurations;
+using UserService.Infrastructure.Identity.Configurations.Authorization;
 using UserService.Presentation.Web.Attributes;
 using UserService.Presentation.Web.Helpers;
 

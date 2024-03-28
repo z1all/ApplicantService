@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace UserService.Infrastructure.Identity.Configurations
+namespace UserService.Infrastructure.Identity.Configurations.Authorization
 {
     internal class JwtOptionsConfigure(IConfiguration configuration) : IConfigureOptions<JwtOptions>
     {
