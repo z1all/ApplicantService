@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace UserService.Core.Application.Models
+namespace Common.Models
 {
     public class ExecutionResult
     {
@@ -23,10 +23,10 @@ namespace UserService.Core.Application.Models
             IsSuccess = isSuccess;
         }
 
-        public ExecutionResult(string keyError, string error)
+        public ExecutionResult(string keyError, params string[] error)
         {
             IsSuccess = false;
-            _errors = _errors.Add(keyError, [error]);
+            _errors = _errors.Add(keyError, error.ToList());
         }
     }
 

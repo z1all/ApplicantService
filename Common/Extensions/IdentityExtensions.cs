@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Common.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Immutable;
 
-namespace UserService.Core.Application.Extensions
+namespace Common.Extensions
 {
-    public static class ToErrorsDictionaryExtensions
+    public static class IdentityExtensions
     {
         public static ImmutableDictionary<string, List<string>> ToErrorDictionary(this IEnumerable<IdentityError> identityErrors)
         {
@@ -15,6 +16,11 @@ namespace UserService.Core.Application.Extensions
             }
 
             return errors;
+        }
+
+        public static ExecutionResult ToExecutionResultError(this IdentityResult identityResult)
+        {
+            return new() { Errors = identityResult.Errors.ToErrorDictionary() };
         }
     }
 }

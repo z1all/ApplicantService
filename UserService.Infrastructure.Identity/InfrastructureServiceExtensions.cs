@@ -80,8 +80,10 @@ namespace UserService.Infrastructure.Persistence
 
         public static void AddEasyNetQ(this IServiceCollection services)
         {
-            services.ConfigureOptions<EasynetqOptionsConfigure>();
-            services.AddScoped<ISendNotification, EasynetqSendNotification>();
+            services.ConfigureOptions<EasyNetQOptionsConfigure>();
+            services.AddSingleton<IRequestService, EasyNetQRequestService>();
+            services.AddSingleton<INotificationService, EasyNetQNotificationService>();
+            services.AddSingleton<IServiceBusProvider, ServiceBusProvider>();
             services.AddSingleton<IBus>(provider =>
             {
                 var easynetqOptions = provider.GetRequiredService<IOptions<EasynetqOptions>>().Value;
