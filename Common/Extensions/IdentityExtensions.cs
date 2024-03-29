@@ -22,5 +22,10 @@ namespace Common.Extensions
         {
             return new() { Errors = identityResult.Errors.ToErrorDictionary() };
         }
+
+        public static ExecutionResult<T> ToExecutionResultError<T>(this IdentityResult identityResult) where T : class 
+        {
+            return new() { Errors = identityResult.Errors.ToErrorDictionary() };
+        }
     }
 }

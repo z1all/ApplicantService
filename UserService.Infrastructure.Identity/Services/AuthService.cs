@@ -35,23 +35,14 @@ namespace UserService.Infrastructure.Persistence.Services
                 UserName = $"{registrationDTO.FullName}_{Guid.NewGuid()}",
             };
 
-            IdentityResult result = await _userManager.CreateAsync(user, registrationDTO.Password);
-            if (!result.Succeeded)
-            {
-                return new(){ Errors = result.Errors.ToErrorDictionary() };
-            }
+            IdentityResult creationResult = await _userManager.CreateAsync(user, registrationDTO.Password);
+            if (!creationResult.Succeeded) return creationResult.ToExecutionResultError<TokenResponse>();
 
-            result = await _userManager.AddToRoleAsync(user, Role.Applicant.ToString());
-            if (!result.Succeeded)
-            {
-                return new() { Errors = result.Errors.ToErrorDictionary() };
-            }
+            IdentityResult addingRoleResult = await _userManager.AddToRoleAsync(user, Role.Applicant.ToString());
+            if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError<TokenResponse>();
 
             ExecutionResult<TokenResponse> creatingTokenResult = await GetTokensAsync(user);
-            if (!creatingTokenResult.IsSuccess)
-            {
-                return creatingTokenResult;
-            }
+            if (!creatingTokenResult.IsSuccess) return creatingTokenResult;
 
             ExecutionResult sendingResult = await _serviceBusProvider.Notification.CreatedApplicantAsync(new User()
             {

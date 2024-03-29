@@ -45,7 +45,7 @@ namespace UserService.Infrastructure.Identity.Services
 
         private ExecutionResult GiveResult(bool result, string errorMassage)
         {
-            if (result)
+            if (!result)
             {
                 return new("SendNotificationFail", errorMassage);
             }
