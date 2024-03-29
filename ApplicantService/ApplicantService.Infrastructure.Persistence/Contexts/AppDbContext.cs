@@ -9,11 +9,11 @@ namespace ApplicantService.Infrastructure.Persistence.Contexts
 
         public DbSet<UserCache> UsersCache { get; private set; }
         public DbSet<Applicant> Applicants { get; private set; }
-        public DbSet<Document> Documents { get; private set; }
         public DbSet<DocumentFileInfo> FilesInfo { get; private set; }
+        public DbSet<EducationDocumentTypeCache> EducationDocumentTypesCache { get; private set; }
+        public DbSet<Document> Documents { get; private set; }
         public DbSet<Passport> Passports { get; private set; }
         public DbSet<EducationDocument> EducationDocuments { get; private set; }
-        public DbSet<EducationDocumentTypeCache> EducationDocumentTypesCache { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

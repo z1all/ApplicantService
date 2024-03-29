@@ -1,4 +1,5 @@
-﻿using ApplicantService.Infrastructure.Persistence.Contexts;
+﻿using ApplicantService.Core.Domain;
+using ApplicantService.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +34,41 @@ namespace ApplicantService.Infrastructure.Persistence
 
         public static void AddDatabaseSeed(this IServiceProvider services)
         {
-            
+            using var dbContext = services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
+
+            Guid userId = Guid.NewGuid();
+
+            UserCache user = new()
+            {
+                Id = userId,
+                Email = "asdas@ads.com",
+                FullName = "Bite",
+            };
+
+            Applicant applicant = new()
+            {
+                Birthday = DateOnly.MinValue,
+                Citizenship = "123",
+                Gender = Core.Domain.Enums.Gender.male,
+                PhoneNumber = "1233123",
+                UserId = user.Id,
+            };
+
+            dbContext.UsersCache.Add(user);
+            dbContext.Applicants.Add(applicant);
+
+            dbContext.Passports.Add(new()
+            {
+                ApplicantId = userId,
+                ApplicantIdCache = user.Id,
+                DocumentType = Core.Domain.Enums.DocumentType.Passport,
+                BirthPlace = "1dsfg",
+                IssuedByWhom = "fdgh",
+                IssueYear = DateOnly.MaxValue,
+                SeriesNumber = "123dfgdfg",
+            });
+
+            dbContext.SaveChanges();
         }
     }
 }
