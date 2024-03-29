@@ -7,9 +7,9 @@ namespace ApplicantService.Core.Domain
     {
         [Key]
         public Guid Id { get; set; } 
-        public DocumentType DocumentType { get; set; }
+        public required DocumentType DocumentType { get; set; }
 
-        public Guid ApplicantId { get; set; }
+        public required Guid ApplicantId { get; set; }
         public Applicant? Applicant { get; set; }
 
         public IEnumerable<DocumentFileInfo> FilesInfo { get; set; } = null!;
