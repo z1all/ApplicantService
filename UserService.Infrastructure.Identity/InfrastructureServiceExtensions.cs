@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using EasyNetQ;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +12,8 @@ using UserService.Infrastructure.Persistence.Services;
 using Microsoft.Extensions.Options;
 using UserService.Infrastructure.Identity.Configurations.Authorization;
 using UserService.Infrastructure.Identity.Configurations.Other;
+using EasyNetQ;
+using EasyNetQ.DI;
 
 namespace UserService.Infrastructure.Persistence
 {
@@ -80,13 +81,15 @@ namespace UserService.Infrastructure.Persistence
 
         public static void AddEasyNetQ(this IServiceCollection services)
         {
-            services.ConfigureOptions<EasynetqOptionsConfigure>();
-            services.AddScoped<ISendNotification, EasynetqSendNotification>();
+            services.ConfigureOptions<EasyNetQOptionsConfigure>();
+            services.AddSingleton<IRequestService, EasyNetQRequestService>();
+            services.AddSingleton<INotificationService, EasyNetQNotificationService>();
+            services.AddSingleton<IServiceBusProvider, ServiceBusProvider>();
             services.AddSingleton<IBus>(provider =>
             {
                 var easynetqOptions = provider.GetRequiredService<IOptions<EasynetqOptions>>().Value;
 
-                return RabbitHutch.CreateBus(easynetqOptions.ConnectionString, s => s.EnableSystemTextJson());
+                return RabbitHutch.CreateBus(easynetqOptions.ConnectionString, r => r.EnableSystemTextJson());
             });
         }
 

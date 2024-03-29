@@ -2,17 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
-using UserService.Core.Application.Models;
 using UserService.Infrastructure.Identity.Configurations.Authorization;
-using UserService.Presentation.Web.Attributes;
 using UserService.Presentation.Web.Helpers;
+using Common.Models;
 
 namespace UserService.Presentation.Web.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    [ValidateModelState]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseController
     {
         private readonly IAuthService _authService;
 
@@ -53,7 +51,7 @@ namespace UserService.Presentation.Web.Controllers
             if (!response.IsSuccess) return BadRequest(response);
             return NoContent();
         }
-        
+
         [HttpPost("access")]
         [Authorize(AuthenticationSchemes = CustomJwtBearerDefaults.CheckOnlySignature)]
         public async Task<ActionResult<TokenResponse>> UpdateAccessTokenAsync(UpdateAccessRequest request)
@@ -68,33 +66,5 @@ namespace UserService.Presentation.Web.Controllers
             if (!response.IsSuccess) return BadRequest(response);
             return Ok(response.Result!);
         }
-
-        private BadRequestObjectResult BadRequest(ExecutionResult executionResult, string? otherMassage = null)
-        {
-            return BadRequest(new ErrorResponse()
-            {
-                Title = otherMassage ?? "One or more errors occurred.",
-                Status = 400,
-                Errors = executionResult.Errors,
-            });
-        }
-
-        //[HttpPatch("email")]
-        //public async Task<ActionResult> ChangeEmailAsync(ChangeEmailRequest request)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //[HttpPatch("password")]
-        //public async Task<ActionResult> ChangePasswordAsync(ChangePasswordRequest request)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //[HttpPatch("profile")]
-        //public async Task<ActionResult> ChangeProfileAsync(ChangeProfileRequest request)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

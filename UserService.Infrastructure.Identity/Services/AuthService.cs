@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Enums;
-using UserService.Core.Application.Extensions;
 using UserService.Core.Application.Interfaces;
-using UserService.Core.Application.Models;
 using UserService.Core.Domain.Entities;
 using UserService.Infrastructure.Identity.Services;
+using Common.Extensions;
+using Common.Models;
 
 namespace UserService.Infrastructure.Persistence.Services
 {
@@ -15,15 +15,15 @@ namespace UserService.Infrastructure.Persistence.Services
         private readonly SignInManager<CustomUser> _signInManager;
         private readonly ITokenDbService _tokenDbService;
         private readonly TokenHelperService _tokenHelperService;
-        private readonly ISendNotification _sendNotification;
+        private readonly IServiceBusProvider _serviceBusProvider;
 
-        public AuthService(UserManager<CustomUser> userManager, ITokenDbService tokenDbService, TokenHelperService tokenHelperService, SignInManager<CustomUser> signInManager, ISendNotification sendNotification)
+        public AuthService(UserManager<CustomUser> userManager, ITokenDbService tokenDbService, TokenHelperService tokenHelperService, SignInManager<CustomUser> signInManager, IServiceBusProvider serviceBusProvider)
         {
             _userManager = userManager;
             _tokenDbService = tokenDbService;
             _tokenHelperService = tokenHelperService;
             _signInManager = signInManager;
-            _sendNotification = sendNotification;
+            _serviceBusProvider = serviceBusProvider;
         }
 
         public async Task<ExecutionResult<TokenResponse>> ApplicantRegistrationAsync(RegistrationDTO registrationDTO)
@@ -35,25 +35,16 @@ namespace UserService.Infrastructure.Persistence.Services
                 UserName = $"{registrationDTO.FullName}_{Guid.NewGuid()}",
             };
 
-            IdentityResult result = await _userManager.CreateAsync(user, registrationDTO.Password);
-            if (!result.Succeeded)
-            {
-                return new(){ Errors = result.Errors.ToErrorDictionary() };
-            }
+            IdentityResult creationResult = await _userManager.CreateAsync(user, registrationDTO.Password);
+            if (!creationResult.Succeeded) return creationResult.ToExecutionResultError<TokenResponse>();
 
-            result = await _userManager.AddToRoleAsync(user, Role.Applicant.ToString());
-            if (!result.Succeeded)
-            {
-                return new() { Errors = result.Errors.ToErrorDictionary() };
-            }
+            IdentityResult addingRoleResult = await _userManager.AddToRoleAsync(user, Role.Applicant.ToString());
+            if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError<TokenResponse>();
 
             ExecutionResult<TokenResponse> creatingTokenResult = await GetTokensAsync(user);
-            if (!creatingTokenResult.IsSuccess)
-            {
-                return creatingTokenResult;
-            }
+            if (!creatingTokenResult.IsSuccess) return creatingTokenResult;
 
-            ExecutionResult sendingResult = await _sendNotification.CreatedApplicant(new User()
+            ExecutionResult sendingResult = await _serviceBusProvider.Notification.CreatedApplicantAsync(new User()
             {
                 Id = Guid.Parse(user.Id),
                 FullName = user.FullName,
@@ -82,19 +73,19 @@ namespace UserService.Infrastructure.Persistence.Services
             CustomUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
             if (user == null)
             {
-                return new("LoginFail", "Invalid email or password.");
+                return new(keyError: "LoginFail", error: "Invalid email or password.");
             }
 
             SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if (!signInResult.Succeeded)
             {
-                return new("LoginFail", "Invalid email or password.");
+                return new(keyError: "LoginFail", error: "Invalid email or password.");
             }
 
             IList<string> userRoles = await _userManager.GetRolesAsync(user);
             if (!UserHaveRole(userRoles, loginFor))
             {
-                return new("LoginFail", "Invalid email or password.");
+                return new(keyError: "LoginFail", error: "Invalid email or password.");
             }
 
             return await GetTokensAsync(user);
@@ -114,9 +105,8 @@ namespace UserService.Infrastructure.Persistence.Services
             bool result = await _tokenDbService.RemoveTokensAsync(accessTokenJTI);
             if(!result)
             {
-                return new("LogoutFail", "The tokens have already been deleted.");
+                return new(keyError: "LogoutFail", error: "The tokens have already been deleted.");
             }
-
             return new(true);
         }
 
@@ -125,19 +115,19 @@ namespace UserService.Infrastructure.Persistence.Services
             bool tokenExist = await _tokenDbService.TokensExist(refresh, accessTokenJTI);
             if (!tokenExist)
             {
-                return new("UpdateAccessTokenFail", "Tokens are not valid!");
+                return new(keyError: "UpdateAccessTokenFail", error: "Tokens are not valid!");
             }
 
             bool removeResult = await _tokenDbService.RemoveTokensAsync(accessTokenJTI);
             if (!removeResult)
             {
-                return new("UpdateAccessTokenFail", "Unknow error");
+                return new(keyError: "UpdateAccessTokenFail", error: "Unknow error");
             }
 
             CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
-                return new("UpdateAccessTokenFail", "Unknow error");
+                return new(keyError: "UpdateAccessTokenFail", error: "Unknow error");
             }
 
             return await GetTokensAsync(user);
@@ -151,7 +141,7 @@ namespace UserService.Infrastructure.Persistence.Services
             bool saveTokenResult = await _tokenDbService.SaveTokensAsync(refreshToken, tokenJTI);
             if (!saveTokenResult)
             {
-                return new("UnknowError", "Unknown error");
+                return new(keyError: "UnknowError", error: "Unknown error");
             }
 
             return new()

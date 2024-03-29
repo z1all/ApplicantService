@@ -1,5 +1,5 @@
 ﻿using UserService.Core.Application.DTOs;
-using UserService.Core.Application.Models;
+using Common.Models;
 
 namespace UserService.Core.Application.Interfaces
 {
