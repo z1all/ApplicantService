@@ -1,7 +1,10 @@
-﻿namespace ApplicantService.Core.Domain
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ApplicantService.Core.Domain
 {
-    public class FileInfo
+    public class DocumentFileInfo
     {
+        [Key]
         public required Guid Id { get; set; }
         public required string PathName { get; set; }
 
