@@ -6,7 +6,7 @@ using Common.Extensions;
 using Common.Models;
 using UserService.Core.Application.Enums;
 
-namespace UserService.Infrastructure.Persistence.Services
+namespace UserService.Infrastructure.Identity.Services
 {
     internal class ProfileService : IProfileService
     {
@@ -88,7 +88,7 @@ namespace UserService.Infrastructure.Persistence.Services
             };
 
             IdentityResult creatingResult = await _userManager.CreateAsync(user, createManager.Password);
-            if (!creatingResult.Succeeded) creatingResult.ToExecutionResultError();
+            if (!creatingResult.Succeeded) return creatingResult.ToExecutionResultError();
 
             Role role = createManager.FacultyId == null ? Role.MainManager : Role.Manager;
             IdentityResult addingRoleResult = await _userManager.AddToRoleAsync(user, role.ToString());
@@ -167,10 +167,7 @@ namespace UserService.Infrastructure.Persistence.Services
             if (!wasUpdated) return new(isSuccess: true);
 
             IdentityResult updatingResult = await _userManager.UpdateAsync(user);
-            if (!updatingResult.Succeeded)
-            {
-                return new(keyError: "ChangeFail", error: "Unknow error!");
-            }
+            if (!updatingResult.Succeeded) return updatingResult.ToExecutionResultError();
 
             return await _serviceBusProvider.Notification.UpdatedUserAsync(MapCustomUserToUser(user));
         }

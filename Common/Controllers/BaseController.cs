@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UserService.Core.Application.DTOs;
-using UserService.Presentation.Web.Attributes;
+using Common.Attributes;
 using Common.Models;
+using Common.DTOs;
 
-namespace UserService.Presentation.Web.Controllers
+namespace Common.Controllers
 {
     [ApiController]
     [ValidateModelState]

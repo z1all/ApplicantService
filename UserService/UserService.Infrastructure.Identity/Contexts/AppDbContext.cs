@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using UserService.Core.Domain.Entities;
 
-namespace UserService.Infrastructure.Persistence.Contexts
+namespace UserService.Infrastructure.Identity.Contexts
 {
     internal class AppDbContext : IdentityDbContext<CustomUser>
     {
