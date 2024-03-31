@@ -12,6 +12,6 @@ namespace ApplicantService.Core.Domain
         public required Guid UserId { get; set; }
         public UserCache? User { get; set; }
 
-        public IEnumerable<Document> Documents { get; set; } = Enumerable.Empty<Document>();
+        public IEnumerable<Document> Documents { get; set; } = null!;
     }
 }
