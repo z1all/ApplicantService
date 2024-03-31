@@ -1,8 +1,8 @@
-﻿using UserService.Presentation.Web.Middlewares;
+﻿using Microsoft.AspNetCore.Builder;
 
-namespace UserService.Presentation.Web
+namespace Common.Middlewares.Extensions
 {
-    internal static class PresentationWebMiddlewareExtensions
+    public static class CommonMiddlewareExtensions
     {
         public static void UseExceptionsHandler(this WebApplication webApplication)
         {

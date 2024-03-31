@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Immutable;
-using UserService.Core.Application.DTOs;
 
-namespace UserService.Presentation.Web.Attributes
+namespace Common.Attributes
 {
-    internal class ValidateModelStateAttribute : ActionFilterAttribute
+    public class ValidateModelStateAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {

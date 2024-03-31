@@ -1,5 +1,6 @@
-using UserService.Infrastructure.Persistence;
-using UserService.Presentation.Web;
+using UserService.Infrastructure.Identity;
+using Common.Configurations.Extensions;
+using Common.Middlewares.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +9,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Services extensions
 builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddPresentationWebService();
+
+// Configuration extensions
+builder.Services.AddSwaggerConfigure();
+builder.Services.AddModalStateConfigure();
 
 var app = builder.Build();
 
@@ -34,10 +39,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-// 1. Создаем IBus
-// 2. Создаем новый интерфейс IServiceBus с методами для отправки сообщений
-// 3. Добавить реализацию в infrastructure
-// 4. Создать проект common с общими моделями для общения
-// 5. Добавить использование реализации в AuthService
-// 6. При старте приложения создавать нужные очереди для отправки сообщений
