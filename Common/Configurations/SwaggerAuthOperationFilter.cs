@@ -2,9 +2,9 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace UserService.Presentation.Web.Filters
+namespace Common.Configurations
 {
-    internal class AuthOperationFilter : IOperationFilter
+    internal class SwaggerAuthOperationFilter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         { 

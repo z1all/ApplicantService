@@ -5,17 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Domain.Entities;
-using UserService.Infrastructure.Identity;
 using UserService.Infrastructure.Identity.Services;
-using UserService.Infrastructure.Persistence.Contexts;
-using UserService.Infrastructure.Persistence.Services;
+using UserService.Infrastructure.Identity.Contexts;
 using Microsoft.Extensions.Options;
 using UserService.Infrastructure.Identity.Configurations.Authorization;
 using UserService.Infrastructure.Identity.Configurations.Other;
 using EasyNetQ;
-using EasyNetQ.DI;
 
-namespace UserService.Infrastructure.Persistence
+namespace UserService.Infrastructure.Identity
 {
     public static class InfrastructureServiceExtensions
     {

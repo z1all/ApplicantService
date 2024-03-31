@@ -7,7 +7,7 @@ using UserService.Infrastructure.Identity.Services;
 using Common.Extensions;
 using Common.Models;
 
-namespace UserService.Infrastructure.Persistence.Services
+namespace UserService.Infrastructure.Identity.Services
 {
     internal class AuthService : IAuthService
     {

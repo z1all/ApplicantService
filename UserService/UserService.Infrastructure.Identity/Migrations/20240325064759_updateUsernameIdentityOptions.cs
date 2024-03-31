@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace UserService.Infrastructure.Persistence.Migrations
+namespace UserService.Infrastructure.Identity.Migrations
 {
     /// <inheritdoc />
     public partial class updateUsernameIdentityOptions : Migration

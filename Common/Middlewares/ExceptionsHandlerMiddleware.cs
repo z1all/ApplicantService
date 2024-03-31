@@ -1,8 +1,9 @@
-﻿using System.Collections.Immutable;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Immutable;
 using System.Net;
-using UserService.Core.Application.DTOs;
+using Common.DTOs;
 
-namespace UserService.Presentation.Web.Middlewares
+namespace Common.Middlewares
 {
     public class ExceptionsHandlerMiddleware(RequestDelegate next)
     {
