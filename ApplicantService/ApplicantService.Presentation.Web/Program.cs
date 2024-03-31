@@ -3,17 +3,10 @@ using ApplicantService.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.Services.AddControllers() // Перенести в конфигурацию
-builder.Services
-    .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
-    .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen() Перенести в конфигурацию
-builder.Services.AddSwaggerGen(options =>
-{
-    options.UseDateOnlyTimeOnlyStringConverters();
-});
+builder.Services.AddSwaggerGen();
 
 // Service extensions
 builder.Services.AddApplicationServices();
