@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using UserService.Infrastructure.Persistence.Contexts;
+using UserService.Infrastructure.Identity.Contexts;
 
 #nullable disable
 
-namespace UserService.Infrastructure.Persistence.Migrations
+namespace UserService.Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20240325064759_updateUsernameIdentityOptions")]
