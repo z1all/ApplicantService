@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
+using UserService.Core.Application.Enums;
 using UserService.Core.Domain.Entities;
 using Common.Extensions;
 using Common.Models;
-using UserService.Core.Application.Enums;
 
 namespace UserService.Infrastructure.Identity.Services
 {

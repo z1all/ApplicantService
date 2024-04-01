@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Common.Configurations.Authorization;
 
 namespace UserService.Infrastructure.Identity.Configurations.Authorization
 {

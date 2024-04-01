@@ -3,7 +3,6 @@ using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Enums;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Domain.Entities;
-using UserService.Infrastructure.Identity.Services;
 using Common.Extensions;
 using Common.Models;
 

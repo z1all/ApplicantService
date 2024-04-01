@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace UserService.Infrastructure.Identity.Configurations.Other
+namespace Common.Configurations.Others
 {
-    internal class EasyNetQOptionsConfigure(IConfiguration configuration) : IConfigureOptions<EasynetqOptions>
+    public class EasyNetQOptionsConfigure(IConfiguration configuration) : IConfigureOptions<EasynetqOptions>
     {
         private readonly string valueKey = "EasyNetQ";
         private readonly IConfiguration _configuration = configuration;
