@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
-using UserService.Core.Application.Enums;
 using UserService.Core.Domain.Entities;
+using Common.Enums;
 using Common.Extensions;
 using Common.Models;
 
@@ -65,7 +65,7 @@ namespace UserService.Infrastructure.Identity.Services
             IdentityResult creatingResult = await _userManager.CreateAsync(user, createAdmin.Password);
             if (!creatingResult.Succeeded) creatingResult.ToExecutionResultError();
 
-            List<string> roles = [Role.Admin.ToString(), Role.MainManager.ToString(), Role.Applicant.ToString()];
+            List<string> roles = [Role.Admin, Role.MainManager, Role.Applicant];
             IdentityResult addingRoleResult = await _userManager.AddToRolesAsync(user, roles);
             if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError();
 
@@ -90,8 +90,8 @@ namespace UserService.Infrastructure.Identity.Services
             IdentityResult creatingResult = await _userManager.CreateAsync(user, createManager.Password);
             if (!creatingResult.Succeeded) return creatingResult.ToExecutionResultError();
 
-            Role role = createManager.FacultyId == null ? Role.MainManager : Role.Manager;
-            IdentityResult addingRoleResult = await _userManager.AddToRoleAsync(user, role.ToString());
+            string role = createManager.FacultyId == null ? Role.MainManager : Role.Manager;
+            IdentityResult addingRoleResult = await _userManager.AddToRoleAsync(user, role);
             if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError();
 
             ExecutionResult creatingRequestResult = await _serviceBusProvider.Request.CreateManagerAsync(MapCustomUserToManager(user, createManager.FacultyId));
@@ -140,13 +140,13 @@ namespace UserService.Infrastructure.Identity.Services
             List<string> errors = new();
 
             bool isManager = false;
-            if (!userRoles.Contains(Role.Manager.ToString()) || !userRoles.Contains(Role.MainManager.ToString()))
+            if (!userRoles.Contains(Role.Manager) || !userRoles.Contains(Role.MainManager))
             {
                 errors.Add("This user is not manager or main manager!");
                 isManager = true;
             }
 
-            if (isManager && userRoles.Contains(Role.Admin.ToString()))
+            if (isManager && userRoles.Contains(Role.Admin))
             {
                 errors.Add("You cannot delete a manager with the admin role!");
             }
