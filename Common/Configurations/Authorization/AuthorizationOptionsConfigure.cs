@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
-namespace UserService.Infrastructure.Identity.Configurations.Authorization
+namespace Common.Configurations.Authorization
 {
-    internal class AuthorizationOptionsConfigure : IConfigureOptions<AuthorizationOptions>
+    public class AuthorizationOptionsConfigure : IConfigureOptions<AuthorizationOptions>
     {
         public void Configure(AuthorizationOptions options)
         {
@@ -12,7 +12,6 @@ namespace UserService.Infrastructure.Identity.Configurations.Authorization
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser()
                 .Build();
-            options.AddPolicy(CustomJwtBearerDefaults.CheckOnlySignature, p => p.RequireAuthenticatedUser());
         }
     }
 }

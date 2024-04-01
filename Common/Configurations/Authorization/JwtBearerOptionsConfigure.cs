@@ -3,9 +3,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace UserService.Infrastructure.Identity.Configurations.Authorization
+namespace Common.Configurations.Authorization
 {
-    internal class JwtBearerOptionsConfigure(IOptions<JwtOptions> _jwtOptions) : IConfigureNamedOptions<JwtBearerOptions>
+    public class JwtBearerOptionsConfigure(IOptions<JwtOptions> _jwtOptions) : IConfigureNamedOptions<JwtBearerOptions>
     {
         private readonly JwtOptions jwtOptions = _jwtOptions.Value;
 
