@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using UserService.Core.Application.Enums;
+using Common.Enums;
 
 namespace UserService.Infrastructure.Identity
 {
@@ -9,10 +9,10 @@ namespace UserService.Infrastructure.Identity
         {
             IdentityRole[] roles =
             [
-                new() { Name = Role.Applicant.ToString() },
-                new() { Name = Role.Manager.ToString() },
-                new() { Name = Role.MainManager.ToString() },
-                new() { Name = Role.Admin.ToString() },
+                new() { Name = Role.Applicant },
+                new() { Name = Role.Manager },
+                new() { Name = Role.MainManager },
+                new() { Name = Role.Admin },
             ];
 
             List<IdentityRole> existRoles = roleManager.Roles.ToList();

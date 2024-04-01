@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace UserService.Infrastructure.Identity.Configurations.Authorization
+namespace Common.Configurations.Authorization
 {
-    internal class JwtOptionsConfigure(IConfiguration configuration) : IConfigureOptions<JwtOptions>
+    public class JwtOptionsConfigure(IConfiguration configuration) : IConfigureOptions<JwtOptions>
     {
         private readonly string valueKey = "JwtAuthentication";
         private readonly IConfiguration _configuration = configuration;

@@ -1,8 +1,8 @@
-﻿using Common.Models;
+﻿using UserService.Core.Application.DTOs;
+using UserService.Core.Application.Interfaces;
+using Common.Models;
 using Common.ServiceBusDTOs.FromUserService;
 using EasyNetQ;
-using UserService.Core.Application.DTOs;
-using UserService.Core.Application.Interfaces;
 
 namespace UserService.Infrastructure.Identity.Services
 {

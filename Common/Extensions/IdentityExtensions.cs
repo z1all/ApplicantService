@@ -1,6 +1,6 @@
-﻿using Common.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Immutable;
+using Common.Models;
 
 namespace Common.Extensions
 {

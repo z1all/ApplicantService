@@ -2,15 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Domain.Entities;
 using UserService.Infrastructure.Identity.Services;
 using UserService.Infrastructure.Identity.Contexts;
-using Microsoft.Extensions.Options;
 using UserService.Infrastructure.Identity.Configurations.Authorization;
 using UserService.Infrastructure.Identity.Configurations.Other;
+using Common.Configurations.Extensions;
 using EasyNetQ;
+using StackExchange.Redis;
 
 namespace UserService.Infrastructure.Identity
 {
@@ -30,27 +30,18 @@ namespace UserService.Infrastructure.Identity
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<ITokenDbService, TokenRedisService>();
-            services.AddEasyNetQ();
+            services.AddEasyNetQServices();
 
             return services;
         }
 
         private static void AddJwtAuthorize(this IServiceCollection services)
         {
-            services.ConfigureOptions<JwtBearerOptionsConfigure>();
             services.ConfigureOptions<CustomJwtBearerOptionsConfigure>();
-            services.ConfigureOptions<JwtOptionsConfigure>();
-            services.ConfigureOptions<AuthorizationOptionsConfigure>();
+            services.ConfigureOptions<CustomAuthorizationOptionsConfigure>();
 
-            services.AddAuthentication()
-                    .AddJwtBearer()
-                    .AddJwtBearer(CustomJwtBearerDefaults.CheckOnlySignature);
-        }
-
-        private static void AddRedisDb(this IServiceCollection services, IConfiguration configuration)
-        {
-            string? redisConnectionString = configuration.GetConnectionString("RedisConnection");
-            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString!));
+            services.AddJwtAuthentication()
+                .AddJwtBearer(CustomJwtBearerDefaults.CheckOnlySignature);         
         }
 
         private static void AddEntityFrameworkDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -62,6 +53,20 @@ namespace UserService.Infrastructure.Identity
 
             services.AddIdentity<CustomUser, IdentityRole>()
                     .AddEntityFrameworkStores<AppDbContext>();
+        }
+
+        private static void AddRedisDb(this IServiceCollection services, IConfiguration configuration)
+        {
+            string? redisConnectionString = configuration.GetConnectionString("RedisConnection");
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString!));
+        }
+
+        private static void AddEasyNetQServices(this IServiceCollection services)
+        {
+            services.AddSingleton<IRequestService, EasyNetQRequestService>();
+            services.AddSingleton<INotificationService, EasyNetQNotificationService>();
+            services.AddSingleton<IServiceBusProvider, ServiceBusProvider>();
+            services.AddEasyNetQ();
         }
 
         public static void AddAutoMigration(this IServiceProvider services)
@@ -76,23 +81,9 @@ namespace UserService.Infrastructure.Identity
             AppDbSeed.AddRoles(roleManager);
         }
 
-        public static void AddEasyNetQ(this IServiceCollection services)
-        {
-            services.ConfigureOptions<EasyNetQOptionsConfigure>();
-            services.AddSingleton<IRequestService, EasyNetQRequestService>();
-            services.AddSingleton<INotificationService, EasyNetQNotificationService>();
-            services.AddSingleton<IServiceBusProvider, ServiceBusProvider>();
-            services.AddSingleton<IBus>(provider =>
-            {
-                var easynetqOptions = provider.GetRequiredService<IOptions<EasynetqOptions>>().Value;
-
-                return RabbitHutch.CreateBus(easynetqOptions.ConnectionString, r => r.EnableSystemTextJson());
-            });
-        }
-
         public static void AddEasyNetQSeed(this IServiceProvider services)
         {
-            using var bus = services.CreateScope().ServiceProvider.GetRequiredService<IBus> ();
+            using var bus = services.CreateScope().ServiceProvider.GetRequiredService<IBus>();
             EasyNetQSeed.AddQueue(bus.Advanced);
         }
     }
