@@ -1,5 +1,5 @@
-﻿using EasyNetQ;
-using EasyNetQ.Topology;
+﻿using EasyNetQ.Topology;
+using EasyNetQ;
 
 namespace UserService.Infrastructure.Identity
 {

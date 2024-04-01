@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.Core.Application.DTOs;
-using UserService.Core.Application.Enums;
+using Common.Enums;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Domain.Entities;
-using UserService.Infrastructure.Identity.Services;
 using Common.Extensions;
 using Common.Models;
 
@@ -38,7 +37,7 @@ namespace UserService.Infrastructure.Identity.Services
             IdentityResult creationResult = await _userManager.CreateAsync(user, registrationDTO.Password);
             if (!creationResult.Succeeded) return creationResult.ToExecutionResultError<TokenResponse>();
 
-            IdentityResult addingRoleResult = await _userManager.AddToRoleAsync(user, Role.Applicant.ToString());
+            IdentityResult addingRoleResult = await _userManager.AddToRoleAsync(user, Role.Applicant);
             if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError<TokenResponse>();
 
             ExecutionResult<TokenResponse> creatingTokenResult = await GetTokensAsync(user);
@@ -68,7 +67,7 @@ namespace UserService.Infrastructure.Identity.Services
             return await LoginAsync(loginDTO, [Role.Applicant]);
         }
 
-        private async Task<ExecutionResult<TokenResponse>> LoginAsync(LoginDTO loginDTO, Role[] loginFor)
+        private async Task<ExecutionResult<TokenResponse>> LoginAsync(LoginDTO loginDTO, string[] loginFor)
         {
             CustomUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
             if (user == null)
@@ -91,11 +90,11 @@ namespace UserService.Infrastructure.Identity.Services
             return await GetTokensAsync(user);
         }
 
-        private bool UserHaveRole(IList<string> userRoles, Role[] haveAnyRole)
+        private bool UserHaveRole(IList<string> userRoles, string[] haveAnyRole)
         {
-            foreach (Role role in haveAnyRole) 
+            foreach (string role in haveAnyRole) 
             {
-                if(userRoles.Contains(role.ToString())) return true;
+                if(userRoles.Contains(role)) return true;
             }
             return false;
         }

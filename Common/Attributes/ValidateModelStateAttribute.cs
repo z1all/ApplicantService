@@ -1,7 +1,7 @@
-﻿using Common.DTOs;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Immutable;
+using Common.DTOs;
 
 namespace Common.Attributes
 {
