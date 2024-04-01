@@ -18,6 +18,7 @@ namespace ApplicantService.Infrastructure.Persistence.Repositories
         {
             return await _dbContext.Applicants
                 .AsNoTracking()
+                .Include(applicant => applicant.User)
                 .FirstOrDefaultAsync(applicant => applicant.UserId == id);
         }
 
