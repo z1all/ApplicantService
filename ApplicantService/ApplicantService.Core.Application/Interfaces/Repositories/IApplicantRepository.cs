@@ -1,4 +1,5 @@
 ﻿using ApplicantService.Core.Domain;
+using Common.Repositories;
 
 namespace ApplicantService.Core.Application.Interfaces.Repositories
 {

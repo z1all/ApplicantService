@@ -1,15 +1,12 @@
-﻿using ApplicantService.Core.Application.Interfaces.Repositories;
-using ApplicantService.Core.Domain;
-using ApplicantService.Infrastructure.Persistence.Contexts;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace ApplicantService.Infrastructure.Persistence.Repositories
+namespace Common.Repositories
 {
-    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
+    public class BaseRepository<TEntity, TDbContext> : IBaseRepository<TEntity> where TEntity : BaseEntity where TDbContext : DbContext
     {
-        protected readonly AppDbContext _dbContext;
+        protected readonly TDbContext _dbContext;
 
-        public BaseRepository(AppDbContext dbContext)
+        public BaseRepository(TDbContext dbContext)
         {
             _dbContext = dbContext;
         }

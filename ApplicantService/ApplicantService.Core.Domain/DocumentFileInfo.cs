@@ -1,4 +1,6 @@
-﻿namespace ApplicantService.Core.Domain
+﻿using Common.Repositories;
+
+namespace ApplicantService.Core.Domain
 {
     public class DocumentFileInfo : BaseEntity
     {

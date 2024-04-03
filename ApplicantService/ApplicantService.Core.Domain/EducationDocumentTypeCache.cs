@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Common.Repositories;
 
 namespace ApplicantService.Core.Domain
 {

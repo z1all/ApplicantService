@@ -1,4 +1,5 @@
 ﻿using ApplicantService.Core.Domain.Enums;
+using Common.Repositories;
 
 namespace ApplicantService.Core.Domain
 {

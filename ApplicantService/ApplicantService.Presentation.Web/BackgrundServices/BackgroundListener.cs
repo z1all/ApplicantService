@@ -28,15 +28,11 @@ namespace ApplicantService.Presentation.Web
 
         public async Task ConsumeAsync(UserUpdatedNotification message, CancellationToken cancellationToken = default)
         {
-            bool applicantExist = await _applicantRepository.AnyByIdAsync(message.Id);
-            if (!applicantExist) return;
+            Applicant? applicant = await _applicantRepository.GetByIdAsync(message.Id);
+            if (applicant is null) return;
 
-            Applicant applicant = new()
-            {
-                Id = message.Id,
-                Email = message.Email,
-                FullName = message.FullName,
-            };
+            applicant.FullName = message.FullName;
+            applicant.Email = message.Email;
 
             await _applicantRepository.UpdateAsync(applicant);
         }

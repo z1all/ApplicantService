@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ApplicantService.Core.Domain
+namespace Common.Repositories
 {
     public class BaseEntity
     {

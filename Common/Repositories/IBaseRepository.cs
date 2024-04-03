@@ -1,6 +1,4 @@
-﻿using ApplicantService.Core.Domain;
-
-namespace ApplicantService.Core.Application.Interfaces.Repositories
+﻿namespace Common.Repositories
 {
     public interface IBaseRepository<TEntity> where TEntity : BaseEntity
     {
