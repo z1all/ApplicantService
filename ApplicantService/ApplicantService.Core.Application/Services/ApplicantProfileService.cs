@@ -8,9 +8,9 @@ namespace ApplicantService.Core.Application.Services
 {
     public class ApplicantProfileService : IApplicantProfileService
     {
-        private readonly IProfileRepository _profileRepository;
+        private readonly IApplicantRepository _profileRepository;
 
-        public ApplicantProfileService(IProfileRepository profileRepository)
+        public ApplicantProfileService(IApplicantRepository profileRepository)
         {
             _profileRepository = profileRepository;
         }
@@ -26,8 +26,8 @@ namespace ApplicantService.Core.Application.Services
             {
                 Result = new ApplicantProfile()
                 {
-                    Email = applicant.User!.Email,
-                    FullName = applicant.User!.FullName,
+                    Email = applicant.Email,
+                    FullName = applicant.FullName,
                     Birthday = applicant.Birthday,
                     Citizenship = applicant.Citizenship,
                     Gender = applicant.Gender,

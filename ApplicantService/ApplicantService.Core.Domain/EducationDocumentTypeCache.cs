@@ -2,10 +2,8 @@
 
 namespace ApplicantService.Core.Domain
 {
-    public class EducationDocumentTypeCache
+    public class EducationDocumentTypeCache : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
         public required string Name { get; set; }
         public required bool Deprecated { get; set; }
     }

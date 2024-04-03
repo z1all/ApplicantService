@@ -7,43 +7,38 @@ namespace ApplicantService.Presentation.Web
 {
     public class BackgroundListener : IConsumeAsync<ApplicantCreatedNotification>, IConsumeAsync<UserUpdatedNotification>
     {
-        private readonly IProfileRepository _profileRepository;
+        private readonly IApplicantRepository _applicantRepository;
 
-        public BackgroundListener(IProfileRepository profileRepository)
+        public BackgroundListener(IApplicantRepository profileRepository)
         {
-            _profileRepository = profileRepository;
+            _applicantRepository = profileRepository;
         }
 
         public async Task ConsumeAsync(ApplicantCreatedNotification message, CancellationToken cancellationToken = default)
         {
-            UserCache user = new()
+            Applicant applicant = new()
             {
                 Id = message.Id,
                 Email = message.Email,
                 FullName = message.FullName,
             };
 
-            Applicant applicant = new()
-            {
-                UserId = message.Id, 
-            };
-
-            await _profileRepository.CreateAsync(user, applicant);
+            await _applicantRepository.AddAsync(applicant);
         }
 
         public async Task ConsumeAsync(UserUpdatedNotification message, CancellationToken cancellationToken = default)
         {
-            bool applicantExist = await _profileRepository.AnyByIdAsync(message.Id);
+            bool applicantExist = await _applicantRepository.AnyByIdAsync(message.Id);
             if (!applicantExist) return;
 
-            UserCache user = new()
+            Applicant applicant = new()
             {
                 Id = message.Id,
                 Email = message.Email,
                 FullName = message.FullName,
             };
 
-            await _profileRepository.UpdateAsync(user);
+            await _applicantRepository.UpdateAsync(applicant);
         }
     }
 }

@@ -7,7 +7,6 @@ namespace ApplicantService.Infrastructure.Persistence.Contexts
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<UserCache> UsersCache { get; private set; }
         public DbSet<Applicant> Applicants { get; private set; }
         public DbSet<DocumentFileInfo> FilesInfo { get; private set; }
         public DbSet<EducationDocumentTypeCache> EducationDocumentTypesCache { get; private set; }
@@ -19,13 +18,7 @@ namespace ApplicantService.Infrastructure.Persistence.Contexts
         {
             // Applicant
             modelBuilder.Entity<Applicant>()
-                .HasKey(applicant => applicant.UserId);
-
-            modelBuilder.Entity<Applicant>()
-                .HasOne(applicants => applicants.User)
-                .WithOne(userCache => userCache.Applicant)
-                .HasForeignKey<Applicant>(applicants => applicants.UserId)
-                .IsRequired();
+                .HasKey(applicant => applicant.Id);
 
             // Document
             modelBuilder.Entity<Document>()
