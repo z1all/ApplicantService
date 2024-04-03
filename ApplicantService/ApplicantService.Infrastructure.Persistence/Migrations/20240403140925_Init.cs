@@ -42,10 +42,10 @@ namespace ApplicantService.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Birthday = table.Column<DateOnly>(type: "date", nullable: false),
-                    Gender = table.Column<int>(type: "integer", nullable: false),
-                    Citizenship = table.Column<string>(type: "text", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: false)
+                    Birthday = table.Column<DateOnly>(type: "date", nullable: true),
+                    Gender = table.Column<int>(type: "integer", nullable: true),
+                    Citizenship = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

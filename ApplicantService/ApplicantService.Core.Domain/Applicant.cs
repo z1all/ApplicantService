@@ -4,10 +4,10 @@ namespace ApplicantService.Core.Domain
 {
     public class Applicant
     {
-        public required DateOnly Birthday { get; set; }
-        public required Gender Gender { get; set; }
-        public required string Citizenship { get; set; } = null!;
-        public required string PhoneNumber { get; set; } = null!;
+        public DateOnly? Birthday { get; set; }
+        public Gender? Gender { get; set; }
+        public string? Citizenship { get; set; }
+        public string? PhoneNumber { get; set; }
 
         public required Guid UserId { get; set; }
         public UserCache? User { get; set; }

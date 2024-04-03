@@ -22,9 +22,29 @@ namespace ApplicantService.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(applicant => applicant.UserId == id);
         }
 
+        public async Task<bool> AnyByIdAsync(Guid id)
+        {
+            return await _dbContext.Applicants
+                .AsNoTracking()
+                .AnyAsync(applicant => applicant.UserId == id);
+        }
+
+        public async Task CreateAsync(UserCache user, Applicant applicant)
+        {
+            await _dbContext.UsersCache.AddAsync(user);
+            await _dbContext.Applicants.AddAsync(applicant);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task UpdateAsync(Applicant applicant)
         {
             _dbContext.Entry(applicant).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(UserCache user)
+        {
+            _dbContext.Entry(user).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
     }

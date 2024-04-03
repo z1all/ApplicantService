@@ -27,7 +27,7 @@ namespace ApplicantService.Core.Application.Services
                 Result = new ApplicantProfile()
                 {
                     Email = applicant.User!.Email,
-                    FullName = applicant.User!.Email,
+                    FullName = applicant.User!.FullName,
                     Birthday = applicant.Birthday,
                     Citizenship = applicant.Citizenship,
                     Gender = applicant.Gender,

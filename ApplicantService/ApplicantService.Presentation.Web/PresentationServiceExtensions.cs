@@ -8,6 +8,9 @@ namespace ApplicantService.Presentation.Web
         {
             services.AddJwtAuthentication();
             services.AddSwaggerConfigure();
+            services.AddEasyNetQ();
+
+            services.AddScoped<BackgroundListener>();
 
             return services;
         }
