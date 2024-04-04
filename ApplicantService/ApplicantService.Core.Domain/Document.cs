@@ -1,12 +1,10 @@
 ﻿using ApplicantService.Core.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
+using Common.Repositories;
 
 namespace ApplicantService.Core.Domain
 {
-    public class Document
+    public class Document : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; } 
         public required DocumentType DocumentType { get; set; }
 
         public required Guid ApplicantId { get; set; }

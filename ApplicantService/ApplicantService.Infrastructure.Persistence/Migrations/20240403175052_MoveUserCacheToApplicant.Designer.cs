@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApplicantService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240329195351_Init")]
-    partial class Init
+    [Migration("20240403175052_MoveUserCacheToApplicant")]
+    partial class MoveUserCacheToApplicant
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,24 +27,31 @@ namespace ApplicantService.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ApplicantService.Core.Domain.Applicant", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateOnly>("Birthday")
+                    b.Property<DateOnly?>("Birthday")
                         .HasColumnType("date");
 
                     b.Property<string>("Citizenship")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Gender")
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Gender")
                         .HasColumnType("integer");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("Applicants");
                 });
@@ -108,25 +115,6 @@ namespace ApplicantService.Infrastructure.Persistence.Migrations
                     b.ToTable("EducationDocumentTypesCache");
                 });
 
-            modelBuilder.Entity("ApplicantService.Core.Domain.UserCache", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UsersCache");
-                });
-
             modelBuilder.Entity("ApplicantService.Core.Domain.EducationDocument", b =>
                 {
                     b.HasBaseType("ApplicantService.Core.Domain.Document");
@@ -170,17 +158,6 @@ namespace ApplicantService.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.ToTable("Passports");
-                });
-
-            modelBuilder.Entity("ApplicantService.Core.Domain.Applicant", b =>
-                {
-                    b.HasOne("ApplicantService.Core.Domain.UserCache", "User")
-                        .WithOne("Applicant")
-                        .HasForeignKey("ApplicantService.Core.Domain.Applicant", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ApplicantService.Core.Domain.Document", b =>
@@ -239,11 +216,6 @@ namespace ApplicantService.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("ApplicantService.Core.Domain.Document", b =>
                 {
                     b.Navigation("FilesInfo");
-                });
-
-            modelBuilder.Entity("ApplicantService.Core.Domain.UserCache", b =>
-                {
-                    b.Navigation("Applicant");
                 });
 #pragma warning restore 612, 618
         }

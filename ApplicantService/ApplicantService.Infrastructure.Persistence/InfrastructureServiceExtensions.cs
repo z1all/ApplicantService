@@ -15,7 +15,7 @@ namespace ApplicantService.Infrastructure.Persistence
             services.AddEntityFrameworkDbContext(configuration);
 
             // Repositories
-            services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped<IApplicantRepository, ApplicantRepository>();
 
             return services;
         }
