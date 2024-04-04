@@ -30,7 +30,7 @@ namespace Common.Models
         }
     }
 
-    public class ExecutionResult<TSuccessResult> : ExecutionResult where TSuccessResult : class
+    public class ExecutionResult<TSuccessResult> : ExecutionResult /*where TSuccessResult : class*/
     {
         public TSuccessResult? _result;
 

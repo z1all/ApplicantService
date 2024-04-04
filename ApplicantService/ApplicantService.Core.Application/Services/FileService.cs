@@ -12,17 +12,17 @@ namespace ApplicantService.Core.Application.Services
             _requestService = requestService;
         }
 
-        public Task<ExecutionResult> GetApplicantScan(Guid documentId, Guid scanId, Guid applicantId)
+        public Task<ExecutionResult> GetApplicantScanAsync(Guid documentId, Guid scanId, Guid applicantId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ExecutionResult> AddApplicantScan(Guid documentId, Guid scanId, Guid applicantId)
+        public Task<ExecutionResult> AddApplicantScanAsync(Guid documentId, Guid scanId, Guid applicantId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ExecutionResult> DeleteApplicantScan(Guid documentId, Guid scanId, Guid applicantId)
+        public Task<ExecutionResult> DeleteApplicantScanAsync(Guid documentId, Guid scanId, Guid applicantId)
         {
             throw new NotImplementedException();
         }

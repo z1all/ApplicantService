@@ -2,6 +2,7 @@
 using Common.Attributes;
 using Common.Models;
 using Common.DTOs;
+using Common.Helpers;
 
 namespace Common.Controllers
 {
@@ -18,5 +19,35 @@ namespace Common.Controllers
                 Errors = executionResult.Errors,
             });
         }
+
+        protected async Task<ActionResult<TResult>> ExecutionResultHandlerAsync<TResult>(OperationCallbackAsync<TResult> operation)
+        {
+            if (!HttpContext.TryGetUserId(out Guid userId))
+            {
+                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+            }
+
+            ExecutionResult<TResult> response = await operation(userId);
+
+            if (!response.IsSuccess) return BadRequest(response);
+            return Ok(response.Result!);
+        }
+
+        protected async Task<ActionResult> ExecutionResultHandlerAsync(OperationCallbackAsync operation)
+        {
+            if (!HttpContext.TryGetUserId(out Guid userId))
+            {
+                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+            }
+
+            ExecutionResult response = await operation(userId);
+
+            if (!response.IsSuccess) return BadRequest(response);
+            return NoContent();
+        }
+
+
+        protected delegate Task<ExecutionResult<TResult>> OperationCallbackAsync<TResult>(Guid userId);
+        protected delegate Task<ExecutionResult> OperationCallbackAsync(Guid userId);
     }
 }

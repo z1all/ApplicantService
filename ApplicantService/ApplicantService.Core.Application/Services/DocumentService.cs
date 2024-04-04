@@ -13,44 +13,44 @@ namespace ApplicantService.Core.Application.Services
             _requestService = requestService;
         }
 
-        public Task<ExecutionResult> DeleteApplicantDocument(Guid documentId, Guid applicantId)
+        public Task<ExecutionResult> DeleteApplicantDocumentAsync(Guid documentId, Guid applicantId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ExecutionResult<List<DocumentInfo>>> GetApplicantDocuments(Guid applicantId)
+        public Task<ExecutionResult<List<DocumentInfo>>> GetApplicantDocumentsAsync(Guid applicantId)
         {
             throw new NotImplementedException();
         }       
 
         /////
-        public Task<ExecutionResult<PassportInfo>> GetApplicantPassport(Guid applicantId)
+        public Task<ExecutionResult<PassportInfo>> GetApplicantPassportAsync(Guid applicantId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ExecutionResult> AddApplicantPassport(EditAddPassportInfo documentInfo, Guid applicantId)
+        public Task<ExecutionResult> AddApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ExecutionResult> UpdateApplicantPassport(EditAddPassportInfo documentInfo, Guid applicantId)
+        public Task<ExecutionResult> UpdateApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId)
         {
             throw new NotImplementedException();
         }
 
         /////
-        public Task<ExecutionResult<EducationDocumentInfo>> GetApplicantEducationDocument(Guid documentId, Guid applicantId)
+        public Task<ExecutionResult<EducationDocumentInfo>> GetApplicantEducationDocumentAsync(Guid documentId, Guid applicantId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ExecutionResult> AddApplicantEducationDocument(Guid applicantId, EditAddEducationDocumentInfo documentInfo)
+        public Task<ExecutionResult> AddApplicantEducationDocumentAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ExecutionResult> UpdateApplicantEducationDocument(Guid documentId, Guid applicantId, EditAddEducationDocumentInfo documentInfo)
+        public Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditAddEducationDocumentInfo documentInfo)
         {
             throw new NotImplementedException();
         }

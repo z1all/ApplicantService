@@ -1,13 +1,14 @@
-﻿using ApplicantService.Core.Application.DTOs;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Application.Interfaces.Services;
 using Common.Controllers;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicantService.Presentation.Web.Controllers
 {
     [Route("api/document")]
     [ApiController]
+    [Authorize]
     public class DocumentController : BaseController
     {
         private readonly IDocumentService _documentService;
@@ -20,77 +21,72 @@ namespace ApplicantService.Presentation.Web.Controllers
         }
 
         [HttpGet("documents")]
-        [Authorize]
         public async Task<ActionResult<List<DocumentInfo>>> GetDocuments()
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(_documentService.GetApplicantDocumentsAsync);
         }
 
         [HttpDelete("{documentId}")]
-        [Authorize]
         public async Task<ActionResult> DeleteDocument([FromRoute] Guid documentId)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(async userId =>
+                await _documentService.DeleteApplicantDocumentAsync(documentId, userId));
         }
 
         [HttpGet("passport")]
-        [Authorize]
         public async Task<ActionResult<PassportInfo>> GetPassport()
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(_documentService.GetApplicantPassportAsync);
         }
 
         [HttpPut("passport")]
-        [Authorize]
         public async Task<ActionResult> EditPassport(EditAddPassportInfo passportInfo)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(async userId =>
+                await _documentService.UpdateApplicantPassportAsync(passportInfo, userId));
         }
 
         [HttpPost("passport")]
-        [Authorize]
         public async Task<ActionResult> AddPassport(EditAddPassportInfo passportInfo)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(async userId =>
+                await _documentService.AddApplicantPassportAsync(passportInfo, userId));
         }
 
         [HttpGet("education/{documentId}")]
-        [Authorize]
         public async Task<ActionResult<EducationDocumentInfo>> GetEducationDocument([FromRoute] Guid documentId)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(async userId =>
+                await _documentService.GetApplicantEducationDocumentAsync(documentId, userId));
         }
 
         [HttpPut("education/{documentId}")]
-        [Authorize]
         public async Task<ActionResult> EditEducationDocument([FromRoute] Guid documentId, EditAddEducationDocumentInfo documentInfo)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(async userId =>
+                await _documentService.UpdateApplicantEducationDocumentAsync(documentId, userId, documentInfo));
         }
 
         [HttpPost("education/{documentId}")]
-        [Authorize]
         public async Task<ActionResult> AddEducationDocument([FromRoute] Guid documentId, EditAddEducationDocumentInfo documentInfo)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(async userId =>
+               await _documentService.AddApplicantEducationDocumentAsync(documentId, documentInfo));
         }
 
         [HttpGet("{documentId}/scan/{scanId}")]
-        [Authorize]
         public async Task<ActionResult> GetScan([FromRoute] Guid documentId, [FromRoute] Guid scanId)
         {
             throw new NotImplementedException();
         }
 
         [HttpDelete("{documentId}/scan/{scanId}")]
-        [Authorize]
         public async Task<ActionResult> DeleteScan([FromRoute] Guid documentId, [FromRoute] Guid scanId)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost("{documentId}/scan")]
-        [Authorize]
         public async Task<ActionResult> AddScan([FromRoute] Guid documentId)
         {
             throw new NotImplementedException();
