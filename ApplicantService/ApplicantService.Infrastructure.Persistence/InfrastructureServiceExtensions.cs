@@ -16,6 +16,7 @@ namespace ApplicantService.Infrastructure.Persistence
 
             // Repositories
             services.AddScoped<IApplicantRepository, ApplicantRepository>();
+            services.AddScoped<IEducationDocumentTypeCacheRepository, EducationDocumentTypeCacheRepository>();
 
             return services;
         }
