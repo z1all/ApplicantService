@@ -5,6 +5,7 @@ using ApplicantService.Core.Application.Mapper;
 using ApplicantService.Core.Application.Mappers;
 using ApplicantService.Core.Domain;
 using ApplicantService.Core.Domain.Enums;
+using Common.Extensions;
 using Common.Models;
 
 namespace ApplicantService.Core.Application.Services
@@ -12,22 +13,24 @@ namespace ApplicantService.Core.Application.Services
     public class DocumentService : IDocumentService
     {
         private readonly IRequestService _requestService;
+        private readonly INotificationService _notificationService;
         private readonly IDocumentRepository _documentRepository;
-        private readonly IFileRepository _fileRepository;
         private readonly IPassportRepository _passportRepository;
+        private readonly IFileRepository _fileRepository;
         private readonly IEducationDocumentRepository _educationDocumentRepository;
         private readonly IEducationDocumentTypeCacheRepository _educationDocumentTypeCacheRepository;
 
         public DocumentService(
-            IRequestService requestService, IDocumentRepository documentRepository, 
-            IFileRepository fileRepository, IPassportRepository passportRepository,
-            IEducationDocumentRepository educationDocumentRepository, 
+            IRequestService requestService, INotificationService notificationService,
+            IDocumentRepository documentRepository, IPassportRepository passportRepository,
+            IFileRepository fileRepository, IEducationDocumentRepository educationDocumentRepository, 
             IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository)
         {
             _requestService = requestService;
+            _notificationService = notificationService;
             _documentRepository = documentRepository;
-            _fileRepository = fileRepository;
             _passportRepository = passportRepository;
+            _fileRepository = fileRepository;
             _educationDocumentRepository = educationDocumentRepository;
             _educationDocumentTypeCacheRepository = educationDocumentTypeCacheRepository;
         }
@@ -43,13 +46,25 @@ namespace ApplicantService.Core.Application.Services
             Document? document = await _documentRepository.GetByDocumentIdAndApplicantIdAsync(documentId, applicantId);
             if (document is null)
             {
-                return new(keyError: "DeleteDocumentFail", error: $"The applicant does not have a document with Id {documentId}");
+                return new(keyError: "DeleteDocumentFail", error: $"The applicant does not have a document with Id {documentId}.");
+            }
+
+            Guid educationDocumentTypeId = Guid.Empty;
+            if (document.DocumentType == DocumentType.EducationDocument &&
+                (await TryGetEducationDocumentTypeIdAsync(documentId)).TryOut(out educationDocumentTypeId))
+            {
+                return new(keyError: "UnknowError", error: "Unknow error. Try again.");
             }
 
             ExecutionResult deletingResult = await _fileRepository.DeleteAllFromDocumentAsync(documentId);
             if(!deletingResult.IsSuccess) 
             {
                 return new() { Errors = deletingResult.Errors };
+            }
+
+            if(document.DocumentType == DocumentType.EducationDocument)  
+            {
+                await _notificationService.DeletedEducationDocumentTypeAsync(applicantId, educationDocumentTypeId);
             }
 
             await _documentRepository.DeleteAsync(document);
@@ -148,6 +163,12 @@ namespace ApplicantService.Core.Application.Services
             EducationDocument educationDocument = documentInfo.ToEducationDocument(applicantId);
             await _educationDocumentRepository.AddAsync(educationDocument);
 
+            ExecutionResult notificationResult = await _notificationService.AddedEducationDocumentTypeAsync(applicantId, documentInfo.EducationDocumentTypeId);
+            if (!notificationResult.IsSuccess)
+            {
+                return new() { Errors = notificationResult.Errors };
+            }
+
             return new(isSuccess: true);
         }
 
@@ -165,12 +186,32 @@ namespace ApplicantService.Core.Application.Services
                 return new(keyError: "UpdateEducationDocumentFail", error: $"The applicant does not have a education document with Id {documentId}");
             }
 
+            Guid LastEducationDocumentTypeId = educationDocument.EducationDocumentTypeId;
+
             educationDocument.EducationDocumentTypeId = documentInfo.EducationDocumentTypeId;
             educationDocument.Name = documentInfo.Name;
 
             await _educationDocumentRepository.UpdateAsync(educationDocument);
 
+            ExecutionResult notificationResult 
+                = await _notificationService.ChangeEducationDocumentTypeAsync(applicantId, LastEducationDocumentTypeId, documentInfo.EducationDocumentTypeId);
+            if (!notificationResult.IsSuccess)
+            {
+                return new() { Errors = notificationResult.Errors };
+            }
+
             return new(isSuccess: true);
+        }
+
+        private async Task<ValueTuple<bool, Guid>> TryGetEducationDocumentTypeIdAsync(Guid documentId)
+        {
+            EducationDocument? educationDocument = await _educationDocumentRepository.GetByIdAsync(documentId);
+            if (educationDocument is null)
+            {
+                return new(false, Guid.Empty);
+            }
+            
+            return new(true, educationDocument.EducationDocumentTypeId);
         }
 
         private async Task<ExecutionResult> CheckPermissionsAndEducationDocumentTypeAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
