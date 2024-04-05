@@ -1,5 +1,10 @@
 ﻿using ApplicantService.Core.Application.DTOs;
+using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Application.Interfaces.Services;
+using ApplicantService.Core.Application.Mapper;
+using ApplicantService.Core.Application.Mappers;
+using ApplicantService.Core.Domain;
+using ApplicantService.Core.Domain.Enums;
 using Common.Models;
 
 namespace ApplicantService.Core.Application.Services
@@ -7,52 +12,197 @@ namespace ApplicantService.Core.Application.Services
     public class DocumentService : IDocumentService
     {
         private readonly IRequestService _requestService;
+        private readonly IDocumentRepository _documentRepository;
+        private readonly IFileRepository _fileRepository;
+        private readonly IPassportRepository _passportRepository;
+        private readonly IEducationDocumentRepository _educationDocumentRepository;
+        private readonly IEducationDocumentTypeCacheRepository _educationDocumentTypeCacheRepository;
 
-        public DocumentService(IRequestService requestService)
+        public DocumentService(
+            IRequestService requestService, IDocumentRepository documentRepository, 
+            IFileRepository fileRepository, IPassportRepository passportRepository,
+            IEducationDocumentRepository educationDocumentRepository, 
+            IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository)
         {
             _requestService = requestService;
+            _documentRepository = documentRepository;
+            _fileRepository = fileRepository;
+            _passportRepository = passportRepository;
+            _educationDocumentRepository = educationDocumentRepository;
+            _educationDocumentTypeCacheRepository = educationDocumentTypeCacheRepository;
         }
 
-        public Task<ExecutionResult> DeleteApplicantDocumentAsync(Guid documentId, Guid applicantId)
+        public async Task<ExecutionResult> DeleteApplicantDocumentAsync(Guid documentId, Guid applicantId, Guid? managerId)
         {
-            throw new NotImplementedException();
+            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            if (!canEdit.IsSuccess)
+            {
+                return new() { Errors = canEdit.Errors };
+            }
+
+            Document? document = await _documentRepository.GetByDocumentIdAndApplicantIdAsync(documentId, applicantId);
+            if (document is null)
+            {
+                return new(keyError: "DeleteDocumentFail", error: $"The applicant does not have a document with Id {documentId}");
+            }
+
+            ExecutionResult deletingResult = await _fileRepository.DeleteAllFromDocumentAsync(documentId);
+            if(!deletingResult.IsSuccess) 
+            {
+                return new() { Errors = deletingResult.Errors };
+            }
+
+            await _documentRepository.DeleteAsync(document);
+
+            return new(isSuccess: true);
         }
 
-        public Task<ExecutionResult<List<DocumentInfo>>> GetApplicantDocumentsAsync(Guid applicantId)
+        public async Task<ExecutionResult<List<DocumentInfo>>> GetApplicantDocumentsAsync(Guid applicantId)
         {
-            throw new NotImplementedException();
+            List<Document> documents = await _documentRepository.GetAllByApplicantIdAsync(applicantId);
+            
+            return new()
+            {
+                Result = documents.Select(document => new DocumentInfo() 
+                { 
+                    Id = document.Id,
+                    Type = DocumentType.Passport,
+                }).ToList()
+            };
         }       
 
-        /////
-        public Task<ExecutionResult<PassportInfo>> GetApplicantPassportAsync(Guid applicantId)
+        public async Task<ExecutionResult<PassportInfo>> GetApplicantPassportAsync(Guid applicantId)
         {
-            throw new NotImplementedException();
+            Passport? passport = await _passportRepository.GetByApplicantIdAsync(applicantId);
+            if(passport is null)
+            {
+                return new(keyError: "GetPassportFail", error: "Applicant doesn't have a passport");
+            }
+
+            return new() { Result = passport.ToPassportInfo() };
         }
 
-        public Task<ExecutionResult> AddApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId)
+        public async Task<ExecutionResult> AddApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId, Guid? managerId)
         {
-            throw new NotImplementedException();
+            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            if (!canEdit.IsSuccess)
+            {
+                return new() { Errors = canEdit.Errors };
+            }
+
+            bool passportExist = await _passportRepository.AnyByApplicantIdAsync(applicantId);
+            if (passportExist)
+            {
+                return new(keyError: "AddPassportFail", error: "Applicant already have a passport");
+            }
+
+            Passport passport = documentInfo.ToPassport(applicantId);
+            await _passportRepository.AddAsync(passport);
+
+            return new(isSuccess: true);
         }
 
-        public Task<ExecutionResult> UpdateApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId)
+        public async Task<ExecutionResult> UpdateApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId, Guid? managerId)
         {
-            throw new NotImplementedException();
+            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            if (!canEdit.IsSuccess)
+            {
+                return new() { Errors = canEdit.Errors };
+            }
+
+            Passport? passport = await _passportRepository.GetByApplicantIdAsync(applicantId);
+            if (passport is null)
+            {
+                return new(keyError: "AddPassportFail", error: "Applicant doesn't have a passport");
+            }
+
+            passport.BirthPlace = documentInfo.BirthPlace;
+            passport.IssuedByWhom = documentInfo.IssuedByWhom;
+            passport.IssueYear = documentInfo.IssueYear;
+            passport.SeriesNumber = documentInfo.SeriesNumber;
+
+            await _passportRepository.UpdateAsync(passport);
+
+            return new(isSuccess: true);
         }
 
-        /////
-        public Task<ExecutionResult<EducationDocumentInfo>> GetApplicantEducationDocumentAsync(Guid documentId, Guid applicantId)
+        public async Task<ExecutionResult<EducationDocumentInfo>> GetApplicantEducationDocumentAsync(Guid documentId, Guid applicantId)
         {
-            throw new NotImplementedException();
+            EducationDocument? educationDocument = await _educationDocumentRepository.GetByDocumentIdAndApplicantIdAsync(documentId, applicantId);
+            if (educationDocument is null)
+            {
+                return new(keyError: "GetEducationDocumentFail", error: $"The applicant does not have a education document with Id {documentId}");
+            }
+
+            return new() { Result = educationDocument.ToEducationDocumentInfo() };
         }
 
-        public Task<ExecutionResult> AddApplicantEducationDocumentAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo)
+        public async Task<ExecutionResult> AddApplicantEducationDocumentAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
         {
-            throw new NotImplementedException();
+            ExecutionResult executionResult = await CheckPermissionsAndEducationDocumentTypeAsync(applicantId, documentInfo, managerId);
+            if (!executionResult.IsSuccess)
+            {
+                return new() { Errors = executionResult.Errors };
+            }
+
+            EducationDocument educationDocument = documentInfo.ToEducationDocument(applicantId);
+            await _educationDocumentRepository.AddAsync(educationDocument);
+
+            return new(isSuccess: true);
         }
 
-        public Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditAddEducationDocumentInfo documentInfo)
+        public async Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
         {
-            throw new NotImplementedException();
+            ExecutionResult executionResult = await CheckPermissionsAndEducationDocumentTypeAsync(applicantId, documentInfo, managerId);
+            if (!executionResult.IsSuccess)
+            {
+                return new() { Errors = executionResult.Errors };
+            }
+
+            EducationDocument? educationDocument = await _educationDocumentRepository.GetByIdAsync(documentId);
+            if (educationDocument is null)
+            {
+                return new(keyError: "UpdateEducationDocumentFail", error: $"The applicant does not have a education document with Id {documentId}");
+            }
+
+            educationDocument.EducationDocumentTypeId = documentInfo.EducationDocumentTypeId;
+            educationDocument.Name = documentInfo.Name;
+
+            await _educationDocumentRepository.UpdateAsync(educationDocument);
+
+            return new(isSuccess: true);
+        }
+
+        private async Task<ExecutionResult> CheckPermissionsAndEducationDocumentTypeAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
+        {
+            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            if (!canEdit.IsSuccess)
+            {
+                return new() { Errors = canEdit.Errors };
+            }
+
+            bool educationDocumentTypeExist = await _educationDocumentTypeCacheRepository.AnyByIdAsync(documentInfo.EducationDocumentTypeId);
+            if (!educationDocumentTypeExist)
+            {
+                ExecutionResult<EducationDocumentTypeCache> educationDocumentType
+                    = await _requestService.GetEducationDocumentTypeAsync(documentInfo.EducationDocumentTypeId);
+                if (!educationDocumentType.IsSuccess)
+                {
+                    return new() { Errors = educationDocumentType.Errors };
+                }
+                await _educationDocumentTypeCacheRepository.AddAsync(educationDocumentType.Result!);
+            }
+
+            return new(isSuccess: true);
+        }
+
+        private async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
+        {
+            if(managerId is null)
+            {
+                return await _requestService.CheckAdmissionStatusIsCloseAsync(applicantId);
+            }
+            return await _requestService.CheckManagerEditPermissionAsync(applicantId, (Guid)managerId);
         }
     }
 }

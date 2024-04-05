@@ -43,7 +43,7 @@ namespace ApplicantService.Presentation.Web.Controllers
         public async Task<ActionResult> EditPassport(EditAddPassportInfo passportInfo)
         {
             return await ExecutionResultHandlerAsync(async userId =>
-                await _documentService.UpdateApplicantPassportAsync(passportInfo, userId));
+                 await _documentService.UpdateApplicantPassportAsync(passportInfo, userId));
         }
 
         [HttpPost("passport")]
@@ -67,7 +67,7 @@ namespace ApplicantService.Presentation.Web.Controllers
                 await _documentService.UpdateApplicantEducationDocumentAsync(documentId, userId, documentInfo));
         }
 
-        [HttpPost("education/{documentId}")]
+        [HttpPost("education")]
         public async Task<ActionResult> AddEducationDocument([FromRoute] Guid documentId, EditAddEducationDocumentInfo documentInfo)
         {
             return await ExecutionResultHandlerAsync(async userId =>
