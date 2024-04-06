@@ -53,14 +53,10 @@ namespace ApplicantService.Core.Application.Services
             if (document.DocumentType == DocumentType.EducationDocument &&
                 (await TryGetEducationDocumentTypeIdAsync(documentId)).TryOut(out educationDocumentTypeId))
             {
-                return new(keyError: "UnknowError", error: "Unknow error. Try again.");
+                return new(keyError: "UnknowError", error: "Unknow error.");
             }
 
-            ExecutionResult deletingResult = await _fileRepository.DeleteAllFromDocumentAsync(documentId);
-            if(!deletingResult.IsSuccess) 
-            {
-                return new() { Errors = deletingResult.Errors };
-            }
+            await _fileRepository.DeleteAllFromDocumentAsync(documentId);
 
             if(document.DocumentType == DocumentType.EducationDocument)  
             {

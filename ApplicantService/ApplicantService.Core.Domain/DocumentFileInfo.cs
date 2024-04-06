@@ -4,7 +4,7 @@ namespace ApplicantService.Core.Domain
 {
     public class DocumentFileInfo : BaseEntity
     {
-        public string PathName { get => $"{DocumentId}_Name.{Type}"; }
+        public string PathName { get => $"{Id}_{Name}{Type}"; }
         public required string Name { get; set; }
         public required string Type { get; set; }
 

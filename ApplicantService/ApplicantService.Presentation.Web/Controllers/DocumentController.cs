@@ -77,6 +77,8 @@ namespace ApplicantService.Presentation.Web.Controllers
         [HttpGet("{documentId}/scan/{scanId}")]
         public async Task<ActionResult> GetScan([FromRoute] Guid documentId, [FromRoute] Guid scanId)
         {
+            
+
             throw new NotImplementedException();
         }
 
@@ -87,9 +89,30 @@ namespace ApplicantService.Presentation.Web.Controllers
         }
 
         [HttpPost("{documentId}/scan")]
-        public async Task<ActionResult> AddScan([FromRoute] Guid documentId)
+        public async Task<ActionResult> AddScan([FromRoute] Guid documentId, IFormFile formFile)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(async applicantId =>
+            {
+                FileDTO file = new()
+                {
+                    Name = Path.GetFileNameWithoutExtension(formFile.FileName),
+                    Type = Path.GetExtension(formFile.FileName),
+                    File = await GetFileAsync(formFile),
+                };
+
+                return await _fileService.AddApplicantScanAsync(documentId, applicantId, file);
+            });
+        }
+
+        private async Task<byte[]> GetFileAsync(IFormFile formFile)
+        {
+            byte[] file = [];
+            using (var stream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(stream);
+                file = stream.ToArray();   
+            }
+            return file;
         }
     }
 }

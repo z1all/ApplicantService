@@ -1,8 +1,8 @@
 ﻿using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Domain;
-using Common.Models;
 using Common.ServiceBusDTOs.FromAdmissioningService;
 using Common.ServiceBusDTOs.FromDictionaryService;
+using Common.Models;
 using EasyNetQ;
 
 namespace ApplicantService.Core.Application.Services

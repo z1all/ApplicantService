@@ -16,6 +16,12 @@ namespace ApplicantService.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(document => document.Id == documentId && document.ApplicantId == applicantId);
         }
 
+        public async Task<bool> AnyByDocumentIdAndApplicantIdAsync(Guid documentId, Guid applicantId)
+        {
+            return await _dbContext.Documents
+                .AnyAsync(document => document.Id == documentId && document.ApplicantId == applicantId);
+        }
+
         public async Task<List<Document>> GetAllByApplicantIdAsync(Guid applicantId)
         {
             return await _dbContext.Documents
