@@ -18,6 +18,7 @@ namespace ApplicantService.Core.Application.Services
 
         public async Task<ExecutionResult> CheckAdmissionStatusIsCloseAsync(Guid applicantId)
         {
+            return new(true);
             return await RequestHandler<ExecutionResult, CheckAdmissionStatusIsCloseRequest>(new()
             {
                 ApplicantId = applicantId

@@ -1,4 +1,5 @@
 ﻿using ApplicantService.Core.Application.Interfaces.Repositories;
+using ApplicantService.Infrastructure.Persistence.Configuration;
 using ApplicantService.Infrastructure.Persistence.Contexts;
 using ApplicantService.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,9 @@ namespace ApplicantService.Infrastructure.Persistence
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<IEducationDocumentRepository, EducationDocumentRepository>();
             services.AddScoped<IPassportRepository, PassportRepository>();
+
+            // Configurations
+            services.ConfigureOptions<FileStorageOptionsConfigure>();
 
             return services;
         }

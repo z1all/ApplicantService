@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Application.Interfaces.Services;
+using ApplicantService.Core.Application;
 using Common.Controllers;
+using Common.Models;
+using Common.Helpers;
 
 namespace ApplicantService.Presentation.Web.Controllers
 {
@@ -77,27 +80,40 @@ namespace ApplicantService.Presentation.Web.Controllers
         [HttpGet("{documentId}/scan/{scanId}")]
         public async Task<ActionResult> GetScan([FromRoute] Guid documentId, [FromRoute] Guid scanId)
         {
-            
+            if (!HttpContext.TryGetUserId(out Guid applicantId))
+            {
+                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+            }
 
-            throw new NotImplementedException();
+            ExecutionResult<FileDTO> response = await _fileService.GetApplicantScanAsync(documentId, scanId, applicantId);
+
+            if (!response.IsSuccess) return BadRequest(response);
+
+            FileDTO fileDTO = response.Result!;
+            if(!fileDTO.Type.TryMapToContentType(out var contentType))
+            {
+                return BadRequest(new ExecutionResult("DocumentTypeError", $"Unknown document type {fileDTO.Type}"));
+            }
+            return File(fileDTO.File, contentType!, fileDTO.Name);
         }
 
         [HttpDelete("{documentId}/scan/{scanId}")]
         public async Task<ActionResult> DeleteScan([FromRoute] Guid documentId, [FromRoute] Guid scanId)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(async applicantId =>
+                await _fileService.DeleteApplicantScanAsync(documentId, scanId, applicantId));
         }
 
         [HttpPost("{documentId}/scan")]
-        public async Task<ActionResult> AddScan([FromRoute] Guid documentId, IFormFile formFile)
+        public async Task<ActionResult> AddScan([FromRoute] Guid documentId, FileUpload fileUpload)
         {
             return await ExecutionResultHandlerAsync(async applicantId =>
             {
                 FileDTO file = new()
                 {
-                    Name = Path.GetFileNameWithoutExtension(formFile.FileName),
-                    Type = Path.GetExtension(formFile.FileName),
-                    File = await GetFileAsync(formFile),
+                    Name = Path.GetFileNameWithoutExtension(fileUpload.File.FileName),
+                    Type = Path.GetExtension(fileUpload.File.FileName),
+                    File = await GetFileAsync(fileUpload.File),
                 };
 
                 return await _fileService.AddApplicantScanAsync(documentId, applicantId, file);

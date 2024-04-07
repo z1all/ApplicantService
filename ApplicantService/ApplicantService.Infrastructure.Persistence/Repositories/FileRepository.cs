@@ -1,31 +1,46 @@
-﻿using ApplicantService.Core.Application.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Domain;
+using ApplicantService.Infrastructure.Persistence.Configuration;
 using ApplicantService.Infrastructure.Persistence.Contexts;
+using System.IO;
 
 namespace ApplicantService.Infrastructure.Persistence.Repositories
 {
     public class FileRepository : IFileRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly FileStorageOptions _fileStorageOptions;
 
-        public FileRepository(AppDbContext dbContext)
+        public FileRepository(AppDbContext dbContext, IOptions<FileStorageOptions> fileStorageOptions)
         {
             _dbContext = dbContext;
+            _fileStorageOptions = fileStorageOptions.Value;
         }
 
-        public Task<DocumentFileInfo?> GetInfoByFileIdAndApplicantIdAsync(Guid documentFileId, Guid applicantId)
+        public async Task<DocumentFileInfo?> GetInfoByFileIdAndDocumentIdAsync(Guid documentFileId, Guid documentId)
         {
-            throw new NotImplementedException();
+            return await _dbContext.FilesInfo
+                .FirstOrDefaultAsync(documentFileInfo => documentFileInfo.Id == documentFileId && documentFileInfo.DocumentId == documentId);
         }
 
-        public Task<FileEntity?> GetFileAsync(DocumentFileInfo documentFileInfo)
+        public async Task<FileEntity?> GetFileAsync(DocumentFileInfo documentFileInfo)
         {
-            throw new NotImplementedException();
+            string path = Path.Combine(_fileStorageOptions.StoragePath, documentFileInfo.PathName);
+            if (File.Exists(path))
+            {
+                return new() { File = await File.ReadAllBytesAsync(path) };
+            }
+
+            return null;
         }
 
         public async Task AddAsync(DocumentFileInfo documentFile, FileEntity file)
         {
-            string path = documentFile.PathName;
+            documentFile.Id = Guid.NewGuid();
+            Directory.CreateDirectory(_fileStorageOptions.StoragePath);
+            string path = Path.Combine(_fileStorageOptions.StoragePath, documentFile.PathName);
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 await fileStream.WriteAsync(file.File);
@@ -34,15 +49,35 @@ namespace ApplicantService.Infrastructure.Persistence.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task DeleteAllFromDocumentAsync(Guid documentId)
+        public async Task DeleteAllFromDocumentAsync(Guid documentId)
         {
-            // Удаляем файлы, а потом инфу о них
-            throw new NotImplementedException();
+            List<DocumentFileInfo> documentFilesInfo = await _dbContext.FilesInfo
+                .Where(fileInfo => fileInfo.DocumentId == documentId)
+                .ToListAsync();
+
+            foreach(var fileInfo in documentFilesInfo)
+            {
+                string path = Path.Combine(_fileStorageOptions.StoragePath, fileInfo.PathName);
+                if(File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
+
+            _dbContext.RemoveRange(documentFilesInfo);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(DocumentFileInfo documentFileInfo)
+        public async Task DeleteAsync(DocumentFileInfo documentFileInfo)
         {
-            throw new NotImplementedException();
+            string path = Path.Combine(_fileStorageOptions.StoragePath, documentFileInfo.PathName);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            _dbContext.Remove(documentFileInfo);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
