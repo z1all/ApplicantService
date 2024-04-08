@@ -1,15 +1,24 @@
+using DictionaryService.Infrastructure.Persistence;
+using Common.Middlewares.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Services extensions
+builder.Services.AddInfrastructureServices(builder.Configuration);
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// AppDbContext extensions
+app.Services.AddAutoMigration();
+
+// Exceptions handler
+app.UseExceptionsHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

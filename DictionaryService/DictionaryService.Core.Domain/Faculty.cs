@@ -7,6 +7,6 @@ namespace DictionaryService.Core.Domain
         public required string Name { get; set; }
         public required bool Deprecated { get; set; }
 
-        public IEnumerable<EducationProgram> Programs { get; set; } = null!;
+        public IEnumerable<EducationProgram> EducationPrograms { get; set; } = null!;
     }
 }
