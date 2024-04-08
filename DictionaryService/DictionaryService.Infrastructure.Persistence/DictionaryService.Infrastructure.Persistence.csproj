@@ -22,8 +22,4 @@
     <ProjectReference Include="..\DictionaryService.Core.Application\DictionaryService.Core.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>

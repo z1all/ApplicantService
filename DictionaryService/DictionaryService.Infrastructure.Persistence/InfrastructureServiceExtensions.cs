@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using DictionaryService.Infrastructure.Persistence.Contexts;
+using DictionaryService.Core.Application.Interfaces.Repositories;
+using DictionaryService.Infrastructure.Persistence.Repositories;
 
 namespace DictionaryService.Infrastructure.Persistence
 {
@@ -11,6 +13,13 @@ namespace DictionaryService.Infrastructure.Persistence
         {
             // Databases
             services.AddEntityFrameworkDbContext(configuration);
+
+            // Repositories
+            services.AddScoped<IEducationDocumentTypeRepository, EducationDocumentTypeRepository>();
+            services.AddScoped<IEducationLevelRepository, EducationLevelRepository>();
+            services.AddScoped<IEducationProgramRepository, EducationProgramRepository>();
+            services.AddScoped<IFacultyRepository, FacultyRepository>();
+            services.AddScoped<IUpdateStatusRepository, UpdateStatusRepository>();
 
             return services;
         }
