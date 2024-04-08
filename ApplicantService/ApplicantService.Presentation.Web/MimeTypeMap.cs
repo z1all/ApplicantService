@@ -1,4 +1,4 @@
-﻿namespace ApplicantService.Core.Application
+﻿namespace ApplicantService.Presentation.Web
 {
     public static class MimeTypeMap
     {

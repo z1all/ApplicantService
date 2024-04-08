@@ -25,7 +25,6 @@ app.Services.UseEasyNetQAutoSubscriber(Assembly.GetExecutingAssembly());
 
 // AppDbContext extensions
 app.Services.AddAutoMigration();
-app.Services.AddDatabaseSeed();
 
 // Exceptions handler
 app.UseExceptionsHandler();

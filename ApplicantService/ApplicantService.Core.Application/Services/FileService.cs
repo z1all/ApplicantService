@@ -1,9 +1,9 @@
 ﻿using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Application.Interfaces.Services;
+using ApplicantService.Core.Application.Mapper;
 using ApplicantService.Core.Domain;
 using Common.Models;
-using System.Reflection.Metadata;
 
 namespace ApplicantService.Core.Application.Services
 {
@@ -35,15 +35,7 @@ namespace ApplicantService.Core.Application.Services
                 return new(keyError: "FileScanNotFound", error: $"Applicant doesn't have file of scan with id {scanId} in document with id {documentId}");
             }
 
-            return new()
-            {
-                Result = new()
-                {
-                    Name = documentFileInfo.Name,
-                    Type = documentFileInfo.Type,
-                    File = fileEntity.File,
-                }
-            };
+            return new() { Result = fileEntity.ToFileDTO(documentFileInfo) };
         }
 
         public async Task<ExecutionResult> DeleteApplicantScanAsync(Guid documentId, Guid scanId, Guid applicantId, Guid? managerId = null)
@@ -80,18 +72,7 @@ namespace ApplicantService.Core.Application.Services
                 return new(keyError: "DocumentNotFound", error: $"Applicant doesn't have document with id {documentId}");
             }
 
-            DocumentFileInfo documentFileInfo = new()
-            {
-                DocumentId = documentId,
-                Name = file.Name,
-                Type = file.Type,
-            };
-
-            FileEntity fileEntity = new()
-            {
-                File = file.File
-            };
-
+            var (fileEntity, documentFileInfo) = file.ToFileEntityAndDocumentFileInfo(documentId);
             await _fileRepository.AddAsync(documentFileInfo, fileEntity);
 
             return new(isSuccess: true);

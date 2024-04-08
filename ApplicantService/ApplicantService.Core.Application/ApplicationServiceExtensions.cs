@@ -1,5 +1,4 @@
-﻿using ApplicantService.Core.Application.Interfaces.Repositories;
-using ApplicantService.Core.Application.Interfaces.Services;
+﻿using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 

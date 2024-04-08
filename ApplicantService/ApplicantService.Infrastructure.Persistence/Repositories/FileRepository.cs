@@ -4,7 +4,6 @@ using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Domain;
 using ApplicantService.Infrastructure.Persistence.Configuration;
 using ApplicantService.Infrastructure.Persistence.Contexts;
-using System.IO;
 
 namespace ApplicantService.Infrastructure.Persistence.Repositories
 {

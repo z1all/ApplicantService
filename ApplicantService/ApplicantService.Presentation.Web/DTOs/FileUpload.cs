@@ -1,7 +1,6 @@
-﻿using ApplicantService.Core.Application.Validations;
-using Microsoft.AspNetCore.Http;
+﻿using ApplicantService.Presentation.Web.Validations;
 
-namespace ApplicantService.Core.Application.DTOs
+namespace ApplicantService.Presentation.Web.DTOs
 {
     public class FileUpload
     {

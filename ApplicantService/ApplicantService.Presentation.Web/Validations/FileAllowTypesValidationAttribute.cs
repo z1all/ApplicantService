@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ApplicantService.Core.Application.Validations
+namespace ApplicantService.Presentation.Web.Validations
 {
     public class FileAllowTypesValidationAttribute : ValidationAttribute
     {

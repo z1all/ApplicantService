@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Application.Interfaces.Services;
-using ApplicantService.Core.Application;
+using ApplicantService.Presentation.Web.DTOs;
 using Common.Controllers;
 using Common.Models;
 using Common.Helpers;
