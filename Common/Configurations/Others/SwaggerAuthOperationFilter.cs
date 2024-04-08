@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
 namespace Common.Configurations.Others
 {
@@ -8,7 +9,10 @@ namespace Common.Configurations.Others
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            bool thereIsAuthorize = context.MethodInfo.CustomAttributes.Any(attribute => attribute.AttributeType.Name.Contains(typeof(AuthorizeAttribute).Name));
+            IEnumerable<CustomAttributeData> attributes = context.MethodInfo.CustomAttributes;
+            attributes = attributes.Concat(context.MethodInfo.DeclaringType?.CustomAttributes ?? Enumerable.Empty<CustomAttributeData>());
+           
+            bool thereIsAuthorize = attributes.Any(attribute => attribute.AttributeType.Name.Contains(typeof(AuthorizeAttribute).Name));
             if (thereIsAuthorize)
             {
                 operation.Security.Add(

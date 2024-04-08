@@ -9,6 +9,10 @@ namespace ApplicantService.Core.Application
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IApplicantProfileService, ApplicantProfileService>();
+            services.AddScoped<IDocumentService, DocumentService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IRequestService, EasyNetQRequestService>();
+            services.AddScoped<INotificationService, EasyNetQNotificationService>();
 
             return services;
         }
