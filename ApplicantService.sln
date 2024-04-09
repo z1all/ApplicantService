@@ -52,13 +52,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{DE1A1A21-1E5F-45B8-81EB-F051B7015C04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DictionaryService.Core.Application", "DictionaryService\DictionaryService.Core.Application\DictionaryService.Core.Application.csproj", "{39C06BA3-597F-4422-ACA0-8D06AEB138AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryService.Core.Application", "DictionaryService\DictionaryService.Core.Application\DictionaryService.Core.Application.csproj", "{39C06BA3-597F-4422-ACA0-8D06AEB138AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DictionaryService.Core.Domain", "DictionaryService\DictionaryService.Core.Domain\DictionaryService.Core.Domain.csproj", "{B074DE05-DA13-4B73-84F6-87B711B5C032}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryService.Core.Domain", "DictionaryService\DictionaryService.Core.Domain\DictionaryService.Core.Domain.csproj", "{B074DE05-DA13-4B73-84F6-87B711B5C032}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DictionaryService.Infrastructure.Persistence", "DictionaryService\DictionaryService.Infrastructure.Persistence\DictionaryService.Infrastructure.Persistence.csproj", "{E440CBE5-BC5B-4A79-9FB0-9A522302E7FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryService.Infrastructure.Persistence", "DictionaryService\DictionaryService.Infrastructure.Persistence\DictionaryService.Infrastructure.Persistence.csproj", "{E440CBE5-BC5B-4A79-9FB0-9A522302E7FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DictionaryService.Presentation.Web", "DictionaryService\DictionaryService.Presentation.Web\DictionaryService.Presentation.Web.csproj", "{68732D4A-E4A7-448D-B8C2-8776E7BE567E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryService.Presentation.Web", "DictionaryService\DictionaryService.Presentation.Web\DictionaryService.Presentation.Web.csproj", "{68732D4A-E4A7-448D-B8C2-8776E7BE567E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DictionaryService.Infrastructure.ExternalService", "DictionaryService\DictionaryService.Infrastructure.ExternalService\DictionaryService.Infrastructure.ExternalService.csproj", "{343CC003-6C9C-488D-B0B4-BC50D5D1571C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -172,6 +174,14 @@ Global
 		{68732D4A-E4A7-448D-B8C2-8776E7BE567E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{68732D4A-E4A7-448D-B8C2-8776E7BE567E}.Release|x64.ActiveCfg = Release|Any CPU
 		{68732D4A-E4A7-448D-B8C2-8776E7BE567E}.Release|x64.Build.0 = Release|Any CPU
+		{343CC003-6C9C-488D-B0B4-BC50D5D1571C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{343CC003-6C9C-488D-B0B4-BC50D5D1571C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{343CC003-6C9C-488D-B0B4-BC50D5D1571C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{343CC003-6C9C-488D-B0B4-BC50D5D1571C}.Debug|x64.Build.0 = Debug|Any CPU
+		{343CC003-6C9C-488D-B0B4-BC50D5D1571C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{343CC003-6C9C-488D-B0B4-BC50D5D1571C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{343CC003-6C9C-488D-B0B4-BC50D5D1571C}.Release|x64.ActiveCfg = Release|Any CPU
+		{343CC003-6C9C-488D-B0B4-BC50D5D1571C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -198,6 +208,7 @@ Global
 		{B074DE05-DA13-4B73-84F6-87B711B5C032} = {36BAA6DD-78A3-4804-92AE-836B37CEE567}
 		{E440CBE5-BC5B-4A79-9FB0-9A522302E7FB} = {4BAA60B9-E993-4C1A-AD71-1B101446735A}
 		{68732D4A-E4A7-448D-B8C2-8776E7BE567E} = {DE1A1A21-1E5F-45B8-81EB-F051B7015C04}
+		{343CC003-6C9C-488D-B0B4-BC50D5D1571C} = {4BAA60B9-E993-4C1A-AD71-1B101446735A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9C33DDE0-5A90-4DDB-A50A-D316863C604D}

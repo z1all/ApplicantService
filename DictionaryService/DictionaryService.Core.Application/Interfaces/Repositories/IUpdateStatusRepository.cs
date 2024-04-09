@@ -3,5 +3,8 @@ using Common.Repositories;
 
 namespace DictionaryService.Core.Application.Interfaces.Repositories
 {
-    public interface IUpdateStatusRepository : IBaseRepository<UpdateStatus> { }
+    public interface IUpdateStatusRepository : IBaseRepository<UpdateStatus> 
+    {
+        Task<List<UpdateStatus>> GetAllAsync();
+    }
 }

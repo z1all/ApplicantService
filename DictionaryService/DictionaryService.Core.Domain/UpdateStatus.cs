@@ -1,12 +1,12 @@
-﻿using Common.Repositories;
-using DictionaryService.Core.Domain.Enum;
+﻿using DictionaryService.Core.Domain.Enum;
+using Common.Repositories;
 
 namespace DictionaryService.Core.Domain
 {
     public class UpdateStatus : BaseEntity
     {
-        public DateTime LastUpdate { get; set; }
-        public DictionaryType DictionaryType { get; set; }
-        public UpdateStatusEnum Status { get; set; }
+        public DateTime? LastUpdate { get; set; }
+        public required DictionaryType DictionaryType { get; set; }
+        public required UpdateStatusEnum Status { get; set; }
     }
 }

@@ -35,5 +35,11 @@ namespace DictionaryService.Infrastructure.Persistence
             using var dbContext = services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
             dbContext.Database.Migrate();
         }
+
+        public static void AddDatabaseSeed(this IServiceProvider services)
+        {
+            using var dbContext = services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
+            AppDbSeed.AddUpdateStatuses(dbContext);
+        }
     }
 }
