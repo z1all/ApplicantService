@@ -4,8 +4,9 @@ namespace DictionaryService.Core.Application.DTOs
 {
     public class UpdateStatusDTO
     {
-        public DateTime? LastUpdate { get; set; }
-        public DictionaryType DictionaryType { get; set; }
-        public UpdateStatusEnum Status { get; set; }
+        public required DateTime? LastUpdate { get; set; }
+        public required DictionaryType DictionaryType { get; set; }
+        public required UpdateStatusEnum Status { get; set; }
+        public required string? Comments { get; set; }
     }
 }

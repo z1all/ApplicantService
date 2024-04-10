@@ -1,11 +1,8 @@
-﻿using Common.Repositories;
-
-namespace DictionaryService.Core.Domain
+﻿namespace DictionaryService.Core.Domain
 {
-    public class Faculty : BaseEntity
+    public class Faculty : BaseDictionaryEntity
     {
         public required string Name { get; set; }
-        public required bool Deprecated { get; set; }
 
         public IEnumerable<EducationProgram> EducationPrograms { get; set; } = null!;
     }

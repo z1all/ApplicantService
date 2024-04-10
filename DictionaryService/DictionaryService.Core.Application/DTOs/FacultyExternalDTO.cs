@@ -1,9 +1,7 @@
 ﻿namespace DictionaryService.Core.Application.DTOs
 {
-    public class FacultyExternalDTO
+    public class FacultyExternalDTO : BaseExternalDTO
     {
-        public required Guid Id { get; set; }
         public required string Name { get; set; }
-        //public required DateTime CreateTime { get; set; }
     }
 }

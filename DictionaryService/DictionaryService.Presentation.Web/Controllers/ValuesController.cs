@@ -20,9 +20,9 @@ namespace DictionaryService.Presentation.Web.Controllers
 
 
         [HttpPost]
-        public async Task Update(DictionaryType dictionaryType)
+        public async Task<ActionResult> Update(DictionaryType dictionaryType)
         {
-            await _updateDictionaryService.UpdateDictionaryAsync(dictionaryType);
+            return Ok(await _updateDictionaryService.UpdateDictionaryAsync(dictionaryType));
         }
 
         [HttpPost("all")]

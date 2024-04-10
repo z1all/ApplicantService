@@ -8,5 +8,6 @@ namespace DictionaryService.Core.Domain
         public DateTime? LastUpdate { get; set; }
         public required DictionaryType DictionaryType { get; set; }
         public required UpdateStatusEnum Status { get; set; }
+        public string? Comments { get; set; } 
     }
 }
