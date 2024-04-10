@@ -3,6 +3,7 @@ using System;
 using DictionaryService.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DictionaryService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240410154616_AddExternalIdToEducationLevel")]
+    partial class AddExternalIdToEducationLevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +57,7 @@ namespace DictionaryService.Infrastructure.Persistence.Migrations
                     b.Property<bool>("Deprecated")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("ExternalId")
+                    b.Property<int>("ExternelId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -62,8 +65,6 @@ namespace DictionaryService.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("ExternalId");
 
                     b.ToTable("EducationLevels");
                 });

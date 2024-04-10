@@ -1,7 +1,8 @@
 ﻿namespace DictionaryService.Core.Application.DTOs
 {
-    public class EducationProgramExternalDTO : BaseExternalDTO
+    public class EducationProgramExternalDTO 
     {
+        public required Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Code { get; set; }
         public required string Language { get; set; }

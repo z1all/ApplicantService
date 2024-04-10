@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using DictionaryService.Infrastructure.Persistence.Contexts;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Infrastructure.Persistence.Repositories;
+using DictionaryService.Core.Application.Interfaces.Transaction;
+using DictionaryService.Infrastructure.Persistence.Transaction;
 
 namespace DictionaryService.Infrastructure.Persistence
 {
@@ -13,6 +15,7 @@ namespace DictionaryService.Infrastructure.Persistence
         {
             // Databases
             services.AddEntityFrameworkDbContext(configuration);
+            services.AddScoped<ITransactionProvider, EntityFrameworkTransactionProvider>();
 
             // Repositories
             services.AddScoped<IEducationDocumentTypeRepository, EducationDocumentTypeRepository>();

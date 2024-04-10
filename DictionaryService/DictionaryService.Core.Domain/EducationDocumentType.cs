@@ -2,8 +2,6 @@
 {
     public class EducationDocumentType : BaseDictionaryEntity
     {
-        public required string Name { get; set; }
-
         public required Guid EducationLevelId { get; set; }
         public EducationLevel? EducationLevel { get; set; }
 

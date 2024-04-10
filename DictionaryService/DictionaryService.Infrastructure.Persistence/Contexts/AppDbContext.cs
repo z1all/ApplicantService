@@ -39,6 +39,10 @@ namespace DictionaryService.Infrastructure.Persistence.Contexts
                .HasMany(educationDocumentType => educationDocumentType.NextEducationLevels)
                .WithMany();
 
+            // EducationLevel
+            modelBuilder.Entity<EducationLevel>()
+                .HasAlternateKey(educationLevel => educationLevel.ExternalId);
+
             // UpdateStatus
             modelBuilder.Entity<UpdateStatus>()
                 .HasKey(updateStatus => updateStatus.Id);
