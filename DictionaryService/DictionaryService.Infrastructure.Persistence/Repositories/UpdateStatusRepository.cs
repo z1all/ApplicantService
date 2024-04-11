@@ -27,6 +27,7 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                 List<UpdateStatusEnum> updatingStatuses = [
                     UpdateStatusEnum.Loading,
                     UpdateStatusEnum.Updating,
+                    UpdateStatusEnum.Wait,
                 ];
 
                 existOtherUpdating = await _dbContext.UpdateStatuses

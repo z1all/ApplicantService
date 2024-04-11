@@ -23,5 +23,16 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                 .Where(educationPrograms => educationPrograms.EducationLevelId == educationLevelId)
                 .ToListAsync();
         }
+
+        public async Task<List<EducationProgram>> GetAllAsync()
+        {
+            return await _dbContext.EducationPrograms.ToListAsync();
+        }
+
+        public override async Task<EducationProgram?> GetByIdAsync(Guid id)
+        {
+            return await _dbContext.EducationPrograms
+                .FirstOrDefaultAsync(Faculty => Faculty.Id == id);
+        }
     }
 }

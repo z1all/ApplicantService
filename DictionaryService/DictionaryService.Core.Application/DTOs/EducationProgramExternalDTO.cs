@@ -3,6 +3,7 @@
     public class EducationProgramExternalDTO 
     {
         public required Guid Id { get; set; }
+        public required DateTime CreateTime { get; set; }
         public required string Name { get; set; }
         public required string Code { get; set; }
         public required string Language { get; set; }

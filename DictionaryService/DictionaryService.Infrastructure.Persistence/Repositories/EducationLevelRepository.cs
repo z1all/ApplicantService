@@ -10,9 +10,21 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
     {
         public EducationLevelRepository(AppDbContext appDbContext) : base(appDbContext) { }
 
+        public async Task<bool> AnyByExternalIdAsync(int externalId)
+        {
+            return await _dbContext.EducationLevels
+                .AnyAsync(educationLevel => educationLevel.ExternalId == externalId);
+        }
+
         public async Task<List<EducationLevel>> GetAllAsync()
         {
             return await _dbContext.EducationLevels.ToListAsync();
+        }
+
+        public EducationLevel GetByExternalId(int externalId)
+        {
+            return _dbContext.EducationLevels
+                .First(educationLevel => educationLevel.ExternalId == externalId);
         }
 
         public override async Task<EducationLevel?> GetByIdAsync(Guid id)

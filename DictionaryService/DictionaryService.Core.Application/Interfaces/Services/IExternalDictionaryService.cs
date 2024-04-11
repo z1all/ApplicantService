@@ -8,6 +8,6 @@ namespace DictionaryService.Core.Application.Interfaces.Services
         Task<ExecutionResult<List<EducationLevelExternalDTO>>> GetEducationLevelsAsync();
         Task<ExecutionResult<List<EducationDocumentTypeExternalDTO>>> GetEducationDocumentTypesAsync();
         Task<ExecutionResult<List<FacultyExternalDTO>>> GetFacultiesAsync();
-        Task<ExecutionResult<ProgramListExternalDTO>> GetEducationProgramAsync();
+        Task<ExecutionResult<List<EducationProgramExternalDTO>>> GetEducationProgramAsync();
     }
 }

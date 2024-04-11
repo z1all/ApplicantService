@@ -10,6 +10,14 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
     {
         public EducationDocumentTypeRepository(AppDbContext appDbContext) : base(appDbContext) { }
 
+        public async Task<List<EducationDocumentType>> GetAllAsync()
+        {
+            return await _dbContext.EducationDocumentTypes
+                .Include(educationDocumentTypes => educationDocumentTypes.EducationLevel)
+                .Include(educationDocumentTypes => educationDocumentTypes.NextEducationLevels)
+                .ToListAsync();
+        }
+
         public async Task<List<EducationDocumentType>> GetAllByNextEducationLevelIdAsync(Guid educationLevelId)
         {
             return await _dbContext.EducationDocumentTypes
@@ -18,10 +26,17 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                 ).ToListAsync();
         }
 
-        public async Task<EducationDocumentType> GetByCurrentEducationLevelIdProgram(Guid educationLevelId)
+        public async Task<List<EducationDocumentType>> GetByCurrentEducationLevelIdAsync(Guid educationLevelId)
         {
             return await _dbContext.EducationDocumentTypes
-                .FirstAsync(educationDocumentTypes => educationDocumentTypes.EducationLevelId == educationLevelId);
+                .Where(educationDocumentTypes => educationDocumentTypes.EducationLevelId == educationLevelId)
+                .ToListAsync();
+        }
+
+        public override async Task<EducationDocumentType?> GetByIdAsync(Guid id)
+        {
+            return await _dbContext.EducationDocumentTypes
+                .FirstOrDefaultAsync(Faculty => Faculty.Id == id);
         }
     }
 }

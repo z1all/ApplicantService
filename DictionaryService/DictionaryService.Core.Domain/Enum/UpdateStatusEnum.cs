@@ -7,5 +7,6 @@
         Updating = 3,
         ErrorInUpdating = 4,
         Updated = 5,
+        Wait = 6,
     }
 }
