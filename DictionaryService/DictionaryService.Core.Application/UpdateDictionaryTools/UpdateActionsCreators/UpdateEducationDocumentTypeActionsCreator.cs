@@ -4,6 +4,7 @@ using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Application.Interfaces.Services;
 using Common.Models;
+using Common.Repositories;
 
 namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators
 {
@@ -12,19 +13,28 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         private readonly IEducationLevelRepository _educationLevelRepository;
         private readonly IEducationDocumentTypeRepository _educationDocumentTypeRepository;
         private readonly IExternalDictionaryService _externalDictionaryService;
+        private readonly IUpdateStatusRepository _updateStatusRepository;
+        private List<EducationLevel>? _educationLevelsCache = null;
+        private UpdateStatus? _updateStatusCache = null;
 
-        private List<EducationLevel>? educationLevelsCache = null;
+        protected override UpdateStatus UpdateStatusCache => _updateStatusCache!;
+        protected override IUpdateStatusRepository UpdateStatusRepository => _updateStatusRepository;
+        protected override IBaseRepository<EducationDocumentType> Repository => _educationDocumentTypeRepository;
 
-        public UpdateEducationDocumentTypeActionsCreator(IEducationLevelRepository educationLevelRepository, IEducationDocumentTypeRepository educationDocumentTypeRepository, IExternalDictionaryService externalDictionaryService)
+        public UpdateEducationDocumentTypeActionsCreator(
+            IEducationLevelRepository educationLevelRepository, IEducationDocumentTypeRepository educationDocumentTypeRepository, 
+            IExternalDictionaryService externalDictionaryService, IUpdateStatusRepository updateStatusRepository)
         {
             _educationLevelRepository = educationLevelRepository;
             _educationDocumentTypeRepository = educationDocumentTypeRepository;
             _externalDictionaryService = externalDictionaryService;
+            _updateStatusRepository = updateStatusRepository;
         }
 
         protected override async Task BeforeActionsAsync()
         {
-            educationLevelsCache = await _educationLevelRepository.GetAllAsync();
+            _educationLevelsCache = await _educationLevelRepository.GetAllAsync();
+            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(Domain.Enum.DictionaryType.EducationDocumentType);
         }
 
         protected override bool CompareKey(EducationDocumentType documentType, EducationDocumentTypeExternalDTO externalDocumentType)
@@ -38,7 +48,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override void UpdateEntity(EducationDocumentType documentType, EducationDocumentTypeExternalDTO externalDocumentType)
         {
-            EducationLevel currentEducationLevel = educationLevelsCache!.First(educationLevel => educationLevel.ExternalId == externalDocumentType.EducationLevel.Id);
+            EducationLevel currentEducationLevel = _educationLevelsCache!.First(educationLevel => educationLevel.ExternalId == externalDocumentType.EducationLevel.Id);
 
             documentType.Name = externalDocumentType.Name;
             documentType.EducationLevelId = currentEducationLevel.Id;
@@ -47,7 +57,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
             List<EducationLevel> addNextEducationLevels = new();
             foreach (var externalNextEducationLevel in externalDocumentType.NextEducationLevels)
             {
-                EducationLevel educationLevel = educationLevelsCache!.First(educationLevel => educationLevel.ExternalId == externalNextEducationLevel.Id);
+                EducationLevel educationLevel = _educationLevelsCache!.First(educationLevel => educationLevel.ExternalId == externalNextEducationLevel.Id);
 
                 addNextEducationLevels.Add(educationLevel);
             }
@@ -56,7 +66,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override EducationDocumentType AddEntity(EducationDocumentTypeExternalDTO externalDocumentType)
         {
-            EducationLevel currentEducationLevel = educationLevelsCache!.First(educationLevel => educationLevel.ExternalId == externalDocumentType.EducationLevel.Id);
+            EducationLevel currentEducationLevel = _educationLevelsCache!.First(educationLevel => educationLevel.ExternalId == externalDocumentType.EducationLevel.Id);
 
             EducationDocumentType documentType = new()
             {
@@ -69,7 +79,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
             List<EducationLevel> addNextEducationLevels = new();
             foreach (var externalNextEducationLevel in externalDocumentType.NextEducationLevels)
             {
-                EducationLevel educationLevel = educationLevelsCache!.First(educationLevel => educationLevel.ExternalId == externalNextEducationLevel.Id);
+                EducationLevel educationLevel = _educationLevelsCache!.First(educationLevel => educationLevel.ExternalId == externalNextEducationLevel.Id);
 
                 addNextEducationLevels.Add(educationLevel);
             }
@@ -85,7 +95,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override Task<bool> CheckBeforeAddEntityAsync(EducationDocumentTypeExternalDTO externalDocumentType, List<string> comments)
         {
-            bool currentEducationLevelExist = educationLevelsCache!.Any(educationLevel => educationLevel.ExternalId == externalDocumentType.EducationLevel.Id);
+            bool currentEducationLevelExist = _educationLevelsCache!.Any(educationLevel => educationLevel.ExternalId == externalDocumentType.EducationLevel.Id);
             if (!currentEducationLevelExist)
             {
                 comments.Add($"The education document type '{externalDocumentType.Name}' refers to a non-existent education level '{externalDocumentType.EducationLevel.Name}'.");
@@ -94,7 +104,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
             bool nextEducationLevelExist = true;
             foreach (var externalNextEducationLevel in externalDocumentType.NextEducationLevels)
             {
-                bool exist = educationLevelsCache!.Any(educationLevel => educationLevel.ExternalId == externalNextEducationLevel.Id);
+                bool exist = _educationLevelsCache!.Any(educationLevel => educationLevel.ExternalId == externalNextEducationLevel.Id);
                 if (!exist)
                 {
                     comments.Add($"The education document type '{externalDocumentType.Name}' refers to a non-existent next education level '{externalNextEducationLevel.Name}'.");
@@ -106,77 +116,3 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         }
     }
 }
-/*
- 
-            +++ List<EducationLevel> educationLevelsCache = await _educationLevelRepository.GetAllAsync();
-
-            +++ GetEntityAsync<EducationDocumentType> getEntityAsync = _educationDocumentTypeRepository.GetAllAsync;
-            +++ GetExternalEntityAsync<EducationDocumentTypeExternalDTO> getExternalEntityAsync = _externalDictionaryService.GetEducationDocumentTypesAsync;
-            +++ CompareKey<EducationDocumentType, EducationDocumentTypeExternalDTO> compareKey = (documentType, externalDocumentType) => documentType.Id == externalDocumentType.Id;
-            +++ OnUpdateEntity<EducationDocumentType, EducationDocumentTypeExternalDTO> onUpdateEntity = (documentType, externalDocumentType) =>
-            {
-                EducationLevel currentEducationLevel = educationLevelsCache.First(educationLevel => educationLevel.ExternalId == externalDocumentType.EducationLevel.Id);
-
-                documentType.Name = externalDocumentType.Name;
-                documentType.EducationLevelId = currentEducationLevel.Id;
-                documentType.Deprecated = false;
-
-                List<EducationLevel> addNextEducationLevels = new();
-                foreach (var externalNextEducationLevel in externalDocumentType.NextEducationLevels)
-                {
-                    EducationLevel educationLevel = educationLevelsCache.First(educationLevel => educationLevel.ExternalId == externalNextEducationLevel.Id);
-
-                    addNextEducationLevels.Add(educationLevel);
-                }
-                documentType.NextEducationLevels = addNextEducationLevels;
-            };
-            +++ OnAddEntity<EducationDocumentType, EducationDocumentTypeExternalDTO> onAddEntity = (externalDocumentType) =>
-            {
-                EducationLevel currentEducationLevel = educationLevelsCache.First(educationLevel => educationLevel.ExternalId == externalDocumentType.EducationLevel.Id);
-
-                EducationDocumentType documentType = new()
-                {
-                    Id = externalDocumentType.Id,
-                    Name = externalDocumentType.Name,
-                    EducationLevelId = currentEducationLevel.Id,
-                    Deprecated = false,
-                };
-
-                List<EducationLevel> addNextEducationLevels = new();
-                foreach (var externalNextEducationLevel in externalDocumentType.NextEducationLevels)
-                {
-                    EducationLevel educationLevel = educationLevelsCache.First(educationLevel => educationLevel.ExternalId == externalNextEducationLevel.Id);
-
-                    addNextEducationLevels.Add(educationLevel);
-                }
-                documentType.NextEducationLevels = addNextEducationLevels;
-
-                return documentType;
-            };
-
-            CheckBeforeAddEntityAsync<EducationDocumentTypeExternalDTO> checkBeforeAdd = (externalDocumentType, comments) =>
-            {
-                bool currentEducationLevelExist = educationLevelsCache.Any(educationLevel => educationLevel.ExternalId == externalDocumentType.EducationLevel.Id);
-                if (!currentEducationLevelExist)
-                {
-                    comments.Add($"The education document type '{externalDocumentType.Name}' refers to a non-existent education level '{externalDocumentType.EducationLevel.Name}'.");
-                }
-
-                bool nextEducationLevelExist = true;
-                foreach (var externalNextEducationLevel in externalDocumentType.NextEducationLevels)
-                {
-                    bool exist = educationLevelsCache.Any(educationLevel => educationLevel.ExternalId == externalNextEducationLevel.Id);
-                    if(!exist)
-                    {
-                        comments.Add($"The education document type '{externalDocumentType.Name}' refers to a non-existent next education level '{externalNextEducationLevel.Name}'.");
-                    }
-                    nextEducationLevelExist &= exist;
-                }
-
-                return Task.FromResult(currentEducationLevelExist && nextEducationLevelExist);
-            };
-            CheckBeforeUpdateEntityAsync<EducationDocumentType, EducationDocumentTypeExternalDTO> checkBeforeUpdate = async (documentType, externalDocumentType, comments) =>
-            {
-                return await checkBeforeAdd(externalDocumentType, comments);
-            };
- */

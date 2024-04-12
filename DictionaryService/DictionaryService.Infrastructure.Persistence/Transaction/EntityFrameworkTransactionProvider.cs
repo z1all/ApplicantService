@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using DictionaryService.Core.Application.Interfaces.Transaction;
 using DictionaryService.Infrastructure.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
+using DictionaryService.Core.Domain;
 
 namespace DictionaryService.Infrastructure.Persistence.Transaction
 {

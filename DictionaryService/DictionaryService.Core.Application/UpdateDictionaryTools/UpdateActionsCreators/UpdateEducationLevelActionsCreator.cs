@@ -4,6 +4,7 @@ using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base;
 using DictionaryService.Core.Domain;
 using Common.Models;
+using Common.Repositories;
 
 namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators
 {
@@ -13,15 +14,28 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         private readonly IEducationProgramRepository _educationProgramRepository;
         private readonly IEducationDocumentTypeRepository _educationDocumentTypeRepository;
         private readonly IExternalDictionaryService _externalDictionaryService;
+        private readonly IUpdateStatusRepository _updateStatusRepository;
+        private UpdateStatus? _updateStatusCache = null;
+
+        protected override UpdateStatus UpdateStatusCache => _updateStatusCache!;
+        protected override IUpdateStatusRepository UpdateStatusRepository => _updateStatusRepository;
+        protected override IBaseRepository<EducationLevel> Repository => _educationLevelRepository;
 
         public UpdateEducationLevelActionsCreator(
             IEducationLevelRepository educationLevelRepository, IEducationProgramRepository educationProgramRepository, 
-            IEducationDocumentTypeRepository educationDocumentTypeRepository, IExternalDictionaryService externalDictionaryService)
+            IEducationDocumentTypeRepository educationDocumentTypeRepository, IExternalDictionaryService externalDictionaryService,
+            IUpdateStatusRepository updateStatusRepository)
         {
             _educationLevelRepository = educationLevelRepository;
             _educationProgramRepository = educationProgramRepository;
             _educationDocumentTypeRepository = educationDocumentTypeRepository;
             _externalDictionaryService = externalDictionaryService;
+            _updateStatusRepository = updateStatusRepository;
+        }
+
+        protected override async Task BeforeActionsAsync()
+        {
+            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(Domain.Enum.DictionaryType.EducationLevel);
         }
 
         protected override bool CompareKey(EducationLevel educationLevel, EducationLevelExternalDTO externalEducationLevel)
@@ -71,43 +85,3 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         }
     }
 }
-/*
-            +++CompareKey<EducationLevel, EducationLevelExternalDTO> compareKey = (educationLevel, externalEducationLevel) => educationLevel.ExternalId == externalEducationLevel.Id;
-            +++GetEntityAsync<EducationLevel> getEntityAsync = _educationLevelRepository.GetAllAsync;
-            +++GetExternalEntityAsync<EducationLevelExternalDTO> getExternalEntityAsync = _externalDictionaryService.GetEducationLevelsAsync;
-            OnUpdateEntity<EducationLevel, EducationLevelExternalDTO> onUpdateEntity = (educationLevel, externalEducationLevel) =>
-            {
-                educationLevel.Name = externalEducationLevel.Name;
-                educationLevel.Deprecated = false;
-            };
-
-            OnAddEntity<EducationLevel, EducationLevelExternalDTO> onAddEntity = (externalEducationLevel) =>
-            {
-                EducationLevel newEducationLevel = new()
-                {
-                    ExternalId = externalEducationLevel.Id,
-                    Name = externalEducationLevel.Name,
-                    Deprecated = false,
-                };
-
-                return newEducationLevel;
-            };
-            OnDeleteEntityAsync<EducationLevel> onDeleteEntityAsync = async (educationLevel, comments) =>
-            {
-                bool thereAreRelated = false;
-
-                List<EducationProgram> educationPrograms = await _educationProgramRepository.GetAllByEducationLevelIdAsync(educationLevel.Id);
-                thereAreRelated |= SoftDeleteEntityIf(deleteRelatedEntities, educationPrograms, comments, entity => 
-                    $"The educational program '{entity.Name}' refers to the education level '{educationLevel.Name}'.");
-
-                List<EducationDocumentType> documentTypesRelatedWithNextLevel = await _educationDocumentTypeRepository.GetAllByNextEducationLevelIdAsync(educationLevel.Id);
-                thereAreRelated |= SoftDeleteEntityIf(deleteRelatedEntities, documentTypesRelatedWithNextLevel, comments, entity =>
-                    $"The educational document type '{entity.Name}' refers to the education level '{educationLevel.Name}'.");
-
-                List<EducationDocumentType> documentTypesRelatedWithCurrentLevel = await _educationDocumentTypeRepository.GetByCurrentEducationLevelIdAsync(educationLevel.Id);
-                thereAreRelated |= SoftDeleteEntityIf(deleteRelatedEntities, documentTypesRelatedWithCurrentLevel, comments, entity => 
-                    $"The educational document type '{entity.Name}' refers to the education level '{educationLevel.Name}'.");
-
-                return thereAreRelated;
-            };
- */

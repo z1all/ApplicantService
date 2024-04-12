@@ -4,6 +4,7 @@ using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Domain;
 using Common.Models;
+using Common.Repositories;
 
 namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators
 {
@@ -12,12 +13,26 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         private readonly IFacultyRepository _facultyRepository;
         private readonly IEducationProgramRepository _educationProgramRepository;
         private readonly IExternalDictionaryService _externalDictionaryService;
+        private readonly IUpdateStatusRepository _updateStatusRepository;
+        private UpdateStatus? _updateStatusCache = null;
 
-        public UpdateFacultyActionsCreator(IFacultyRepository facultyRepository, IEducationProgramRepository educationProgramRepository, IExternalDictionaryService externalDictionaryService) 
+        protected override UpdateStatus UpdateStatusCache => _updateStatusCache!;
+        protected override IUpdateStatusRepository UpdateStatusRepository => _updateStatusRepository;
+        protected override IBaseRepository<Faculty> Repository => _facultyRepository;
+
+        public UpdateFacultyActionsCreator(
+            IFacultyRepository facultyRepository, IEducationProgramRepository educationProgramRepository, 
+            IExternalDictionaryService externalDictionaryService, IUpdateStatusRepository updateStatusRepository)
         {
             _facultyRepository = facultyRepository;
             _educationProgramRepository = educationProgramRepository;
             _externalDictionaryService = externalDictionaryService;
+            _updateStatusRepository = updateStatusRepository;
+        }
+
+        protected override async Task BeforeActionsAsync()
+        {
+            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(Domain.Enum.DictionaryType.Faculty);
         }
 
         protected override bool CompareKey(Faculty faculty, FacultyExternalDTO externalFaculty)
@@ -59,35 +74,3 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         }
     }
 }
-/*
-            +++ CompareKey<Faculty, FacultyExternalDTO> compareKey = (faculty, externalFaculty) => faculty.Id == externalFaculty.Id;
-            +++GetEntityAsync<Faculty> getEntityAsync = _facultyRepository.GetAllAsync;
-            +++GetExternalEntityAsync<FacultyExternalDTO> getExternalEntityAsync = _externalDictionaryService.GetFacultiesAsync;
-            +++OnUpdateEntity<Faculty, FacultyExternalDTO> onUpdateEntity = (faculty, externalFaculty) =>
-            {
-                faculty.Name = externalFaculty.Name;
-                faculty.Deprecated = false;
-            };
-            OnAddEntity<Faculty, FacultyExternalDTO> onAddEntity = (externalFaculty) =>
-            {
-                Faculty newFaculty = new()
-                {
-                    Id = externalFaculty.Id,
-                    Name = externalFaculty.Name,
-                    Deprecated = false,
-                };
-
-                return newFaculty;
-            };
-
-            OnDeleteEntityAsync<Faculty> onDeleteEntityAsync = async (faculty, comments) =>
-            {
-                bool thereAreRelated = false;
-
-                List<EducationProgram> educationPrograms = await _educationProgramRepository.GetAllByFacultyIdAsync(faculty.Id);
-                thereAreRelated |= SoftDeleteEntityIf(deleteRelatedEntities, educationPrograms, comments, entity =>
-                    $"The educational program '{entity.Name}' refers to the education level '{faculty.Name}'.");
-
-                return thereAreRelated;
-            };
- */

@@ -26,9 +26,9 @@ namespace DictionaryService.Presentation.Web.Controllers
         }
 
         [HttpPost("all")]
-        public async Task UpdateAll()
+        public async Task<ActionResult> UpdateAll()
         {
-            await _updateDictionaryService.UpdateAllDictionaryAsync();
+            return Ok(await _updateDictionaryService.UpdateAllDictionaryAsync());
         }
 
         [HttpGet]

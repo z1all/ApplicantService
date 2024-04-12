@@ -31,18 +31,28 @@ namespace DictionaryService.Infrastructure.Persistence
         {
             string? postgreConnectionString = configuration.GetConnectionString("PostgreConnection");
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(postgreConnectionString!));
+            services.AddDbContext<UpdateStatusDbContext>(options => options.UseNpgsql(postgreConnectionString!));
         }
 
         public static void AddAutoMigration(this IServiceProvider services)
         {
-            using var dbContext = services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
-            dbContext.Database.Migrate();
+            using(var appDbContext = services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>())
+            {
+                appDbContext.Database.Migrate();
+            }
+
+            using (var updateStatusDbContext = services.CreateScope().ServiceProvider.GetRequiredService<UpdateStatusDbContext>())
+            {
+                updateStatusDbContext.Database.Migrate();
+            }
         }
 
         public static void AddDatabaseSeed(this IServiceProvider services)
         {
-            using var dbContext = services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
-            AppDbSeed.AddUpdateStatuses(dbContext);
+            using (var updateStatusDbContext = services.CreateScope().ServiceProvider.GetRequiredService<UpdateStatusDbContext>())
+            {
+                AppDbSeed.AddUpdateStatuses(updateStatusDbContext);
+            }
         }
     }
 }

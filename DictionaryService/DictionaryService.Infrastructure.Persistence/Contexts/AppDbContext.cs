@@ -11,8 +11,7 @@ namespace DictionaryService.Infrastructure.Persistence.Contexts
         public DbSet<EducationProgram> EducationPrograms { get; set; }
         public DbSet<EducationLevel> EducationLevels { get; set; }
         public DbSet<EducationDocumentType> EducationDocumentTypes { get; set; }
-        public DbSet<UpdateStatus> UpdateStatuses { get; private set; }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // EducationProgram

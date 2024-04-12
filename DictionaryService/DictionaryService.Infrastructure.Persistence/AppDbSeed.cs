@@ -5,7 +5,7 @@ namespace DictionaryService.Infrastructure.Persistence
 {
     internal static class AppDbSeed
     {
-        public static void AddUpdateStatuses(AppDbContext dbContext)
+        public static void AddUpdateStatuses(UpdateStatusDbContext dbContext)
         {
             UpdateStatus[] updateStatuses =
             [

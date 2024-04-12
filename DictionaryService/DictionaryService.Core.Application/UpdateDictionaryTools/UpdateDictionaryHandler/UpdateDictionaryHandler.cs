@@ -1,16 +1,14 @@
 ﻿using DictionaryService.Core.Domain;
 using Common.Models;
-using Common.Repositories;
 
 namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler
 {
-    public static class UpdateDictionaryHandler<TEntity, TExternalEntity, TRepository>
+    public static class UpdateDictionaryHandler<TEntity, TExternalEntity>
         where TEntity : BaseDictionaryEntity
         where TExternalEntity : class
-        where TRepository : IBaseRepository<TEntity>
     {
         public static async Task<ExecutionResult> UpdateAsync(
-            bool deleteRelatedEntities, TRepository repository,
+            bool deleteRelatedEntities,
             UpdateDictionaryActions<TEntity, TExternalEntity> actions)
         {
             await actions.BeforeActionsAsync();
@@ -20,27 +18,42 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 
             // Получаем данные из внешнего сервиса
             ExecutionResult<List<TExternalEntity>> getExternalEntityResult = await actions.GetExternalEntityAsync();
-            if (!getExternalEntityResult.IsSuccess) return getExternalEntityResult;
+            if (!getExternalEntityResult.IsSuccess) 
+            {
+                await actions.AfterLoadingErrorAsync(getExternalEntityResult.Errors.Values.FirstOrDefault()?[0] ?? "Unknow error");
+                return getExternalEntityResult; 
+            } 
             List<TExternalEntity> externalEntities = getExternalEntityResult.Result!;
+
+            await actions.BeforeUpdatingAsync();
 
             // Пробуем обновлять и добавлять записи
             ExecutionResult<Dictionary<Guid, TEntity>> updatingAndAddingResult
-                = await DoUpdateAndAddEntitiesAsync(repository, actions.ToUpdateAndAddActions(), externalEntities, existEntities);
-            if (!updatingAndAddingResult.IsSuccess) return updatingAndAddingResult;
+                = await DoUpdateAndAddEntitiesAsync(actions.ToUpdateAndAddActions(), externalEntities, existEntities);
+            if (!updatingAndAddingResult.IsSuccess) 
+            {
+                await actions.AfterUpdatingErrorAsync(updatingAndAddingResult.Errors.Values.FirstOrDefault()?[0] ?? "Unknow error");
+                return updatingAndAddingResult; 
+            }
             Dictionary<Guid, TEntity> existEntitiesForRemove = updatingAndAddingResult.Result!;
 
             // Пробуем удалить записи
-            ExecutionResult deletingResult
-                = await DoDeleteEntitiesAsync(deleteRelatedEntities, repository, actions.ToDeleteActions(), existEntitiesForRemove);
-            if (!deletingResult.IsSuccess) return deletingResult;
+            ExecutionResult deletingResult = await DoDeleteEntitiesAsync(deleteRelatedEntities, actions.ToDeleteActions(), existEntitiesForRemove);
+            if (!deletingResult.IsSuccess)
+            {
+                await actions.AfterUpdatingErrorAsync(updatingAndAddingResult.Errors.Values.FirstOrDefault()?[0] ?? "Unknow error");
+                return deletingResult; 
+            }
 
-            await repository.SaveChangesAsync();
+            await actions.Repository.SaveChangesAsync();
+
+            await actions.AfterUpdateAsync();
 
             return new(isSuccess: true);
         }
 
         private static async Task<ExecutionResult<Dictionary<Guid, TEntity>>> DoUpdateAndAddEntitiesAsync(
-            TRepository repository, UpdateAndAddDictionaryActions<TEntity, TExternalEntity> actions,
+            UpdateAndAddDictionaryActions<TEntity, TExternalEntity> actions,
             List<TExternalEntity> externalEntities, List<TEntity> existEntities)
         {
             // Словарь для хранения тех сущностей, которые существуют только в нашей бд, то есть были удалены во внешнем сервисе
@@ -72,7 +85,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 
                     // Добавляем запись...
                     TEntity newEntity = actions.AddEntity(externalEntity);
-                    await repository.AddAsync(newEntity);
+                    await actions.Repository.AddAsync(newEntity);
                 }
             }
 
@@ -88,7 +101,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
         }
 
         private static async Task<ExecutionResult> DoDeleteEntitiesAsync(
-            bool deleteRelatedEntities, TRepository repository,
+            bool deleteRelatedEntities,
             DeleteDictionaryActions<TEntity> actions,
             Dictionary<Guid, TEntity> existEntitiesForRemove)
         {
@@ -99,7 +112,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
                 // Если удалена, то пропускаем
                 if (entityForRemove.Deprecated) continue;
 
-                TEntity? entity = await repository.GetByIdAsync(entityForRemove.Id);
+                TEntity? entity = await actions.Repository.GetByIdAsync(entityForRemove.Id);
                 if (entity is null)
                 {
                     return new(keyError: "UnknownError", error: "Unknown error.");

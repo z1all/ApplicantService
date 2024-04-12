@@ -4,8 +4,8 @@ using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Application.Interfaces.Transaction;
 using DictionaryService.Core.Domain.Enum;
 using DictionaryService.Core.Domain;
-using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
+using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base;
 using Common.Models;
 
 namespace DictionaryService.Core.Application.Services
@@ -13,40 +13,47 @@ namespace DictionaryService.Core.Application.Services
     public class UpdateDictionaryService : IUpdateDictionaryService
     {
         private readonly IUpdateStatusRepository _updateStatusRepository;
-        private readonly IFacultyRepository _facultyRepository;
-        private readonly IEducationLevelRepository _educationLevelRepository;
-        private readonly IEducationProgramRepository _educationProgramRepository;
-        private readonly IEducationDocumentTypeRepository _educationDocumentTypeRepository;
-        private readonly IExternalDictionaryService _externalDictionaryService;
         private readonly ITransactionProvider _transactionProvider;
 
+        private readonly UpdateActionsCreator<Faculty, FacultyExternalDTO> _updateFacultyActionsCreator;
+        private readonly UpdateActionsCreator<EducationLevel, EducationLevelExternalDTO> _updateEducationLevelActionsCreator;
+        private readonly UpdateActionsCreator<EducationProgram, EducationProgramExternalDTO> _updateEducationProgramActionsCreator;
+        private readonly UpdateActionsCreator<EducationDocumentType, EducationDocumentTypeExternalDTO> _updateEducationDocumentTypeActionsCreator;
+
         public UpdateDictionaryService(
-            IUpdateStatusRepository updateStatusRepository, IFacultyRepository facultyRepository,
-            IEducationLevelRepository educationLevelRepository, IEducationDocumentTypeRepository educationDocumentTypeRepository,
-            IEducationProgramRepository educationProgramRepository, IExternalDictionaryService externalDictionaryService,
-            ITransactionProvider transactionProvider)
+            IUpdateStatusRepository updateStatusRepository, ITransactionProvider transactionProvider,
+            UpdateActionsCreator<Faculty, FacultyExternalDTO> updateFacultyActionsCreator,
+            UpdateActionsCreator<EducationLevel, EducationLevelExternalDTO> updateEducationLevelActionsCreator,
+            UpdateActionsCreator<EducationProgram, EducationProgramExternalDTO> updateEducationProgramActionsCreator,
+            UpdateActionsCreator<EducationDocumentType, EducationDocumentTypeExternalDTO> updateEducationDocumentTypeActionsCreator)
         {
             _updateStatusRepository = updateStatusRepository;
-            _facultyRepository = facultyRepository;
-            _educationLevelRepository = educationLevelRepository;
-            _educationDocumentTypeRepository = educationDocumentTypeRepository;
-            _educationProgramRepository = educationProgramRepository;
-            _externalDictionaryService = externalDictionaryService;
             _transactionProvider = transactionProvider;
+
+            _updateFacultyActionsCreator = updateFacultyActionsCreator;
+            _updateEducationLevelActionsCreator = updateEducationLevelActionsCreator;
+            _updateEducationProgramActionsCreator = updateEducationProgramActionsCreator;
+            _updateEducationDocumentTypeActionsCreator = updateEducationDocumentTypeActionsCreator;
         }
 
         public async Task<ExecutionResult> UpdateAllDictionaryAsync()
         {
-            ExecutionResult existOtherUpdating = await CheckOtherUpdatingAsync();
-            if (!existOtherUpdating.IsSuccess) { return existOtherUpdating; }
+            bool existOtherUpdating = await _updateStatusRepository.TryBeganUpdatingForAllDictionaryAsync();
+            if (existOtherUpdating)
+            {
+                return new(keyError: "ExistOtherUpdating", error: "Another dictionary update is already underway, try it later.");
+            }
 
             throw new NotImplementedException();
         }
 
         public async Task<ExecutionResult> UpdateDictionaryAsync(DictionaryType dictionaryType)
         {
-            ExecutionResult existOtherUpdating = await CheckOtherUpdatingAsync();
-            if (!existOtherUpdating.IsSuccess) { return existOtherUpdating; }
+            bool existOtherUpdating = await _updateStatusRepository.TryBeganUpdatingForDictionaryAsync(dictionaryType);
+            if (existOtherUpdating)
+            {
+                return new(keyError: "ExistOtherUpdating", error: "Another dictionary update is already underway, try it later.");
+            }
 
             // Создаем транзакцию для отмены изменений, если что-то пошло не так
             using ITransaction transaction = await _transactionProvider.CreateTransactionScopeAsync();
@@ -62,7 +69,7 @@ namespace DictionaryService.Core.Application.Services
                     _ => new(keyError: "WrongDictionaryType", error: "Wrong dictionary type"),
                 };
 
-                if (!existOtherUpdating.IsSuccess)
+                if (!executionResult.IsSuccess)
                 {
                     await transaction.RollbackAsync();
                 }
@@ -75,7 +82,13 @@ namespace DictionaryService.Core.Application.Services
             }
             catch (Exception)
             {
-                await transaction.RollbackAsync(); 
+                await transaction.RollbackAsync();
+
+                UpdateStatus? updateStatus = await _updateStatusRepository.GetByDictionaryTypeAsync(dictionaryType);
+                updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
+                updateStatus!.Comments = "Unknow error";
+                await _updateStatusRepository.UpdateAsync(updateStatus);
+
                 throw;
             }
         }
@@ -94,51 +107,40 @@ namespace DictionaryService.Core.Application.Services
             };
         }
 
-        private async Task<ExecutionResult> CheckOtherUpdatingAsync()
-        {
-            bool existOtherUpdating = await _updateStatusRepository.CheckOtherUpdatingAsync();
-            if (existOtherUpdating)
-            {
-                return new(keyError: "ExistOtherUpdating", error: "Another directory update is already underway, try it later.");
-            }
-
-            return new(isSuccess: true);
-        }
-
         private async Task<ExecutionResult> UpdateFacultyAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<Faculty, FacultyExternalDTO> updateFacultyActions 
-                = new UpdateFacultyActionsCreator(_facultyRepository, _educationProgramRepository, _externalDictionaryService).CreateActions();
+                = _updateFacultyActionsCreator.CreateActions();
 
-            return await UpdateDictionaryHandler<Faculty, FacultyExternalDTO, IFacultyRepository>
-                .UpdateAsync(deleteRelatedEntities, _facultyRepository, updateFacultyActions);
+            return await UpdateDictionaryHandler<Faculty, FacultyExternalDTO>
+                .UpdateAsync(deleteRelatedEntities, updateFacultyActions);
         }
 
         private async Task<ExecutionResult> UpdateEducationLevelAsync(bool deleteRelatedEntities = false)
         {
-            UpdateDictionaryActions<EducationLevel, EducationLevelExternalDTO> updateEducationLevelActions 
-                = new UpdateEducationLevelActionsCreator(_educationLevelRepository, _educationProgramRepository, _educationDocumentTypeRepository, _externalDictionaryService).CreateActions();
+            UpdateDictionaryActions<EducationLevel, EducationLevelExternalDTO> updateEducationLevelActions
+                = _updateEducationLevelActionsCreator.CreateActions();
 
-            return await UpdateDictionaryHandler<EducationLevel, EducationLevelExternalDTO, IEducationLevelRepository>
-                .UpdateAsync(deleteRelatedEntities, _educationLevelRepository, updateEducationLevelActions);
+            return await UpdateDictionaryHandler<EducationLevel, EducationLevelExternalDTO>
+                .UpdateAsync(deleteRelatedEntities, updateEducationLevelActions);
         }
 
         private async Task<ExecutionResult> UpdateEducationProgramAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<EducationProgram, EducationProgramExternalDTO> updateEducationProgramActions
-                = new UpdateEducationProgramActionsCreator(_facultyRepository, _educationLevelRepository, _educationProgramRepository, _externalDictionaryService).CreateActions();
+                = _updateEducationProgramActionsCreator.CreateActions();
 
-            return await UpdateDictionaryHandler<EducationProgram, EducationProgramExternalDTO, IEducationProgramRepository>
-               .UpdateAsync(deleteRelatedEntities, _educationProgramRepository, updateEducationProgramActions);
+            return await UpdateDictionaryHandler<EducationProgram, EducationProgramExternalDTO>
+               .UpdateAsync(deleteRelatedEntities, updateEducationProgramActions);
         }
 
         private async Task<ExecutionResult> UpdateEducationDocumentTypeAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<EducationDocumentType, EducationDocumentTypeExternalDTO> updateEducationDocumentTypeActions
-                = new UpdateEducationDocumentTypeActionsCreator(_educationLevelRepository, _educationDocumentTypeRepository, _externalDictionaryService).CreateActions();
+                = _updateEducationDocumentTypeActionsCreator.CreateActions();
 
-            return await UpdateDictionaryHandler<EducationDocumentType, EducationDocumentTypeExternalDTO, IEducationDocumentTypeRepository>
-               .UpdateAsync(deleteRelatedEntities, _educationDocumentTypeRepository, updateEducationDocumentTypeActions);
+            return await UpdateDictionaryHandler<EducationDocumentType, EducationDocumentTypeExternalDTO>
+               .UpdateAsync(deleteRelatedEntities, updateEducationDocumentTypeActions);
         }
     }
 }

@@ -1,14 +1,20 @@
 ﻿using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
 using DictionaryService.Core.Domain;
 using Common.Models;
+using Common.Repositories;
+using DictionaryService.Core.Domain.Enum;
+using DictionaryService.Core.Application.Interfaces.Repositories;
 
 namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base
 {
-    // Создать базовый абстрактный класс с виртуальными методами которые возвращают делегаты. Также должен быть метод который собирает результаты этих методов и упаковывает в объект
     public abstract class UpdateActionsCreator<TEntity, TExternalEntity>
         where TEntity : BaseDictionaryEntity
         where TExternalEntity : class
     {
+        protected abstract UpdateStatus UpdateStatusCache { get; }
+        protected abstract IUpdateStatusRepository UpdateStatusRepository { get; }
+        protected abstract IBaseRepository<TEntity> Repository { get; }
+
         protected abstract bool CompareKey(TEntity entity, TExternalEntity externalEntity);
         protected abstract Task<List<TEntity>> GetEntityAsync();
         protected abstract Task<ExecutionResult<List<TExternalEntity>>> GetExternalEntityAsync();
@@ -20,12 +26,44 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         protected virtual Task<bool> DeleteEntityAsync(bool deleteRelatedEntities, TEntity entity, List<string> comments) => Task.FromResult(false);
 
         protected virtual Task BeforeActionsAsync() => Task.CompletedTask;
+        protected virtual async Task AfterLoadingErrorAsync(string comments)
+        {
+            UpdateStatusCache.Status = UpdateStatusEnum.ErrorInLoading;
+            UpdateStatusCache.Comments = comments;
+            await UpdateStatusRepository.UpdateAsync(UpdateStatusCache);
+        }
+        protected virtual async Task BeforeUpdatingAsync()
+        {
+            UpdateStatusCache.Status = UpdateStatusEnum.Updating;
+            UpdateStatusCache.Comments = null;
+            await UpdateStatusRepository.UpdateAsync(UpdateStatusCache);
+        }
+        protected virtual async Task AfterUpdatingErrorAsync(string comments)
+        {
+            UpdateStatusCache.Status = UpdateStatusEnum.ErrorInUpdating;
+            UpdateStatusCache.Comments = comments;
+            await UpdateStatusRepository.UpdateAsync(UpdateStatusCache);
+        }
+        protected virtual async Task AfterUpdateAsync()
+        {
+            UpdateStatusCache.Status = UpdateStatusEnum.Updated;
+            UpdateStatusCache.Comments = null;
+            UpdateStatusCache.LastUpdate = DateTime.UtcNow;
+            await UpdateStatusRepository.UpdateAsync(UpdateStatusCache);
+        }
 
         public UpdateDictionaryActions<TEntity, TExternalEntity> CreateActions()
         {
             return new()
             {
+                Repository = Repository,
+
                 BeforeActionsAsync = BeforeActionsAsync,
+                AfterLoadingErrorAsync = AfterLoadingErrorAsync,
+                BeforeUpdatingAsync = BeforeUpdatingAsync,
+                AfterUpdatingErrorAsync = AfterUpdatingErrorAsync,
+                AfterUpdateAsync = AfterUpdateAsync,
+
                 CompareKey = CompareKey,
                 GetEntityAsync = GetEntityAsync,
                 GetExternalEntityAsync = GetExternalEntityAsync,
@@ -36,8 +74,8 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
                 DeleteEntityAsync = DeleteEntityAsync,
             };
         }
-        protected bool SoftDeleteEntityIf<TEntity>(bool deleteRelatedEntities, List<TEntity> relatedEntities, List<string> comments, Func<TEntity, string> onAddErrorMessage)
-            where TEntity : BaseDictionaryEntity
+        protected bool SoftDeleteEntityIf<TRelatedEntity>(bool deleteRelatedEntities, List<TRelatedEntity> relatedEntities, List<string> comments, Func<TRelatedEntity, string> onAddErrorMessage)
+            where TRelatedEntity : BaseDictionaryEntity
         {
             bool thereAreRelated = false;
 
