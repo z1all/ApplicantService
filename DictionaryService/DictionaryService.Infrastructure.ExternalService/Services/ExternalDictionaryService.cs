@@ -20,7 +20,7 @@ namespace DictionaryService.Infrastructure.ExternalService.Services
             _httpClient = httpClient;
 
             _httpClient.BaseAddress = new Uri(_externalOptions.BaseUrl);
-
+            
             _httpClient.DefaultRequestHeaders
                 .Add(HeaderNames.Accept, "text/plain");
             _httpClient.DefaultRequestHeaders
