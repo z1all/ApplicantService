@@ -44,7 +44,33 @@ namespace DictionaryService.Core.Application.Services
                 return new(keyError: "ExistOtherUpdating", error: "Another dictionary update is already underway, try it later.");
             }
 
-            throw new NotImplementedException();
+            return await UpdateDictionaryHandlerAsync(async () =>
+            {
+                ExecutionResult updateFacultyResult = await UpdateFacultyAsync(true);
+                if (!updateFacultyResult.IsSuccess) return updateFacultyResult; 
+
+                ExecutionResult updateEducationLevelResult = await UpdateEducationLevelAsync(true);
+                if (!updateEducationLevelResult.IsSuccess) return updateEducationLevelResult;
+
+                ExecutionResult updateEducationProgramResult = await UpdateEducationProgramAsync(true);
+                if (!updateEducationProgramResult.IsSuccess) return updateEducationProgramResult;
+
+                ExecutionResult updateEducationDocumentTypeResult = await UpdateEducationDocumentTypeAsync(true);
+                if (!updateEducationDocumentTypeResult.IsSuccess) return updateEducationDocumentTypeResult;
+
+                return new(isSuccess: true);
+            }, async () =>
+            {
+                List<UpdateStatus> updateStatuses = await _updateStatusRepository.GetAllAsync();
+
+                updateStatuses.ForEach(updateStatus =>
+                {
+                    updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
+                    updateStatus!.Comments = "Unknow error";
+                });
+
+                await _updateStatusRepository.SaveChangesAsync();
+            });
         }
 
         public async Task<ExecutionResult> UpdateDictionaryAsync(DictionaryType dictionaryType)
@@ -55,12 +81,9 @@ namespace DictionaryService.Core.Application.Services
                 return new(keyError: "ExistOtherUpdating", error: "Another dictionary update is already underway, try it later.");
             }
 
-            // Создаем транзакцию для отмены изменений, если что-то пошло не так
-            using ITransaction transaction = await _transactionProvider.CreateTransactionScopeAsync();
-
-            try
+            return await UpdateDictionaryHandlerAsync(async () =>
             {
-                ExecutionResult executionResult = dictionaryType switch
+                return dictionaryType switch
                 {
                     DictionaryType.Faculty => await UpdateFacultyAsync(),
                     DictionaryType.EducationProgram => await UpdateEducationProgramAsync(),
@@ -68,29 +91,13 @@ namespace DictionaryService.Core.Application.Services
                     DictionaryType.EducationDocumentType => await UpdateEducationDocumentTypeAsync(),
                     _ => new(keyError: "WrongDictionaryType", error: "Wrong dictionary type"),
                 };
-
-                if (!executionResult.IsSuccess)
-                {
-                    await transaction.RollbackAsync();
-                }
-                else
-                {
-                    await transaction.CommitAsync();
-                }
-
-                return executionResult;
-            }
-            catch (Exception)
+            }, async () =>
             {
-                await transaction.RollbackAsync();
-
                 UpdateStatus? updateStatus = await _updateStatusRepository.GetByDictionaryTypeAsync(dictionaryType);
                 updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
                 updateStatus!.Comments = "Unknow error";
                 await _updateStatusRepository.UpdateAsync(updateStatus);
-
-                throw;
-            }
+            });
         }
 
         public async Task<ExecutionResult<List<UpdateStatusDTO>>> GetUpdateStatusesAsync()
@@ -105,6 +112,38 @@ namespace DictionaryService.Core.Application.Services
                     Comments = updateStatus.Comments,
                 }).ToList()
             };
+        }
+
+        private async Task<ExecutionResult> UpdateDictionaryHandlerAsync(Func<Task<ExecutionResult>> updateOperationAsync, Func<Task> onErrorAsync)
+        {
+            // Создаем транзакцию для отмены изменений, если что-то пошло не так
+            using ITransaction transaction = await _transactionProvider.CreateTransactionScopeAsync();
+
+            try
+            {
+                ExecutionResult executionResult = await updateOperationAsync();
+
+                if (!executionResult.IsSuccess)
+                {
+                    await transaction.RollbackAsync();
+
+                    await onErrorAsync();
+                }
+                else
+                {
+                    await transaction.CommitAsync();
+                }
+
+                return executionResult;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+
+                await onErrorAsync();
+
+                throw;
+            }
         }
 
         private async Task<ExecutionResult> UpdateFacultyAsync(bool deleteRelatedEntities = false)

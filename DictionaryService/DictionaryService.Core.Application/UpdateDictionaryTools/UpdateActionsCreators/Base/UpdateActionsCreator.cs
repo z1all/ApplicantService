@@ -1,9 +1,9 @@
 ﻿using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
 using DictionaryService.Core.Domain;
-using Common.Models;
-using Common.Repositories;
 using DictionaryService.Core.Domain.Enum;
 using DictionaryService.Core.Application.Interfaces.Repositories;
+using Common.Models;
+using Common.Repositories;
 
 namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base
 {
@@ -25,7 +25,13 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         protected virtual Task<bool> CheckBeforeAddEntityAsync(TExternalEntity externalEntity, List<string> comments) => Task.FromResult(true);
         protected virtual Task<bool> DeleteEntityAsync(bool deleteRelatedEntities, TEntity entity, List<string> comments) => Task.FromResult(false);
 
-        protected virtual Task BeforeActionsAsync() => Task.CompletedTask;
+        protected virtual async Task BeforeActionsAsync()
+        {
+            UpdateStatusCache.Status = UpdateStatusEnum.Loading;
+            UpdateStatusCache.Comments = null;
+            await UpdateStatusRepository.UpdateAsync(UpdateStatusCache);
+        }
+
         protected virtual async Task AfterLoadingErrorAsync(string comments)
         {
             UpdateStatusCache.Status = UpdateStatusEnum.ErrorInLoading;
