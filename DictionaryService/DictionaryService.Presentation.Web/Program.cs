@@ -1,6 +1,7 @@
 using DictionaryService.Infrastructure.Persistence;
 using DictionaryService.Infrastructure.ExternalService;
 using ApplicantService.Core.Application;
+using DictionaryService.Presentation.Web;
 using Common.Middlewares.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddInfrastructureExternalServices();
+builder.Services.AddPresentationServices();
 
 var app = builder.Build();
 

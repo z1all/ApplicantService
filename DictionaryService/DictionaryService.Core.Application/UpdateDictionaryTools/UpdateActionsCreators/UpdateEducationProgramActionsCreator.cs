@@ -37,6 +37,8 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override async Task BeforeActionsAsync()
         {
+            await base.BeforeActionsAsync();
+
             educationLevelsCache = await _educationLevelRepository.GetAllAsync();
             facultiesCache = await _facultyRepository.GetAllAsync();
             _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(Domain.Enum.DictionaryType.EducationProgram);

@@ -13,6 +13,7 @@ namespace ApplicantService.Core.Application
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IUpdateDictionaryService, UpdateDictionaryService>();
+            services.AddScoped<IDictionaryInfoService, DictionaryInfoService>();
 
             // Action creators
             services.AddScoped<UpdateActionsCreator<Faculty, FacultyExternalDTO>, UpdateFacultyActionsCreator>();

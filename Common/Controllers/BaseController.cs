@@ -20,7 +20,7 @@ namespace Common.Controllers
             });
         }
 
-        protected async Task<ActionResult<TResult>> ExecutionResultHandlerAsync<TResult>(OperationCallbackAsync<TResult> operation)
+        protected async Task<ActionResult<TResult>> ExecutionResultHandlerAsync<TResult>(Func<Guid, Task<ExecutionResult<TResult>>> operation)
         {
             if (!HttpContext.TryGetUserId(out Guid userId))
             {
@@ -33,7 +33,15 @@ namespace Common.Controllers
             return Ok(response.Result!);
         }
 
-        protected async Task<ActionResult> ExecutionResultHandlerAsync(OperationCallbackAsync operation)
+        protected async Task<ActionResult<TResult>> ExecutionResultHandlerAsync<TResult>(Func<Task<ExecutionResult<TResult>>> operation)
+        {
+            ExecutionResult<TResult> response = await operation();
+
+            if (!response.IsSuccess) return BadRequest(response);
+            return Ok(response.Result!);
+        }
+
+        protected async Task<ActionResult> ExecutionResultHandlerAsync(Func<Guid, Task<ExecutionResult>> operation)
         {
             if (!HttpContext.TryGetUserId(out Guid userId))
             {
@@ -45,9 +53,5 @@ namespace Common.Controllers
             if (!response.IsSuccess) return BadRequest(response);
             return NoContent();
         }
-
-
-        protected delegate Task<ExecutionResult<TResult>> OperationCallbackAsync<TResult>(Guid userId);
-        protected delegate Task<ExecutionResult> OperationCallbackAsync(Guid userId);
     }
 }
