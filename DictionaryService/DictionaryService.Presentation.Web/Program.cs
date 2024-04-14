@@ -1,4 +1,6 @@
 using DictionaryService.Infrastructure.Persistence;
+using DictionaryService.Infrastructure.ExternalService;
+using ApplicantService.Core.Application;
 using Common.Middlewares.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,12 +11,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Services extensions
+builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddInfrastructureExternalServices();
 
 var app = builder.Build();
 
 // AppDbContext extensions
 app.Services.AddAutoMigration();
+app.Services.AddDatabaseSeed();
 
 // Exceptions handler
 app.UseExceptionsHandler();

@@ -54,11 +54,16 @@ namespace DictionaryService.Infrastructure.Persistence.Migrations
                     b.Property<bool>("Deprecated")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("ExternalId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("ExternalId");
 
                     b.ToTable("EducationLevels");
                 });
@@ -130,10 +135,13 @@ namespace DictionaryService.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Comments")
+                        .HasColumnType("text");
+
                     b.Property<int>("DictionaryType")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("LastUpdate")
+                    b.Property<DateTime?>("LastUpdate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
@@ -143,7 +151,7 @@ namespace DictionaryService.Infrastructure.Persistence.Migrations
 
                     b.HasAlternateKey("DictionaryType");
 
-                    b.ToTable("UpdateStatuses");
+                    b.ToTable("UpdateStatus");
                 });
 
             modelBuilder.Entity("EducationDocumentTypeEducationLevel", b =>

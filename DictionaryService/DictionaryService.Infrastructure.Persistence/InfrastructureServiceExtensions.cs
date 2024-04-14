@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using DictionaryService.Infrastructure.Persistence.Contexts;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Infrastructure.Persistence.Repositories;
+using DictionaryService.Core.Application.Interfaces.Transaction;
+using DictionaryService.Infrastructure.Persistence.Transaction;
 
 namespace DictionaryService.Infrastructure.Persistence
 {
@@ -13,6 +15,7 @@ namespace DictionaryService.Infrastructure.Persistence
         {
             // Databases
             services.AddEntityFrameworkDbContext(configuration);
+            services.AddScoped<ITransactionProvider, EntityFrameworkTransactionProvider>();
 
             // Repositories
             services.AddScoped<IEducationDocumentTypeRepository, EducationDocumentTypeRepository>();
@@ -28,12 +31,28 @@ namespace DictionaryService.Infrastructure.Persistence
         {
             string? postgreConnectionString = configuration.GetConnectionString("PostgreConnection");
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(postgreConnectionString!));
+            services.AddDbContext<UpdateStatusDbContext>(options => options.UseNpgsql(postgreConnectionString!));
         }
 
         public static void AddAutoMigration(this IServiceProvider services)
         {
-            using var dbContext = services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
-            dbContext.Database.Migrate();
+            using(var appDbContext = services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>())
+            {
+                appDbContext.Database.Migrate();
+            }
+
+            using (var updateStatusDbContext = services.CreateScope().ServiceProvider.GetRequiredService<UpdateStatusDbContext>())
+            {
+                updateStatusDbContext.Database.Migrate();
+            }
+        }
+
+        public static void AddDatabaseSeed(this IServiceProvider services)
+        {
+            using (var updateStatusDbContext = services.CreateScope().ServiceProvider.GetRequiredService<UpdateStatusDbContext>())
+            {
+                AppDbSeed.AddUpdateStatuses(updateStatusDbContext);
+            }
         }
     }
 }

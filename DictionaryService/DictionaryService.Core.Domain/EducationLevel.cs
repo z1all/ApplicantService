@@ -1,10 +1,7 @@
-﻿using Common.Repositories;
-
-namespace DictionaryService.Core.Domain
+﻿namespace DictionaryService.Core.Domain
 {
-    public class EducationLevel : BaseEntity
+    public class EducationLevel : BaseDictionaryEntity 
     {
-        public required string Name { get; set; }
-        public required bool Deprecated { get; set; }
+        public required int ExternalId { get; set; }
     }
 }
