@@ -1,8 +1,8 @@
-﻿namespace DictionaryService.Core.Application.DTOs
+﻿namespace Common.DTOs
 {
-    public class FacultyDTO
+    public class EducationLevelDTO
     {
         public required Guid Id { get; set; }
         public required string Name { get; set; }
-}
+    }
 }

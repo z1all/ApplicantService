@@ -1,4 +1,4 @@
-﻿namespace DictionaryService.Core.Application.DTOs
+﻿namespace Common.DTOs
 {
     public class EducationDocumentTypeDTO
     {

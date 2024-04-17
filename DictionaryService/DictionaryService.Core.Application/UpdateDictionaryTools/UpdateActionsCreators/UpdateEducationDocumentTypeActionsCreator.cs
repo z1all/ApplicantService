@@ -3,6 +3,7 @@ using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCrea
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Application.Interfaces.Services;
+using Common.Enums;
 using Common.Models;
 using Common.Repositories;
 
@@ -33,10 +34,10 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override async Task BeforeActionsAsync()
         {
-            await base.BeforeActionsAsync();
-
             _educationLevelsCache = await _educationLevelRepository.GetAllAsync();
-            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(Domain.Enum.DictionaryType.EducationDocumentType);
+            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(DictionaryType.EducationDocumentType);
+
+            await base.BeforeActionsAsync();
         }
 
         protected override bool CompareKey(EducationDocumentType documentType, EducationDocumentTypeExternalDTO externalDocumentType)
@@ -48,7 +49,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         protected override async Task<ExecutionResult<List<EducationDocumentTypeExternalDTO>>> GetExternalEntityAsync()
             => await _externalDictionaryService.GetEducationDocumentTypesAsync();
 
-        protected override void UpdateEntity(EducationDocumentType documentType, EducationDocumentTypeExternalDTO externalDocumentType)
+        protected override bool UpdateEntity(EducationDocumentType documentType, EducationDocumentTypeExternalDTO externalDocumentType)
         {
             EducationLevel currentEducationLevel = _educationLevelsCache!.First(educationLevel => educationLevel.ExternalId == externalDocumentType.EducationLevel.Id);
 
@@ -64,6 +65,8 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
                 addNextEducationLevels.Add(educationLevel);
             }
             documentType.NextEducationLevels = addNextEducationLevels;
+
+            return true;
         }
 
         protected override EducationDocumentType AddEntity(EducationDocumentTypeExternalDTO externalDocumentType)

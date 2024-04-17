@@ -1,4 +1,4 @@
-﻿using DictionaryService.Core.Application.DTOs;
+﻿using Common.DTOs;
 using DictionaryService.Core.Domain;
 
 namespace DictionaryService.Core.Application.Mappers
@@ -12,7 +12,6 @@ namespace DictionaryService.Core.Application.Mappers
                 Id = educationProgram.Id,
                 Name = educationProgram.Name,
                 Code = educationProgram.Code,
-                CreateTime = educationProgram.CreatedTime,
                 EducationForm = educationProgram.EducationForm,
                 Language = educationProgram.Language,
                 EducationLevel = educationProgram.EducationLevel!.ToEducationLevelDTO(),

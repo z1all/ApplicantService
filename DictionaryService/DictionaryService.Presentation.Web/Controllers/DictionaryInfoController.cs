@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using DictionaryService.Core.Application.Interfaces.Services;
-using DictionaryService.Core.Application.DTOs;
 using Common.Controllers;
-using Common.Models;
+using Common.DTOs;
 
 namespace DictionaryService.Presentation.Web.Controllers
 {
     [Route("api/dictionary")]
-    //[Authorize]
+    [Authorize]
     public class DictionaryInfoController : BaseController
     {
         private readonly IDictionaryInfoService _dictionaryInfoService;

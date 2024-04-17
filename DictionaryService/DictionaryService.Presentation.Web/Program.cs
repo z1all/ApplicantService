@@ -1,8 +1,11 @@
 using DictionaryService.Infrastructure.Persistence;
 using DictionaryService.Infrastructure.ExternalService;
-using ApplicantService.Core.Application;
+using DictionaryService.Core.Application;
 using DictionaryService.Presentation.Web;
+using DictionaryService.Presentation.Web.RPCHandlers;
 using Common.Middlewares.Extensions;
+using Common.EasyNetQAutoSubscriber;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +19,15 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddInfrastructureExternalServices();
 builder.Services.AddPresentationServices();
+builder.Services.AddEasyNetQAutoSubscriber("DictionaryService");
+builder.Services.AddRPCHandlers();
+
 
 var app = builder.Build();
+
+// EasyNetQAutoSubscriber extensions
+app.Services.UseEasyNetQAutoSubscriber(Assembly.GetExecutingAssembly());
+app.Services.UseRPCHandlers();
 
 // AppDbContext extensions
 app.Services.AddAutoMigration();

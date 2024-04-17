@@ -3,6 +3,7 @@ using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCrea
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Application.Interfaces.Services;
+using Common.Enums;
 using Common.Models;
 using Common.Repositories;
 
@@ -37,11 +38,11 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override async Task BeforeActionsAsync()
         {
-            await base.BeforeActionsAsync();
-
             educationLevelsCache = await _educationLevelRepository.GetAllAsync();
             facultiesCache = await _facultyRepository.GetAllAsync();
-            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(Domain.Enum.DictionaryType.EducationProgram);
+            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(DictionaryType.EducationProgram);
+
+            await base.BeforeActionsAsync();
         }
 
         protected override bool CompareKey(EducationProgram program, EducationProgramExternalDTO externalProgram)
@@ -53,18 +54,25 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         protected override async Task<ExecutionResult<List<EducationProgramExternalDTO>>> GetExternalEntityAsync()
             => await _externalDictionaryService.GetEducationProgramAsync();
 
-        protected override void UpdateEntity(EducationProgram program, EducationProgramExternalDTO externalProgram)
+        protected override bool UpdateEntity(EducationProgram program, EducationProgramExternalDTO externalProgram)
         {
             EducationLevel educationLevel = educationLevelsCache!.First(educationLevel => educationLevel.ExternalId == externalProgram.EducationLevel.Id);
 
-            program.CreatedTime = externalProgram.CreateTime.ToUniversalTime();
-            program.Name = externalProgram.Name;
-            program.Code = externalProgram.Code;
-            program.Language = externalProgram.Language;
-            program.EducationForm = externalProgram.EducationForm;
-            program.EducationLevelId = educationLevel.Id;
-            program.FacultyId = externalProgram.Faculty.Id;
-            program.Deprecated = false;
+            if (program.Name != externalProgram.Name || program.Code != externalProgram.Code ||
+                program.Language != externalProgram.Language || program.EducationForm != externalProgram.EducationForm ||
+                program.EducationLevelId != educationLevel.Id || program.FacultyId != externalProgram.Faculty.Id ||
+                program.Deprecated != false)
+            {
+                program.Name = externalProgram.Name;
+                program.Code = externalProgram.Code;
+                program.Language = externalProgram.Language;
+                program.EducationForm = externalProgram.EducationForm;
+                program.EducationLevelId = educationLevel.Id;
+                program.FacultyId = externalProgram.Faculty.Id;
+                program.Deprecated = false;
+                return true;
+            }
+            return false;
         }
 
         protected override EducationProgram AddEntity(EducationProgramExternalDTO externalProgram)
@@ -74,7 +82,6 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
             EducationProgram newEducationLevel = new()
             {
                 Id = externalProgram.Id,
-                CreatedTime = externalProgram.CreateTime.ToUniversalTime(),
                 Name = externalProgram.Name,
                 Code = externalProgram.Code,
                 Language = externalProgram.Language,

@@ -1,4 +1,5 @@
-﻿using Common.Configurations.Extensions;
+﻿using DictionaryService.Presentation.Web.BackgroundServices;
+using Common.Configurations.Extensions;
 
 namespace DictionaryService.Presentation.Web
 {
@@ -8,7 +9,10 @@ namespace DictionaryService.Presentation.Web
         {
             services.AddJwtAuthentication();
             services.AddSwaggerConfigure();
+            services.AddEasyNetQ();
             services.AddModalStateConfigure();
+
+            services.AddScoped<UpdateDictionaryBackgroundListener>();
 
             return services;
         }

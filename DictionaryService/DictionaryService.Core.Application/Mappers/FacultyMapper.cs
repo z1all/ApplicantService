@@ -1,4 +1,4 @@
-﻿using DictionaryService.Core.Application.DTOs;
+﻿using Common.DTOs;
 using DictionaryService.Core.Domain;
 
 namespace DictionaryService.Core.Application.Mappers

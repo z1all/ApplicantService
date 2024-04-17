@@ -1,5 +1,5 @@
 ﻿using DictionaryService.Core.Domain;
-using DictionaryService.Core.Domain.Enum;
+using Common.Enums;
 using Common.Repositories;
 
 namespace DictionaryService.Core.Application.Interfaces.Repositories

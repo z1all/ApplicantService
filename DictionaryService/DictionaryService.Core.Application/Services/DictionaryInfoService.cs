@@ -1,9 +1,9 @@
-﻿using DictionaryService.Core.Application.DTOs;
-using DictionaryService.Core.Application.Interfaces.Services;
+﻿using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Mappers;
 using Common.Models;
+using Common.DTOs;
 
 namespace DictionaryService.Core.Application.Services
 {
@@ -27,8 +27,21 @@ namespace DictionaryService.Core.Application.Services
 
         public async Task<ExecutionResult<ProgramPagedDTO>> GetProgramsAsync(EducationProgramFilterDTO filter)
         {
-            List<EducationProgram> educationPrograms = await _educationProgramRepository.GetAllByFiltersAsync(filter);
+            if (filter.Page < 1)
+            {
+                return new(keyError: "InvalidPageError", error: "Number of page can't be less than 1.");
+            }
 
+            int countPrograms = await _educationProgramRepository.GetAllCountAsync(filter);
+            countPrograms = countPrograms == 0 ? 1 : countPrograms;
+            
+            int countPage = (countPrograms / filter.Size) + (countPrograms % filter.Size == 0 ? 0 : 1);
+            if (filter.Page > countPage) // filter.Page > countPage
+            {
+                return new(keyError: "InvalidPageError", error: $"Number of page can be from 1 to {countPage}.");
+            }
+
+            List<EducationProgram> educationPrograms = await _educationProgramRepository.GetAllByFiltersAsync(filter);
             return new()
             {
                 Result = new()
@@ -36,9 +49,9 @@ namespace DictionaryService.Core.Application.Services
                     Programs = educationPrograms.Select(educationProgram => educationProgram.ToEducationProgramDTO()).ToList(),
                     Pagination = new()
                     {
-                        Count = 1,
-                        Current = 1,
-                        Size = 1,
+                        Count = countPage,
+                        Current = filter.Page,
+                        Size = filter.Size,
                     },
                 },
             };

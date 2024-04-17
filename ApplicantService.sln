@@ -60,7 +60,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryService.Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryService.Presentation.Web", "DictionaryService\DictionaryService.Presentation.Web\DictionaryService.Presentation.Web.csproj", "{68732D4A-E4A7-448D-B8C2-8776E7BE567E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DictionaryService.Infrastructure.ExternalService", "DictionaryService\DictionaryService.Infrastructure.ExternalService\DictionaryService.Infrastructure.ExternalService.csproj", "{343CC003-6C9C-488D-B0B4-BC50D5D1571C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryService.Infrastructure.ExternalService", "DictionaryService\DictionaryService.Infrastructure.ExternalService\DictionaryService.Infrastructure.ExternalService.csproj", "{343CC003-6C9C-488D-B0B4-BC50D5D1571C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

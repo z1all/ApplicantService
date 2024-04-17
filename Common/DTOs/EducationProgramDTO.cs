@@ -1,9 +1,8 @@
-﻿namespace DictionaryService.Core.Application.DTOs
+﻿namespace Common.DTOs
 {
     public class EducationProgramDTO
     {
         public required Guid Id { get; set; }
-        public required DateTime CreateTime { get; set; }
         public required string Name { get; set; }
         public required string Code { get; set; }
         public required string Language { get; set; }

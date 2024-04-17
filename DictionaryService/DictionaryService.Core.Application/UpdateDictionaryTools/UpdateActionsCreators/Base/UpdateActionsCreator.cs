@@ -1,7 +1,7 @@
 ﻿using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
 using DictionaryService.Core.Domain;
-using DictionaryService.Core.Domain.Enum;
 using DictionaryService.Core.Application.Interfaces.Repositories;
+using Common.Enums;
 using Common.Models;
 using Common.Repositories;
 
@@ -18,7 +18,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         protected abstract bool CompareKey(TEntity entity, TExternalEntity externalEntity);
         protected abstract Task<List<TEntity>> GetEntityAsync();
         protected abstract Task<ExecutionResult<List<TExternalEntity>>> GetExternalEntityAsync();
-        protected abstract void UpdateEntity(TEntity entity, TExternalEntity externalEntity);
+        protected abstract bool UpdateEntity(TEntity entity, TExternalEntity externalEntity);
         protected abstract TEntity AddEntity(TExternalEntity externalEntity);
 
         protected virtual Task<bool> CheckBeforeUpdateEntityAsync(TEntity entity, TExternalEntity externalEntity, List<string> comments) => Task.FromResult(true);

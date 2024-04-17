@@ -3,7 +3,7 @@ using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Domain;
 using DictionaryService.Infrastructure.Persistence.Contexts;
 using Common.Repositories;
-using DictionaryService.Core.Application.DTOs;
+using Common.DTOs;
 
 namespace DictionaryService.Infrastructure.Persistence.Repositories
 {
@@ -47,9 +47,20 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                                            (filter.CodeOrNameProgram != null ? educationProgram.Code.Contains(filter.CodeOrNameProgram.ToLower()) 
                                                                             || educationProgram.Name.Contains(filter.CodeOrNameProgram.ToLower()) : true) &&
                                            (filter.EducationLevel != null ? filter.EducationLevel.Contains(educationProgram.EducationLevel!.Id) : true))
-                .Skip(filter.Page * filter.Size)
+                .Skip((filter.Page - 1) * filter.Size)
                 .Take(filter.Size)
                 .ToListAsync();
+        }
+
+        public async Task<int> GetAllCountAsync(EducationProgramFilterDTO filter)
+        {
+            return await _dbContext.EducationPrograms
+                .CountAsync(educationProgram => (filter.FacultyName != null ? educationProgram.Faculty!.Name.ToLower().Contains(filter.FacultyName.ToLower()) : true) &&
+                                           (filter.EducationForm != null ? educationProgram.EducationForm.ToLower().Contains(filter.EducationForm.ToLower()) : true) &&
+                                           (filter.Language != null ? educationProgram.Language.ToLower().Contains(filter.Language.ToLower()) : true) &&
+                                           (filter.CodeOrNameProgram != null ? educationProgram.Code.Contains(filter.CodeOrNameProgram.ToLower())
+                                                                            || educationProgram.Name.Contains(filter.CodeOrNameProgram.ToLower()) : true) &&
+                                           (filter.EducationLevel != null ? filter.EducationLevel.Contains(educationProgram.EducationLevel!.Id) : true));
         }
     }
 }
