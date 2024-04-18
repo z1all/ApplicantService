@@ -1,7 +1,7 @@
-﻿using EasyNetQ.AutoSubscribe;
-using EasyNetQ;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using EasyNetQ.AutoSubscribe;
+using EasyNetQ;
 
 namespace Common.EasyNetQAutoSubscriber
 {

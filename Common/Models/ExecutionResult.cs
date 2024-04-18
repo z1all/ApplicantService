@@ -45,6 +45,7 @@ namespace Common.Models
         }
 
         public ExecutionResult() { }
+        public ExecutionResult(TSuccessResult result) { Result = result; }
 
         public ExecutionResult(string keyError, string error) : base(keyError, error) { }
     }
