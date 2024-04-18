@@ -1,4 +1,4 @@
-﻿namespace Common.Configurations.Others
+﻿namespace Common.Configurations
 {
     public class EasynetqOptions
     {

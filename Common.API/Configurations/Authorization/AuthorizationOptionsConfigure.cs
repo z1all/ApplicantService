@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
-namespace Common.Configurations.Authorization
+namespace Common.API.Configurations.Authorization
 {
     public class AuthorizationOptionsConfigure : IConfigureOptions<AuthorizationOptions>
     {

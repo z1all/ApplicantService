@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Immutable;
 using System.Net;
-using Common.DTOs;
+using Common.API.DTOs;
 
-namespace Common.Middlewares
+namespace Common.API.Middlewares
 {
     public class ExceptionsHandlerMiddleware(RequestDelegate next)
     {
@@ -18,7 +18,7 @@ namespace Common.Middlewares
             catch (Exception ex)
             {
                 var status = (int)(ex switch
-                { 
+                {
                     _ => HttpStatusCode.InternalServerError
                 });
 

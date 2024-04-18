@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 
-namespace Common.DTOs
+namespace Common.API.DTOs
 {
     public class ErrorResponse
     {

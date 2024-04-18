@@ -1,4 +1,4 @@
-﻿namespace Common.Configurations.Authorization
+﻿namespace Common.API.Configurations.Authorization
 {
     public class JwtOptions
     {

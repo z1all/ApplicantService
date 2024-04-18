@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace Common.Configurations.Others
+namespace Common.Configurations
 {
     public class EasyNetQOptionsConfigure(IConfiguration configuration) : IConfigureOptions<EasynetqOptions>
     {

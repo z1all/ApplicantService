@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace Common.Middlewares.Extensions
+namespace Common.API.Middlewares.Extensions
 {
     public static class CommonMiddlewareExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace Common.Helpers
+namespace Common.API.Helpers
 {
     public static class JwtTokenHelper
     {

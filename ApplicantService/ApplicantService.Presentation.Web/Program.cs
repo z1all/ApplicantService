@@ -1,7 +1,7 @@
 using ApplicantService.Core.Application;
 using ApplicantService.Infrastructure.Persistence;
 using ApplicantService.Presentation.Web;
-using Common.Middlewares.Extensions;
+using Common.API.Middlewares.Extensions;
 using Common.EasyNetQAutoSubscriber;
 using System.Reflection;
 

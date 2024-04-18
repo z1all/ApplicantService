@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Common.Configurations.Authorization;
-using Common.Configurations.Others;
-using EasyNetQ;
+using Common.API.Configurations.Authorization;
+using Common.API.Configurations.Others;
 
-namespace Common.Configurations.Extensions
+namespace Common.API.Configurations
 {
-    public static class ConfigurationServiceExtensions
+    public static class ConfigurationApiExtensions
     {
         public static IServiceCollection AddModalStateConfigure(this IServiceCollection services)
         {
@@ -27,24 +25,10 @@ namespace Common.Configurations.Extensions
         {
             services.ConfigureOptions<AuthorizationOptionsConfigure>();
             services.ConfigureOptions<JwtBearerOptionsConfigure>();
-            services.ConfigureOptions<JwtOptionsConfigure>(); 
+            services.ConfigureOptions<JwtOptionsConfigure>();
 
             return services.AddAuthentication()
                     .AddJwtBearer();
-        }
-
-        public static IServiceCollection AddEasyNetQ(this IServiceCollection services)
-        {
-            services.ConfigureOptions<EasyNetQOptionsConfigure>();
-
-            services.AddSingleton<IBus>(provider =>
-            {
-                var easynetqOptions = provider.GetRequiredService<IOptions<EasynetqOptions>>().Value;
-
-                return RabbitHutch.CreateBus(easynetqOptions.ConnectionString, r => r.EnableSystemTextJson());
-            });
-
-            return services;
         }
     }
 }

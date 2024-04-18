@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common.API\Common.API.csproj" />
     <ProjectReference Include="..\..\Common\Common.csproj" />
     <ProjectReference Include="..\DictionaryService.Infrastructure.ExternalService\DictionaryService.Infrastructure.ExternalService.csproj" />
     <ProjectReference Include="..\DictionaryService.Infrastructure.Persistence\DictionaryService.Infrastructure.Persistence.csproj" />

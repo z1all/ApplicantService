@@ -5,8 +5,8 @@ using UserService.Core.Application.Interfaces;
 using UserService.Infrastructure.Identity.Configurations.Authorization;
 using UserService.Presentation.Web.Helpers;
 using Common.Models;
-using Common.Controllers;
-using Common.Helpers;
+using Common.API.Controllers;
+using Common.API.Helpers;
 
 namespace UserService.Presentation.Web.Controllers
 {

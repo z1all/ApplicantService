@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace Common.Configurations.Authorization
+namespace Common.API.Configurations.Authorization
 {
     public class JwtOptionsConfigure(IConfiguration configuration) : IConfigureOptions<JwtOptions>
     {

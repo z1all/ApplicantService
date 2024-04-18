@@ -6,6 +6,8 @@ using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Infrastructure.ExternalService.Configurations;
 using Common.Models;
 using Microsoft.AspNetCore.Routing;
+using System.Buffers.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DictionaryService.Infrastructure.ExternalService.Services
 {
@@ -23,8 +25,19 @@ namespace DictionaryService.Infrastructure.ExternalService.Services
             
             _httpClient.DefaultRequestHeaders
                 .Add(HeaderNames.Accept, "text/plain");
-            _httpClient.DefaultRequestHeaders
-                .Add(HeaderNames.Authorization, _externalOptions.AuthorizationHeader);
+
+            try
+            {
+                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes($"{_externalOptions.Username}:{_externalOptions.Password}");
+                _httpClient.DefaultRequestHeaders
+                    .Add(HeaderNames.Authorization, $"Basic {Convert.ToBase64String(plainTextBytes)}");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+           
         }
 
         public async Task<ExecutionResult<List<EducationDocumentTypeExternalDTO>>> GetEducationDocumentTypesAsync() =>

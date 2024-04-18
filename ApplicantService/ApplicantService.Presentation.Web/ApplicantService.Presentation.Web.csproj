@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common.API\Common.API.csproj" />
     <ProjectReference Include="..\ApplicantService.Infrastructure.Persistence\ApplicantService.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using Common.Configurations.Extensions;
+﻿using Common.API.Configurations;
+using Common.Configurations;
 
 namespace ApplicantService.Presentation.Web
 {

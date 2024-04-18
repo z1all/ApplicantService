@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Common.Attributes;
+using Common.API.Attributes;
+using Common.API.DTOs;
+using Common.API.Helpers;
 using Common.Models;
-using Common.DTOs;
-using Common.Helpers;
 
-namespace Common.Controllers
+namespace Common.API.Controllers
 {
     [ApiController]
     [ValidateModelState]

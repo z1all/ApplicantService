@@ -1,8 +1,8 @@
-﻿using ApplicantService.Core.Application.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Domain;
 using ApplicantService.Infrastructure.Persistence.Contexts;
 using Common.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace ApplicantService.Infrastructure.Persistence.Repositories
 {

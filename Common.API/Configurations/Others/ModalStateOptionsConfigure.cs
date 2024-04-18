@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace Common.Configurations.Others
+namespace Common.API.Configurations.Others
 {
     public class ModalStateOptionsConfigure : IConfigureOptions<ApiBehaviorOptions>
     {
