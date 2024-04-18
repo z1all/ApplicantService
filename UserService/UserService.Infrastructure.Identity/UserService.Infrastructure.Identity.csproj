@@ -27,7 +27,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common.API\Common.API.csproj" />
-    <ProjectReference Include="..\..\Common\Common.csproj" />
+    <ProjectReference Include="..\..\Common.ServiceBus\Common.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\Common\Common.Models.csproj" />
     <ProjectReference Include="..\UserService.Core.Application\UserService.Core.Application.csproj" />
   </ItemGroup>
 

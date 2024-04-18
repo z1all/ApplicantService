@@ -4,7 +4,7 @@ using DictionaryService.Core.Application;
 using DictionaryService.Presentation.Web;
 using DictionaryService.Presentation.Web.RPCHandlers;
 using Common.API.Middlewares.Extensions;
-using Common.EasyNetQAutoSubscriber;
+using Common.ServiceBus.EasyNetQAutoSubscriber;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

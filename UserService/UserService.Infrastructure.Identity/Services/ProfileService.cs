@@ -2,9 +2,9 @@
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Domain.Entities;
-using Common.Enums;
-using Common.Extensions;
-using Common.Models;
+using UserService.Infrastructure.Identity.Extensions;
+using Common.Models.Enums;
+using Common.Models.Models;
 
 namespace UserService.Infrastructure.Identity.Services
 {

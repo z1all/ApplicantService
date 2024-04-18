@@ -1,4 +1,4 @@
-﻿using Common.Models;
+﻿using Common.Models.Models;
 using DictionaryService.Core.Application.DTOs;
 
 namespace DictionaryService.Core.Application.Interfaces.Services

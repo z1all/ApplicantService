@@ -4,9 +4,9 @@ using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
 using UserService.Infrastructure.Identity.Configurations.Authorization;
 using UserService.Presentation.Web.Helpers;
-using Common.Models;
 using Common.API.Controllers;
 using Common.API.Helpers;
+using Common.Models.Models;
 
 namespace UserService.Presentation.Web.Controllers
 {

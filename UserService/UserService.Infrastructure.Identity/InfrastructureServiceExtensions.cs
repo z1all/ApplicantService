@@ -9,9 +9,9 @@ using UserService.Infrastructure.Identity.Contexts;
 using UserService.Infrastructure.Identity.Configurations.Authorization;
 using UserService.Infrastructure.Identity.Configurations.Other;
 using Common.API.Configurations;
+using Common.ServiceBus.Configurations;
 using EasyNetQ;
 using StackExchange.Redis;
-using Common.Configurations;
 
 namespace UserService.Infrastructure.Identity
 {

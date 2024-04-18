@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore.Storage;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Domain;
 using DictionaryService.Infrastructure.Persistence.Contexts;
-using Common.Enums;
 using Common.Repositories;
+using Common.Models.Enums;
 
 namespace DictionaryService.Infrastructure.Persistence.Repositories
 {

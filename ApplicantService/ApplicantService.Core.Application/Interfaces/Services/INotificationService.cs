@@ -1,4 +1,4 @@
-﻿using Common.Models;
+﻿using Common.Models.Models;
 
 namespace ApplicantService.Core.Application.Interfaces.Services
 {

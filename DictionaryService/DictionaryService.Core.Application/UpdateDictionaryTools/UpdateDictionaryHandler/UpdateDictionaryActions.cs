@@ -1,6 +1,6 @@
 ﻿using DictionaryService.Core.Domain;
-using Common.Models;
 using Common.Repositories;
+using Common.Models.Models;
 
 namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler
 {

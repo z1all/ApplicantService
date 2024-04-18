@@ -1,6 +1,6 @@
 ﻿using DictionaryService.Core.Domain;
-using Common.Enums;
 using Common.Repositories;
+using Common.Models.Enums;
 
 namespace DictionaryService.Core.Application.Interfaces.Repositories
 {

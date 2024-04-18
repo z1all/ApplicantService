@@ -1,6 +1,7 @@
 ﻿using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Domain;
-using Common.ServiceBusDTOs.FromDictionaryService;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
+using Common.ServiceBus.ServiceBusDTOs.FromUserService;
 using Common.ServiceBusDTOs.FromUserService;
 using EasyNetQ.AutoSubscribe;
 

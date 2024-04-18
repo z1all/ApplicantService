@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common.ServiceBus\Common.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\Common\Common.Models\Common.Models.csproj" />
+    <ProjectReference Include="..\..\Common\Common.Repositories\Common.Repositories.csproj" />
+    <ProjectReference Include="..\..\Common\Common.ServiceBus\Common.ServiceBus.csproj" />
     <ProjectReference Include="..\DictionaryService.Core.Domain\DictionaryService.Core.Domain.csproj" />
   </ItemGroup>
 

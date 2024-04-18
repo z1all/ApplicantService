@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Common.Enums;
+using Common.Models.Enums;
 
 namespace UserService.Infrastructure.Identity
 {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using DictionaryService.Core.Application.Interfaces.Services;
 using Common.API.Controllers;
-using Common.DTOs;
+using Common.Models.DTOs;
 
 namespace DictionaryService.Presentation.Web.Controllers
 {

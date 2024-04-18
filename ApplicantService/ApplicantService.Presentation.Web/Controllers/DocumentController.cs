@@ -5,7 +5,7 @@ using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Presentation.Web.DTOs;
 using Common.API.Controllers;
 using Common.API.Helpers;
-using Common.Models;
+using Common.Models.Models;
 
 namespace ApplicantService.Presentation.Web.Controllers
 {

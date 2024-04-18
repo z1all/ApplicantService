@@ -1,5 +1,5 @@
 ﻿using Common.API.Configurations;
-using Common.Configurations;
+using Common.ServiceBus.Configurations;
 
 namespace ApplicantService.Presentation.Web
 {

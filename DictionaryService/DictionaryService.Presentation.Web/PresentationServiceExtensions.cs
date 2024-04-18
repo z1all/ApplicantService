@@ -1,6 +1,6 @@
 ﻿using DictionaryService.Presentation.Web.BackgroundServices;
 using Common.API.Configurations;
-using Common.Configurations;
+using Common.ServiceBus.Configurations;
 
 namespace DictionaryService.Presentation.Web
 {

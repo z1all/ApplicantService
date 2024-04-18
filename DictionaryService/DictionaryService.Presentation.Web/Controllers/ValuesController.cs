@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Common.ServiceBusDTOs.FromDictionaryService;
-using Common.Enums;
-using Common.Models;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
 using EasyNetQ;
-using DictionaryService.Core.Domain;
-using Common.DTOs;
+using Common.Models.DTOs;
+using Common.Models.Models;
+using Common.Models.Enums;
 
 namespace DictionaryService.Presentation.Web.Controllers
 {

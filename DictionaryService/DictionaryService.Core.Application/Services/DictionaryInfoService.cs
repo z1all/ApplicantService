@@ -2,8 +2,8 @@
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Mappers;
-using Common.Models;
-using Common.DTOs;
+using Common.Models.DTOs;
+using Common.Models.Models;
 
 namespace DictionaryService.Core.Application.Services
 {

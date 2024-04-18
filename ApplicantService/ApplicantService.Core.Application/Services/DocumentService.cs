@@ -1,12 +1,12 @@
 ﻿using ApplicantService.Core.Application.DTOs;
+using ApplicantService.Core.Application.Extensions;
 using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Application.Mapper;
 using ApplicantService.Core.Application.Mappers;
 using ApplicantService.Core.Domain;
 using ApplicantService.Core.Domain.Enums;
-using Common.Extensions;
-using Common.Models;
+using Common.Models.Models;
 
 namespace ApplicantService.Core.Application.Services
 {
