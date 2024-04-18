@@ -78,9 +78,6 @@ namespace DictionaryService.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<bool>("Deprecated")
                         .HasColumnType("boolean");
 

@@ -1,5 +1,6 @@
 ﻿using DictionaryService.Core.Domain;
 using DictionaryService.Infrastructure.Persistence.Contexts;
+using Common.Enums;
 
 namespace DictionaryService.Infrastructure.Persistence
 {
@@ -11,23 +12,23 @@ namespace DictionaryService.Infrastructure.Persistence
             [
                 new UpdateStatus()
                 {
-                    DictionaryType = Core.Domain.Enum.DictionaryType.Faculty,
-                    Status = Core.Domain.Enum.UpdateStatusEnum.Updated,
+                    DictionaryType = DictionaryType.Faculty,
+                    Status = UpdateStatusEnum.Updated,
                 },
                 new UpdateStatus()
                 {
-                    DictionaryType = Core.Domain.Enum.DictionaryType.EducationProgram,
-                    Status = Core.Domain.Enum.UpdateStatusEnum.Updated,
+                    DictionaryType = DictionaryType.EducationProgram,
+                    Status = UpdateStatusEnum.Updated,
                 },
                 new UpdateStatus()
                 {
-                    DictionaryType = Core.Domain.Enum.DictionaryType.EducationDocumentType,
-                    Status = Core.Domain.Enum.UpdateStatusEnum.Updated,
+                    DictionaryType = DictionaryType.EducationDocumentType,
+                    Status = UpdateStatusEnum.Updated,
                 },
                 new UpdateStatus()
                 {
-                    DictionaryType = Core.Domain.Enum.DictionaryType.EducationLevel,
-                    Status = Core.Domain.Enum.UpdateStatusEnum.Updated,
+                    DictionaryType = DictionaryType.EducationLevel,
+                    Status = UpdateStatusEnum.Updated,
                 },
             ];
 

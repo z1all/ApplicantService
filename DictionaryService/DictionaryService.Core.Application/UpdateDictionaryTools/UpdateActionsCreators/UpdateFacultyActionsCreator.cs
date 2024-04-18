@@ -3,6 +3,7 @@ using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCrea
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Domain;
+using Common.Enums;
 using Common.Models;
 using Common.Repositories;
 
@@ -32,22 +33,29 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override async Task BeforeActionsAsync()
         {
-            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(Domain.Enum.DictionaryType.Faculty);
+            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(DictionaryType.Faculty);
+
+            await base.BeforeActionsAsync();
         }
 
         protected override bool CompareKey(Faculty faculty, FacultyExternalDTO externalFaculty)
             => faculty.Id == externalFaculty.Id;
 
         protected override async Task<List<Faculty>> GetEntityAsync()
-            => await _facultyRepository.GetAllAsync();
+            => await _facultyRepository.GetAllAsync(true);
 
         protected override async Task<ExecutionResult<List<FacultyExternalDTO>>> GetExternalEntityAsync()
             => await _externalDictionaryService.GetFacultiesAsync();
 
-        protected override void UpdateEntity(Faculty faculty, FacultyExternalDTO externalFaculty)
+        protected override bool UpdateEntity(Faculty faculty, FacultyExternalDTO externalFaculty)
         {
-            faculty.Name = externalFaculty.Name;
-            faculty.Deprecated = false;
+            if(faculty.Name != externalFaculty.Name || faculty.Deprecated != false)
+            {
+                faculty.Name = externalFaculty.Name;
+                faculty.Deprecated = false;
+                return true;
+            }
+            return false;
         }
 
         protected override Faculty AddEntity(FacultyExternalDTO externalFaculty)

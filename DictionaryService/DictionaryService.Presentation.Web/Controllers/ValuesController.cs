@@ -1,93 +1,81 @@
-﻿using DictionaryService.Core.Application.DTOs;
-using DictionaryService.Core.Application.Interfaces.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using Common.ServiceBusDTOs.FromDictionaryService;
+using Common.Enums;
+using Common.Models;
+using EasyNetQ;
 using DictionaryService.Core.Domain;
-using DictionaryService.Core.Domain.Enum;
-using DictionaryService.Infrastructure.Persistence.Contexts;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System.Data;
+using Common.DTOs;
 
 namespace DictionaryService.Presentation.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController(IUpdateDictionaryService _updateDictionaryService) : ControllerBase
+    public class ValuesController(IBus bus /*IUpdateDictionaryService _updateDictionaryService*/) : ControllerBase
     {
         // В класс нужно пропихнуть IServiceProvider
         // Класс регаем как синглтон
         // в этом классе bus.Rpc.Respond<MyRequest, MyResponse>() передаем лямбду, в которой через IServiceProvider получаем нужный сервис 
 
-
         [HttpPost]
         public async Task<ActionResult> Update(DictionaryType dictionaryType)
         {
-            return Ok(await _updateDictionaryService.UpdateDictionaryAsync(dictionaryType));
+            await bus.PubSub.PublishAsync<UpdateDictionaryNotificationRequest>(new()
+            {
+                DictionaryType = dictionaryType
+            });
+
+            return NoContent();
         }
 
         [HttpPost("all")]
         public async Task<ActionResult> UpdateAll()
         {
-            return Ok(await _updateDictionaryService.UpdateAllDictionaryAsync());
+            await bus.PubSub.PublishAsync<UpdateAllDictionaryNotificationRequest>(new());
+
+            return NoContent();
         }
 
         [HttpGet]
         public async Task<List<UpdateStatusDTO>> GetStatuses()
         {
-            return (await _updateDictionaryService.GetUpdateStatusesAsync()).Result!;
+            var response = await bus.Rpc.RequestAsync<GetUpdateStatusesRequest, ExecutionResult<GetUpdateStatusesResponse>>(new());
+
+            return response.Result!.UpdateStatuses;
         }
 
-        //[HttpGet]
-        //public async Task<bool> Get() 
-        //{
-            
+        [HttpGet("Faculty")]
+        public async Task<List<FacultyDTO>> GetFaculty()
+        {
+            var response = await bus.Rpc.RequestAsync<GetFacultiesRequest, ExecutionResult<GetFacultiesResponse>>(new());
 
-        //    using (IDbContextTransaction scope = await appDbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable))
-        //    {
+            return response.Result!.Faculties;
+        }
 
-                
-        //        //Lock the table during this transaction
-        //        await appDbContext.Database.ExecuteSqlRawAsync("LOCK TABLE \"Faculties\" IN ACCESS EXCLUSIVE MODE");
+        [HttpGet("EducationPrograms")]
+        public async Task<ProgramPagedDTO> GetEducationPrograms([FromQuery]EducationProgramFilterDTO filter)
+        {
+            var response = await bus.Rpc.RequestAsync<GetEducationProgramsRequest, ExecutionResult<GetEducationProgramsResponse>>(new()
+            { 
+                ProgramFilter = filter 
+            });
 
-        //        var a = await appDbContext.Faculties.FirstOrDefaultAsync();
+            return response.Result!.ProgramPagedDTO;
+        }
 
-        //        Console.WriteLine(a.Name + " 11111111111111");
+        [HttpGet("EducationLevel")]
+        public async Task<List<EducationLevelDTO>> GetEducationLevel()
+        {
+            var response = await bus.Rpc.RequestAsync<GetEducationLevelsRequest, ExecutionResult<GetEducationLevelsResponse>>(new());
 
-        //        var f = appDbContext.Faculties.ToList();
-        //        f.ForEach(x => x.Name = x.Name + "666");
-        //        appDbContext.UpdateRange(f);
-        //        await appDbContext.SaveChangesAsync();
+            return response.Result!.EducationLevels;
+        }
 
-        //        Thread.Sleep(10000);
-        //        //Do your work with the locked table here...
+        [HttpGet("DocumentTypes")]
+        public async Task<List<EducationDocumentTypeDTO>> GetDocumentTypes()
+        {
+            var response = await bus.Rpc.RequestAsync<GetDocumentTypeRequest, ExecutionResult<GetDocumentTypeResponse>>(new());
 
-        //        //Complete the scope here to commit, otherwise it will rollback
-        //        //The table lock will be released after we exit the TransactionScope block
-        //        scope.Commit();
-        //    }
-
-        //    await appDbContext.Faculties.AddAsync(new()
-        //    {
-        //        Name = "123",
-        //        Deprecated = true,
-        //    });
-
-        //    Console.WriteLine("SAD11");
-        //    await appDbContext.SaveChangesAsync();
-        //    Console.WriteLine("SAD22");
-
-        //    return true;
-        //}
-
-
-        //[HttpGet("sad")]
-        //public async Task<List<Faculty>> Get2()
-        //{
-        //    var a = await appDbContext.Faculties.FirstOrDefaultAsync();
-
-        //    Console.WriteLine(a.Name + " 2222222222333333333");
-
-        //    return appDbContext.Faculties.ToList();
-        //}
+            return response.Result!.DocumentTypes;
+        }
     }
 }

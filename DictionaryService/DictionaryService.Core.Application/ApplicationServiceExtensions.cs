@@ -6,13 +6,15 @@ using DictionaryService.Core.Application.DTOs;
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators;
 
-namespace ApplicantService.Core.Application
+namespace DictionaryService.Core.Application
 {
     public static class ApplicationServiceExtensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IUpdateDictionaryService, UpdateDictionaryService>();
+            services.AddScoped<IDictionaryInfoService, DictionaryInfoService>();
+            services.AddScoped<INotificationService, EasyNetQNotificationService>();
 
             // Action creators
             services.AddScoped<UpdateActionsCreator<Faculty, FacultyExternalDTO>, UpdateFacultyActionsCreator>();

@@ -5,6 +5,6 @@ namespace DictionaryService.Core.Application.Interfaces.Repositories
 {
     public interface IFacultyRepository : IBaseRepository<Faculty> 
     {
-        Task<List<Faculty>> GetAllAsync();
+        Task<List<Faculty>> GetAllAsync(bool getDeprecated);
     }
 }

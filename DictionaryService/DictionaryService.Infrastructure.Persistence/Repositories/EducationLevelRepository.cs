@@ -16,9 +16,11 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                 .AnyAsync(educationLevel => educationLevel.ExternalId == externalId);
         }
 
-        public async Task<List<EducationLevel>> GetAllAsync()
+        public async Task<List<EducationLevel>> GetAllAsync(bool getDeprecated)
         {
-            return await _dbContext.EducationLevels.ToListAsync();
+            return await _dbContext.EducationLevels
+                .Where(educationLevels => getDeprecated ? true : !educationLevels.Deprecated)
+                .ToListAsync();
         }
 
         public EducationLevel GetByExternalId(int externalId)

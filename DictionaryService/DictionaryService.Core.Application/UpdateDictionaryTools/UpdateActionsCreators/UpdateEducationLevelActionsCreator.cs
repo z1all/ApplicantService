@@ -3,6 +3,7 @@ using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base;
 using DictionaryService.Core.Domain;
+using Common.Enums;
 using Common.Models;
 using Common.Repositories;
 
@@ -35,22 +36,29 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override async Task BeforeActionsAsync()
         {
-            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(Domain.Enum.DictionaryType.EducationLevel);
+            _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(DictionaryType.EducationLevel);
+
+            await base.BeforeActionsAsync();
         }
 
         protected override bool CompareKey(EducationLevel educationLevel, EducationLevelExternalDTO externalEducationLevel)
             => educationLevel.ExternalId == externalEducationLevel.Id;
 
         protected override async Task<List<EducationLevel>> GetEntityAsync()
-            => await _educationLevelRepository.GetAllAsync();
+            => await _educationLevelRepository.GetAllAsync(true);
 
         protected override async Task<ExecutionResult<List<EducationLevelExternalDTO>>> GetExternalEntityAsync()
             => await _externalDictionaryService.GetEducationLevelsAsync();
 
-        protected override void UpdateEntity(EducationLevel educationLevel, EducationLevelExternalDTO externalEducationLevel)
+        protected override bool UpdateEntity(EducationLevel educationLevel, EducationLevelExternalDTO externalEducationLevel)
         {
-            educationLevel.Name = externalEducationLevel.Name;
-            educationLevel.Deprecated = false;
+            if (educationLevel.Name != externalEducationLevel.Name || educationLevel.Deprecated != false)
+            {
+                educationLevel.Name = externalEducationLevel.Name;
+                educationLevel.Deprecated = false;
+                return true;
+            }
+            return false;
         }
 
         protected override EducationLevel AddEntity(EducationLevelExternalDTO externalEducationLevel)

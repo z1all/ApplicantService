@@ -1,4 +1,4 @@
-﻿using DictionaryService.Core.Domain.Enum;
+﻿using Common.Enums;
 using Common.Repositories;
 
 namespace DictionaryService.Core.Domain

@@ -2,11 +2,13 @@
 using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Application.Interfaces.Transaction;
-using DictionaryService.Core.Domain.Enum;
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base;
+using Common.Enums;
 using Common.Models;
+using Common.DTOs;
+using System.Collections.Generic;
 
 namespace DictionaryService.Core.Application.Services
 {
@@ -14,6 +16,7 @@ namespace DictionaryService.Core.Application.Services
     {
         private readonly IUpdateStatusRepository _updateStatusRepository;
         private readonly ITransactionProvider _transactionProvider;
+        private readonly INotificationService _notificationService;
 
         private readonly UpdateActionsCreator<Faculty, FacultyExternalDTO> _updateFacultyActionsCreator;
         private readonly UpdateActionsCreator<EducationLevel, EducationLevelExternalDTO> _updateEducationLevelActionsCreator;
@@ -22,6 +25,7 @@ namespace DictionaryService.Core.Application.Services
 
         public UpdateDictionaryService(
             IUpdateStatusRepository updateStatusRepository, ITransactionProvider transactionProvider,
+            INotificationService notificationService,
             UpdateActionsCreator<Faculty, FacultyExternalDTO> updateFacultyActionsCreator,
             UpdateActionsCreator<EducationLevel, EducationLevelExternalDTO> updateEducationLevelActionsCreator,
             UpdateActionsCreator<EducationProgram, EducationProgramExternalDTO> updateEducationProgramActionsCreator,
@@ -29,6 +33,7 @@ namespace DictionaryService.Core.Application.Services
         {
             _updateStatusRepository = updateStatusRepository;
             _transactionProvider = transactionProvider;
+            _notificationService = notificationService;
 
             _updateFacultyActionsCreator = updateFacultyActionsCreator;
             _updateEducationLevelActionsCreator = updateEducationLevelActionsCreator;
@@ -46,30 +51,33 @@ namespace DictionaryService.Core.Application.Services
 
             return await UpdateDictionaryHandlerAsync(async () =>
             {
-                ExecutionResult updateFacultyResult = await UpdateFacultyAsync(true);
+                ExecutionResult<List<Faculty>> updateFacultyResult = await UpdateFacultyAsync(true);
                 if (!updateFacultyResult.IsSuccess) return updateFacultyResult; 
 
-                ExecutionResult updateEducationLevelResult = await UpdateEducationLevelAsync(true);
+                ExecutionResult<List<EducationLevel>> updateEducationLevelResult = await UpdateEducationLevelAsync(true);
                 if (!updateEducationLevelResult.IsSuccess) return updateEducationLevelResult;
 
-                ExecutionResult updateEducationProgramResult = await UpdateEducationProgramAsync(true);
+                ExecutionResult<List<EducationProgram>> updateEducationProgramResult = await UpdateEducationProgramAsync(true);
                 if (!updateEducationProgramResult.IsSuccess) return updateEducationProgramResult;
 
-                ExecutionResult updateEducationDocumentTypeResult = await UpdateEducationDocumentTypeAsync(true);
+                ExecutionResult<List<EducationDocumentType>> updateEducationDocumentTypeResult = await UpdateEducationDocumentTypeAsync(true);
                 if (!updateEducationDocumentTypeResult.IsSuccess) return updateEducationDocumentTypeResult;
 
-                return new(isSuccess: true);
-            }, async () =>
+                return await SendNotificationHandlerAsync(updateFacultyResult, updateEducationLevelResult, updateEducationProgramResult, updateEducationDocumentTypeResult);
+            }, async (changeStatus, message) =>
             {
-                List<UpdateStatus> updateStatuses = await _updateStatusRepository.GetAllAsync();
-
-                updateStatuses.ForEach(updateStatus =>
+                if (changeStatus)
                 {
-                    updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
-                    updateStatus!.Comments = "Unknow error";
-                });
+                    List<UpdateStatus> updateStatuses = await _updateStatusRepository.GetAllAsync();
 
-                await _updateStatusRepository.SaveChangesAsync();
+                    updateStatuses.ForEach(updateStatus =>
+                    {
+                        updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
+                        updateStatus!.Comments = message;
+                    });
+
+                    await _updateStatusRepository.SaveChangesAsync();
+                }
             });
         }
 
@@ -83,20 +91,29 @@ namespace DictionaryService.Core.Application.Services
 
             return await UpdateDictionaryHandlerAsync(async () =>
             {
-                return dictionaryType switch
+                var a = dictionaryType switch
                 {
-                    DictionaryType.Faculty => await UpdateFacultyAsync(),
-                    DictionaryType.EducationProgram => await UpdateEducationProgramAsync(),
-                    DictionaryType.EducationLevel => await UpdateEducationLevelAsync(),
-                    DictionaryType.EducationDocumentType => await UpdateEducationDocumentTypeAsync(),
+                    DictionaryType.Faculty => await SendNotificationHandlerAsync(
+                        await UpdateFacultyAsync(), _notificationService.ChangedFacultiesAsync),
+                    DictionaryType.EducationProgram => await SendNotificationHandlerAsync(
+                        await UpdateEducationProgramAsync(), _notificationService.ChangedEducationProgramAsync),
+                    DictionaryType.EducationLevel => await SendNotificationHandlerAsync(
+                        await UpdateEducationLevelAsync(), _notificationService.ChangedEducationLevelAsync),
+                    DictionaryType.EducationDocumentType => await SendNotificationHandlerAsync(
+                        await UpdateEducationDocumentTypeAsync(), _notificationService.ChangedEducationDocumentTypeAsync),
                     _ => new(keyError: "WrongDictionaryType", error: "Wrong dictionary type"),
                 };
-            }, async () =>
+
+                return a;
+            }, async (changeStatus, message) =>
             {
-                UpdateStatus? updateStatus = await _updateStatusRepository.GetByDictionaryTypeAsync(dictionaryType);
-                updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
-                updateStatus!.Comments = "Unknow error";
-                await _updateStatusRepository.UpdateAsync(updateStatus);
+                if(changeStatus)
+                {
+                    UpdateStatus? updateStatus = await _updateStatusRepository.GetByDictionaryTypeAsync(dictionaryType);
+                    updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
+                    updateStatus!.Comments = message;
+                    await _updateStatusRepository.UpdateAsync(updateStatus);
+                }
             });
         }
 
@@ -114,7 +131,38 @@ namespace DictionaryService.Core.Application.Services
             };
         }
 
-        private async Task<ExecutionResult> UpdateDictionaryHandlerAsync(Func<Task<ExecutionResult>> updateOperationAsync, Func<Task> onErrorAsync)
+        private async Task<ExecutionResult> SendNotificationHandlerAsync(
+            ExecutionResult<List<Faculty>> updateFaculty, ExecutionResult<List<EducationLevel>> updateEducationLevel,
+            ExecutionResult<List<EducationProgram>> updateEducationProgram, ExecutionResult<List<EducationDocumentType>> updateEducationDocumentType)
+        {
+            ExecutionResult result = await SendNotificationHandlerAsync(updateFaculty, _notificationService.ChangedFacultiesAsync);
+            if (!result.IsSuccess) return result;
+
+            result = await SendNotificationHandlerAsync(updateEducationLevel, _notificationService.ChangedEducationLevelAsync);
+            if (!result.IsSuccess) return result;
+
+            result = await SendNotificationHandlerAsync(updateEducationProgram, _notificationService.ChangedEducationProgramAsync);
+            if (!result.IsSuccess) return result;
+
+            result = await SendNotificationHandlerAsync(updateEducationDocumentType, _notificationService.ChangedEducationDocumentTypeAsync);
+            if (!result.IsSuccess) return result;
+
+            return new(isSuccess: true);
+        }
+
+        private async Task<ExecutionResult> SendNotificationHandlerAsync<TEntity>(ExecutionResult<List<TEntity>> changedEntities, Func<TEntity, Task<ExecutionResult>> notificationOperationAsync)
+        {
+            if (!changedEntities.IsSuccess) return changedEntities;
+
+            foreach (var entity in changedEntities.Result!)
+            {
+                await notificationOperationAsync(entity);
+            }
+
+            return new(isSuccess: true);
+        }
+
+        private async Task<ExecutionResult> UpdateDictionaryHandlerAsync(Func<Task<ExecutionResult>> updateOperationAsync, Func<bool, string, Task> onErrorAsync)
         {
             // Создаем транзакцию для отмены изменений, если что-то пошло не так
             using ITransaction transaction = await _transactionProvider.CreateTransactionScopeAsync();
@@ -127,7 +175,7 @@ namespace DictionaryService.Core.Application.Services
                 {
                     await transaction.RollbackAsync();
 
-                    await onErrorAsync();
+                    await onErrorAsync(false, "");
                 }
                 else
                 {
@@ -136,17 +184,17 @@ namespace DictionaryService.Core.Application.Services
 
                 return executionResult;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
 
-                await onErrorAsync();
+                await onErrorAsync(true, ex.ToString());
 
                 throw;
             }
         }
 
-        private async Task<ExecutionResult> UpdateFacultyAsync(bool deleteRelatedEntities = false)
+        private async Task<ExecutionResult<List<Faculty>>> UpdateFacultyAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<Faculty, FacultyExternalDTO> updateFacultyActions 
                 = _updateFacultyActionsCreator.CreateActions();
@@ -155,7 +203,7 @@ namespace DictionaryService.Core.Application.Services
                 .UpdateAsync(deleteRelatedEntities, updateFacultyActions);
         }
 
-        private async Task<ExecutionResult> UpdateEducationLevelAsync(bool deleteRelatedEntities = false)
+        private async Task<ExecutionResult<List<EducationLevel>>> UpdateEducationLevelAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<EducationLevel, EducationLevelExternalDTO> updateEducationLevelActions
                 = _updateEducationLevelActionsCreator.CreateActions();
@@ -164,7 +212,7 @@ namespace DictionaryService.Core.Application.Services
                 .UpdateAsync(deleteRelatedEntities, updateEducationLevelActions);
         }
 
-        private async Task<ExecutionResult> UpdateEducationProgramAsync(bool deleteRelatedEntities = false)
+        private async Task<ExecutionResult<List<EducationProgram>>> UpdateEducationProgramAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<EducationProgram, EducationProgramExternalDTO> updateEducationProgramActions
                 = _updateEducationProgramActionsCreator.CreateActions();
@@ -173,7 +221,7 @@ namespace DictionaryService.Core.Application.Services
                .UpdateAsync(deleteRelatedEntities, updateEducationProgramActions);
         }
 
-        private async Task<ExecutionResult> UpdateEducationDocumentTypeAsync(bool deleteRelatedEntities = false)
+        private async Task<ExecutionResult<List<EducationDocumentType>>> UpdateEducationDocumentTypeAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<EducationDocumentType, EducationDocumentTypeExternalDTO> updateEducationDocumentTypeActions
                 = _updateEducationDocumentTypeActionsCreator.CreateActions();

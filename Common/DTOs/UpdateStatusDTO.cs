@@ -1,6 +1,6 @@
-﻿using DictionaryService.Core.Domain.Enum;
+﻿using Common.Enums;
 
-namespace DictionaryService.Core.Application.DTOs
+namespace Common.DTOs
 {
     public class UpdateStatusDTO
     {

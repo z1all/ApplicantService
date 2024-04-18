@@ -1,5 +1,8 @@
-﻿namespace DictionaryService.Core.Domain.Enum
+﻿using System.Text.Json.Serialization;
+
+namespace Common.Enums
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum UpdateStatusEnum
     {
         Loading = 1,
