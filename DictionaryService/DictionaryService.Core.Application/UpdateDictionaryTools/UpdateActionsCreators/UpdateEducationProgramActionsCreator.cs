@@ -38,8 +38,8 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override async Task BeforeActionsAsync()
         {
-            educationLevelsCache = await _educationLevelRepository.GetAllAsync();
-            facultiesCache = await _facultyRepository.GetAllAsync();
+            educationLevelsCache = await _educationLevelRepository.GetAllAsync(true);
+            facultiesCache = await _facultyRepository.GetAllAsync(true);
             _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(DictionaryType.EducationProgram);
 
             await base.BeforeActionsAsync();

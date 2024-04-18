@@ -27,19 +27,45 @@ namespace DictionaryService.Core.Application.Services
             return GiveResult(result, "An error occurred when sending a notification about education document type updated.");
         }
 
-        public Task<ExecutionResult> ChangedEducationLevelAsync(EducationLevel educationLevel)
+        public async Task<ExecutionResult> ChangedEducationLevelAsync(EducationLevel educationLevel)
         {
-            throw new NotImplementedException();
+            bool result = await SendingHandler(new EducationLevelUpdatedNotification()
+            {
+                Id = educationLevel.Id,
+                Name = educationLevel.Name,
+                Deprecated = educationLevel.Deprecated,
+            });
+
+            return GiveResult(result, "An error occurred when sending a notification about education level updated.");
         }
 
-        public Task<ExecutionResult> ChangedEducationProgramAsync(EducationProgram program)
+        public async Task<ExecutionResult> ChangedEducationProgramAsync(EducationProgram program)
         {
-            throw new NotImplementedException();
+            bool result = await SendingHandler(new EducationProgramUpdatedNotification()
+            {
+                Id = program.Id,
+                Name = program.Name,
+                Code = program.Code,
+                EducationForm = program.EducationForm,
+                Language = program.Language,
+                EducationLevelId = program.EducationLevelId,
+                FacultyId = program.FacultyId,
+                Deprecated = program.Deprecated,
+            });
+
+            return GiveResult(result, "An error occurred when sending a notification about education program updated.");
         }
 
-        public Task<ExecutionResult> ChangedFacultiesAsync(Faculty faculty)
+        public async Task<ExecutionResult> ChangedFacultiesAsync(Faculty faculty)
         {
-            throw new NotImplementedException();
+            bool result = await SendingHandler(new FacultyUpdatedNotification()
+            {
+                Id = faculty.Id,
+                Name = faculty.Name,
+                Deprecated = faculty.Deprecated,
+            });
+
+            return GiveResult(result, "An error occurred when sending a notification about faculty updated.");
         }
 
         private ExecutionResult GiveResult(bool result, string errorMassage)

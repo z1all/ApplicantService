@@ -1,5 +1,5 @@
-﻿using Common.Repositories;
-using DictionaryService.Core.Domain;
+﻿using DictionaryService.Core.Domain;
+using Common.Repositories;
 
 namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler
 {

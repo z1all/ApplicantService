@@ -8,7 +8,7 @@ using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCrea
 using Common.Enums;
 using Common.Models;
 using Common.DTOs;
-
+using System.Collections.Generic;
 
 namespace DictionaryService.Core.Application.Services
 {
@@ -51,30 +51,33 @@ namespace DictionaryService.Core.Application.Services
 
             return await UpdateDictionaryHandlerAsync(async () =>
             {
-                ExecutionResult updateFacultyResult = await UpdateFacultyAsync(true);
+                ExecutionResult<List<Faculty>> updateFacultyResult = await UpdateFacultyAsync(true);
                 if (!updateFacultyResult.IsSuccess) return updateFacultyResult; 
 
-                ExecutionResult updateEducationLevelResult = await UpdateEducationLevelAsync(true);
+                ExecutionResult<List<EducationLevel>> updateEducationLevelResult = await UpdateEducationLevelAsync(true);
                 if (!updateEducationLevelResult.IsSuccess) return updateEducationLevelResult;
 
-                ExecutionResult updateEducationProgramResult = await UpdateEducationProgramAsync(true);
+                ExecutionResult<List<EducationProgram>> updateEducationProgramResult = await UpdateEducationProgramAsync(true);
                 if (!updateEducationProgramResult.IsSuccess) return updateEducationProgramResult;
 
-                ExecutionResult updateEducationDocumentTypeResult = await UpdateEducationDocumentTypeAsync(true);
+                ExecutionResult<List<EducationDocumentType>> updateEducationDocumentTypeResult = await UpdateEducationDocumentTypeAsync(true);
                 if (!updateEducationDocumentTypeResult.IsSuccess) return updateEducationDocumentTypeResult;
 
-                return new(isSuccess: true);
-            }, async () =>
+                return await SendNotificationHandlerAsync(updateFacultyResult, updateEducationLevelResult, updateEducationProgramResult, updateEducationDocumentTypeResult);
+            }, async (changeStatus, message) =>
             {
-                List<UpdateStatus> updateStatuses = await _updateStatusRepository.GetAllAsync();
-
-                updateStatuses.ForEach(updateStatus =>
+                if (changeStatus)
                 {
-                    updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
-                    updateStatus!.Comments = "Unknow error";
-                });
+                    List<UpdateStatus> updateStatuses = await _updateStatusRepository.GetAllAsync();
 
-                await _updateStatusRepository.SaveChangesAsync();
+                    updateStatuses.ForEach(updateStatus =>
+                    {
+                        updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
+                        updateStatus!.Comments = message;
+                    });
+
+                    await _updateStatusRepository.SaveChangesAsync();
+                }
             });
         }
 
@@ -102,12 +105,15 @@ namespace DictionaryService.Core.Application.Services
                 };
 
                 return a;
-            }, async () =>
+            }, async (changeStatus, message) =>
             {
-                UpdateStatus? updateStatus = await _updateStatusRepository.GetByDictionaryTypeAsync(dictionaryType);
-                updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
-                updateStatus!.Comments = "Unknow error";
-                await _updateStatusRepository.UpdateAsync(updateStatus);
+                if(changeStatus)
+                {
+                    UpdateStatus? updateStatus = await _updateStatusRepository.GetByDictionaryTypeAsync(dictionaryType);
+                    updateStatus!.Status = UpdateStatusEnum.ErrorInUpdating;
+                    updateStatus!.Comments = message;
+                    await _updateStatusRepository.UpdateAsync(updateStatus);
+                }
             });
         }
 
@@ -125,6 +131,25 @@ namespace DictionaryService.Core.Application.Services
             };
         }
 
+        private async Task<ExecutionResult> SendNotificationHandlerAsync(
+            ExecutionResult<List<Faculty>> updateFaculty, ExecutionResult<List<EducationLevel>> updateEducationLevel,
+            ExecutionResult<List<EducationProgram>> updateEducationProgram, ExecutionResult<List<EducationDocumentType>> updateEducationDocumentType)
+        {
+            ExecutionResult result = await SendNotificationHandlerAsync(updateFaculty, _notificationService.ChangedFacultiesAsync);
+            if (!result.IsSuccess) return result;
+
+            result = await SendNotificationHandlerAsync(updateEducationLevel, _notificationService.ChangedEducationLevelAsync);
+            if (!result.IsSuccess) return result;
+
+            result = await SendNotificationHandlerAsync(updateEducationProgram, _notificationService.ChangedEducationProgramAsync);
+            if (!result.IsSuccess) return result;
+
+            result = await SendNotificationHandlerAsync(updateEducationDocumentType, _notificationService.ChangedEducationDocumentTypeAsync);
+            if (!result.IsSuccess) return result;
+
+            return new(isSuccess: true);
+        }
+
         private async Task<ExecutionResult> SendNotificationHandlerAsync<TEntity>(ExecutionResult<List<TEntity>> changedEntities, Func<TEntity, Task<ExecutionResult>> notificationOperationAsync)
         {
             if (!changedEntities.IsSuccess) return changedEntities;
@@ -137,7 +162,7 @@ namespace DictionaryService.Core.Application.Services
             return new(isSuccess: true);
         }
 
-        private async Task<ExecutionResult> UpdateDictionaryHandlerAsync(Func<Task<ExecutionResult>> updateOperationAsync, Func<Task> onErrorAsync)
+        private async Task<ExecutionResult> UpdateDictionaryHandlerAsync(Func<Task<ExecutionResult>> updateOperationAsync, Func<bool, string, Task> onErrorAsync)
         {
             // Создаем транзакцию для отмены изменений, если что-то пошло не так
             using ITransaction transaction = await _transactionProvider.CreateTransactionScopeAsync();
@@ -150,7 +175,7 @@ namespace DictionaryService.Core.Application.Services
                 {
                     await transaction.RollbackAsync();
 
-                    await onErrorAsync();
+                    await onErrorAsync(false, "");
                 }
                 else
                 {
@@ -159,11 +184,11 @@ namespace DictionaryService.Core.Application.Services
 
                 return executionResult;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
 
-                await onErrorAsync();
+                await onErrorAsync(true, ex.ToString());
 
                 throw;
             }

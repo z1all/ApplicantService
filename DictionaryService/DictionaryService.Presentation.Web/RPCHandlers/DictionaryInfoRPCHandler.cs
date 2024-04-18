@@ -3,6 +3,7 @@ using Common.EasyNetQAutoSubscriber;
 using Common.Models;
 using Common.ServiceBusDTOs.FromDictionaryService;
 using EasyNetQ;
+using DictionaryService.Core.Application.Services;
 
 namespace DictionaryService.Presentation.Web.RPCHandlers
 {
@@ -23,6 +24,18 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
 
             _bus.Rpc.Respond<GetDocumentTypeRequest, ExecutionResult<GetDocumentTypeResponse>>(async (_) =>
                 await ExceptionHandlerAsync(GetDocumentTypeAsync));
+
+            _bus.Rpc.Respond<GetEducationDocumentTypeRequest, ExecutionResult<GetEducationDocumentTypeResponse>>(async (request) =>
+                await ExceptionHandlerAsync(async (service) => await GetDocumentTypeAsync(service, request)));
+
+
+            /*
+                await _dictionaryInfoService.GetFacultiesAsync();
+                await _dictionaryInfoService.GetProgramsAsync(request.ProgramFilter);
+                await _dictionaryInfoService.GetEducationLevelsAsync();
+                await _dictionaryInfoService.GetDocumentTypesAsync();
+                await _dictionaryInfoService.GetDocumentTypeByIdAsync(requests.DocumentId);
+            */
         }
 
         private async Task<ExecutionResult<GetFacultiesResponse>> GetFacultiesAsync(IServiceProvider service)
@@ -51,6 +64,19 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
                 async (_dictionaryInfoService) => await _dictionaryInfoService.GetDocumentTypesAsync(),
                 (documentTypes) => new GetDocumentTypeResponse() { DocumentTypes = documentTypes });
         }
+
+        private async Task<ExecutionResult<GetEducationDocumentTypeResponse>> GetDocumentTypeAsync(IServiceProvider service, GetEducationDocumentTypeRequest requests)
+        {
+            return await GetDictionaryHandlerAsync(service,
+                async (_dictionaryInfoService) => await _dictionaryInfoService.GetDocumentTypeByIdAsync(requests.DocumentId),
+                (documentTypes) => new GetEducationDocumentTypeResponse() 
+                { 
+                   Id = documentTypes.Id,
+                   Name = documentTypes.Name,
+                   Deprecated = false,
+                });
+        }
+
 
         private async Task<ExecutionResult<TResponse>> GetDictionaryHandlerAsync<TResponse, TDictionaryResponse>(
             IServiceProvider service, 

@@ -42,7 +42,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
             => faculty.Id == externalFaculty.Id;
 
         protected override async Task<List<Faculty>> GetEntityAsync()
-            => await _facultyRepository.GetAllAsync();
+            => await _facultyRepository.GetAllAsync(true);
 
         protected override async Task<ExecutionResult<List<FacultyExternalDTO>>> GetExternalEntityAsync()
             => await _externalDictionaryService.GetFacultiesAsync();

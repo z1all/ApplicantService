@@ -7,6 +7,7 @@ namespace DictionaryService.Core.Application.Interfaces.Repositories
     {
         Task<List<EducationDocumentType>> GetAllByNextEducationLevelIdAsync(Guid educationLevelId);
         Task<List<EducationDocumentType>> GetByCurrentEducationLevelIdAsync(Guid educationLevelId);
-        Task<List<EducationDocumentType>> GetAllAsync();
+        Task<List<EducationDocumentType>> GetAllAsync(bool getDeprecated);
+        Task<EducationDocumentType?> GetByIdAsync(Guid id, bool getDeprecated);
     }
 }

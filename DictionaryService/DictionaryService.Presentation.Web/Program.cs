@@ -22,7 +22,6 @@ builder.Services.AddPresentationServices();
 builder.Services.AddEasyNetQAutoSubscriber("DictionaryService");
 builder.Services.AddRPCHandlers();
 
-
 var app = builder.Build();
 
 // EasyNetQAutoSubscriber extensions

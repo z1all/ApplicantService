@@ -36,7 +36,7 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(Faculty => Faculty.Id == id);
         }
 
-        public async Task<List<EducationProgram>> GetAllByFiltersAsync(EducationProgramFilterDTO filter)
+        public async Task<List<EducationProgram>> GetAllByFiltersAsync(EducationProgramFilterDTO filter, bool getDeprecated)
         {
             return await _dbContext.EducationPrograms
                 .Include(educationProgram => educationProgram.Faculty)
@@ -46,13 +46,14 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                                            (filter.Language != null ? educationProgram.Language.ToLower().Contains(filter.Language.ToLower()) : true) && 
                                            (filter.CodeOrNameProgram != null ? educationProgram.Code.Contains(filter.CodeOrNameProgram.ToLower()) 
                                                                             || educationProgram.Name.Contains(filter.CodeOrNameProgram.ToLower()) : true) &&
-                                           (filter.EducationLevel != null ? filter.EducationLevel.Contains(educationProgram.EducationLevel!.Id) : true))
+                                           (filter.EducationLevel != null ? filter.EducationLevel.Contains(educationProgram.EducationLevel!.Id) : true) &&
+                                           (getDeprecated ? true : !educationProgram.Deprecated && !educationProgram.EducationLevel!.Deprecated && !educationProgram.Faculty!.Deprecated)) 
                 .Skip((filter.Page - 1) * filter.Size)
                 .Take(filter.Size)
                 .ToListAsync();
         }
 
-        public async Task<int> GetAllCountAsync(EducationProgramFilterDTO filter)
+        public async Task<int> GetAllCountAsync(EducationProgramFilterDTO filter, bool getDeprecated)
         {
             return await _dbContext.EducationPrograms
                 .CountAsync(educationProgram => (filter.FacultyName != null ? educationProgram.Faculty!.Name.ToLower().Contains(filter.FacultyName.ToLower()) : true) &&
@@ -60,7 +61,8 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                                            (filter.Language != null ? educationProgram.Language.ToLower().Contains(filter.Language.ToLower()) : true) &&
                                            (filter.CodeOrNameProgram != null ? educationProgram.Code.Contains(filter.CodeOrNameProgram.ToLower())
                                                                             || educationProgram.Name.Contains(filter.CodeOrNameProgram.ToLower()) : true) &&
-                                           (filter.EducationLevel != null ? filter.EducationLevel.Contains(educationProgram.EducationLevel!.Id) : true));
+                                           (filter.EducationLevel != null ? filter.EducationLevel.Contains(educationProgram.EducationLevel!.Id) : true) &&
+                                           (getDeprecated ? true : !educationProgram.Deprecated && !educationProgram.EducationLevel!.Deprecated && !educationProgram.Faculty!.Deprecated));
         }
     }
 }

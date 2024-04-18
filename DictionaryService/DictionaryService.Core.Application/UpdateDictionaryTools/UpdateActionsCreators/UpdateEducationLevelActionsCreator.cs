@@ -45,7 +45,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
             => educationLevel.ExternalId == externalEducationLevel.Id;
 
         protected override async Task<List<EducationLevel>> GetEntityAsync()
-            => await _educationLevelRepository.GetAllAsync();
+            => await _educationLevelRepository.GetAllAsync(true);
 
         protected override async Task<ExecutionResult<List<EducationLevelExternalDTO>>> GetExternalEntityAsync()
             => await _externalDictionaryService.GetEducationLevelsAsync();

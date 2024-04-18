@@ -5,7 +5,7 @@ namespace DictionaryService.Core.Application.Interfaces.Repositories
 {
     public interface IEducationLevelRepository : IBaseRepository<EducationLevel> 
     {
-        Task<List<EducationLevel>> GetAllAsync();
+        Task<List<EducationLevel>> GetAllAsync(bool getDeprecated);
         EducationLevel GetByExternalId(int externalId);
         Task<bool> AnyByExternalIdAsync(int externalId);
     }

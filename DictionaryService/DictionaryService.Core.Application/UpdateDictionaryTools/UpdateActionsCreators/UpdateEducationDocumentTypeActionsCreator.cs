@@ -34,7 +34,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override async Task BeforeActionsAsync()
         {
-            _educationLevelsCache = await _educationLevelRepository.GetAllAsync();
+            _educationLevelsCache = await _educationLevelRepository.GetAllAsync(true);
             _updateStatusCache = await _updateStatusRepository.GetByDictionaryTypeAsync(DictionaryType.EducationDocumentType);
 
             await base.BeforeActionsAsync();
@@ -44,7 +44,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
             => documentType.Id == externalDocumentType.Id;
 
         protected override async Task<List<EducationDocumentType>> GetEntityAsync()
-            => await _educationDocumentTypeRepository.GetAllAsync();
+            => await _educationDocumentTypeRepository.GetAllAsync(true);
 
         protected override async Task<ExecutionResult<List<EducationDocumentTypeExternalDTO>>> GetExternalEntityAsync()
             => await _externalDictionaryService.GetEducationDocumentTypesAsync();

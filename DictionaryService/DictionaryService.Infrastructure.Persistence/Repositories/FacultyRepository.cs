@@ -10,9 +10,11 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
     {
         public FacultyRepository(AppDbContext appDbContext) : base(appDbContext) { }
 
-        public async Task<List<Faculty>> GetAllAsync()
+        public async Task<List<Faculty>> GetAllAsync(bool getDeprecated)
         {
-            return await _dbContext.Faculties.ToListAsync();
+            return await _dbContext.Faculties
+                .Where(faculty => getDeprecated ? true : !faculty.Deprecated)
+                .ToListAsync();
         }
 
         public override async Task<Faculty?> GetByIdAsync(Guid id)
