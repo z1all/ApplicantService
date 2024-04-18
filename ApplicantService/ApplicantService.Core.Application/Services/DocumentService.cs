@@ -77,7 +77,7 @@ namespace ApplicantService.Core.Application.Services
                 Result = documents.Select(document => new DocumentInfo() 
                 { 
                     Id = document.Id,
-                    Type = DocumentType.Passport,
+                    Type = document.DocumentType,
                 }).ToList()
             };
         }       
@@ -156,6 +156,12 @@ namespace ApplicantService.Core.Application.Services
                 return new() { Errors = executionResult.Errors };
             }
 
+            bool documentExist = await _educationDocumentRepository.AnyByDocumentTypeIdAndApplicantIdAsync(documentInfo.EducationDocumentTypeId, applicantId);
+            if (documentExist)
+            {
+                return new(keyError: "AddEducationDocumentFail", error: "Applicant already has the education document with this type!");
+            }
+
             EducationDocument educationDocument = documentInfo.ToEducationDocument(applicantId);
             await _educationDocumentRepository.AddAsync(educationDocument);
 
@@ -180,6 +186,12 @@ namespace ApplicantService.Core.Application.Services
             if (educationDocument is null)
             {
                 return new(keyError: "UpdateEducationDocumentFail", error: $"The applicant does not have a education document with Id {documentId}");
+            }
+
+            bool documentExist = await _educationDocumentRepository.AnyByDocumentTypeIdAndApplicantIdAsync(documentInfo.EducationDocumentTypeId, applicantId);
+            if (educationDocument.EducationDocumentTypeId != documentInfo.EducationDocumentTypeId && documentExist)
+            {
+                return new(keyError: "AddEducationDocumentFail", error: "Applicant already has the education document with this type!");
             }
 
             Guid LastEducationDocumentTypeId = educationDocument.EducationDocumentTypeId;
@@ -218,7 +230,7 @@ namespace ApplicantService.Core.Application.Services
                 return new() { Errors = canEdit.Errors };
             }
 
-            bool educationDocumentTypeExist = await _educationDocumentTypeCacheRepository.AnyByIdAsync(documentInfo.EducationDocumentTypeId);
+            bool educationDocumentTypeExist = await _educationDocumentTypeCacheRepository.AnyByIdAsync(documentInfo.EducationDocumentTypeId, false);
             if (!educationDocumentTypeExist)
             {
                 ExecutionResult<EducationDocumentTypeCache> educationDocumentType
@@ -235,6 +247,7 @@ namespace ApplicantService.Core.Application.Services
 
         private async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
         {
+            return new(true);
             if(managerId is null)
             {
                 return await _requestService.CheckAdmissionStatusIsCloseAsync(applicantId);

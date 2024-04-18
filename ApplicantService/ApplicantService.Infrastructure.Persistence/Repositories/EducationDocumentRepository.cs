@@ -18,10 +18,10 @@ namespace ApplicantService.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(document => document.Id == documentId && document.ApplicantId == applicantId);
         }
 
-        public async Task<bool> AnyByDocumentIdAndApplicantIdAsync(Guid documentId, Guid applicantId)
+        public async Task<bool> AnyByDocumentTypeIdAndApplicantIdAsync(Guid documentTypeId, Guid applicantId)
         {
             return await _dbContext.EducationDocuments
-               .AnyAsync(document => document.Id == documentId && document.ApplicantId == applicantId);
+               .AnyAsync(document => document.EducationDocumentTypeId == documentTypeId && document.ApplicantId == applicantId);
         }
     }
 }

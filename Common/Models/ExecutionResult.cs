@@ -4,7 +4,6 @@ namespace Common.Models
 {
     public class ExecutionResult
     {
-        public bool IsSuccess { get; protected init; }
         private ImmutableDictionary<string, List<string>> _errors = ImmutableDictionary<string, List<string>>.Empty;
         public ImmutableDictionary<string, List<string>> Errors
         {
@@ -15,6 +14,7 @@ namespace Common.Models
                 IsSuccess = false;
             }
         }
+        public bool IsSuccess { get; init; }
 
         public ExecutionResult() { }
 

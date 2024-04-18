@@ -37,8 +37,8 @@ namespace ApplicantService.Infrastructure.Persistence.Contexts
             // EducationDocument
             modelBuilder.Entity<EducationDocument>()
                 .HasOne(educationDocument => educationDocument.EducationDocumentType)
-                .WithOne()
-                .HasForeignKey<EducationDocument>(educationDocument => educationDocument.EducationDocumentTypeId)
+                .WithMany()
+                .HasForeignKey(educationDocument => educationDocument.EducationDocumentTypeId)
                 .IsRequired();
 
             // Others

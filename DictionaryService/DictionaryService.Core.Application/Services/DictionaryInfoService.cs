@@ -109,7 +109,7 @@ namespace DictionaryService.Core.Application.Services
             EducationDocumentType? documentType = await _educationDocumentTypeRepository.GetByIdAsync(documentTypeId, false);
             if(documentType is null)
             {
-                return new(keyError: "DocumentTypeNotFoundError", error: "");
+                return new(keyError: "DocumentTypeNotFoundError", error: $"Document type with id {documentTypeId} not found!");
             }
 
             return new() {  Result = documentType.ToEducationDocumentTypeDTO() };

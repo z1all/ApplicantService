@@ -71,10 +71,10 @@ namespace ApplicantService.Presentation.Web.Controllers
         }
 
         [HttpPost("education")]
-        public async Task<ActionResult> AddEducationDocument([FromRoute] Guid documentId, EditAddEducationDocumentInfo documentInfo)
+        public async Task<ActionResult> AddEducationDocument(EditAddEducationDocumentInfo documentInfo)
         {
             return await ExecutionResultHandlerAsync(async userId =>
-               await _documentService.AddApplicantEducationDocumentAsync(documentId, documentInfo));
+               await _documentService.AddApplicantEducationDocumentAsync(userId, documentInfo));
         }
 
         [HttpGet("{documentId}/scan/{scanId}")]
