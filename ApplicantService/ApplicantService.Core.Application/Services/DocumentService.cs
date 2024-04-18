@@ -247,7 +247,6 @@ namespace ApplicantService.Core.Application.Services
 
         private async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
         {
-            return new(true);
             if(managerId is null)
             {
                 return await _requestService.CheckAdmissionStatusIsCloseAsync(applicantId);

@@ -30,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Infrastructure.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Presentation.Web", "UserService\UserService.Presentation.Web\UserService.Presentation.Web.csproj", "{AAD2AFD9-2A8D-4598-8B58-9013A409C755}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Models", "Common\Common.Models\Common.Models.csproj", "{1137920E-BDFF-4352-AB45-A44244434875}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Models", "Common.Models\Common.Models.csproj", "{1137920E-BDFF-4352-AB45-A44244434875}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{48C1A3F3-12DD-437C-AA1F-781F798FF348}"
 EndProject
@@ -62,11 +62,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryService.Presentat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryService.Infrastructure.ExternalService", "DictionaryService\DictionaryService.Infrastructure.ExternalService\DictionaryService.Infrastructure.ExternalService.csproj", "{343CC003-6C9C-488D-B0B4-BC50D5D1571C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.API", "Common\Common.API\Common.API.csproj", "{7844FD25-030A-4416-AB6C-7E9F5505076C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.API", "Common.API\Common.API.csproj", "{7844FD25-030A-4416-AB6C-7E9F5505076C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.ServiceBus", "Common\Common.ServiceBus\Common.ServiceBus.csproj", "{8CF77CC8-199E-48A6-B2DF-41D6DDE687C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.ServiceBus", "Common.ServiceBus\Common.ServiceBus.csproj", "{8CF77CC8-199E-48A6-B2DF-41D6DDE687C2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Repositories", "Common\Common.Repositories\Common.Repositories.csproj", "{A2820C66-D5DA-442C-9594-66BDB8F0ACF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Repositories", "Common.Repositories\Common.Repositories.csproj", "{A2820C66-D5DA-442C-9594-66BDB8F0ACF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

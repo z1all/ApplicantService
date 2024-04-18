@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common.Models.csproj" />
-    <ProjectReference Include="..\..\Common\Common.Models\Common.Models.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Net.Http.Headers" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DictionaryService.Core.Application\DictionaryService.Core.Application.csproj" />
   </ItemGroup>
 

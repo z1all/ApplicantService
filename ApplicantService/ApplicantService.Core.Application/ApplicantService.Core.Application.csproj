@@ -8,11 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common.Models\Common.Models.csproj" />
+    <ProjectReference Include="..\..\Common.Repositories\Common.Repositories.csproj" />
     <ProjectReference Include="..\..\Common.ServiceBus\Common.ServiceBus.csproj" />
-    <ProjectReference Include="..\..\Common\Common.Models.csproj" />
-    <ProjectReference Include="..\..\Common\Common.Models\Common.Models.csproj" />
-    <ProjectReference Include="..\..\Common\Common.Repositories\Common.Repositories.csproj" />
-    <ProjectReference Include="..\..\Common\Common.ServiceBus\Common.ServiceBus.csproj" />
     <ProjectReference Include="..\ApplicantService.Core.Domain\ApplicantService.Core.Domain.csproj" />
   </ItemGroup>
 
