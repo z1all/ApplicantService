@@ -2,5 +2,8 @@
 
 namespace Common.ServiceBus.ServiceBusDTOs.FromUserService
 {
-    public class ManagerCreatedNotification : BaseUser;
+    public class ManagerCreatedNotification : BaseUser
+    {
+        public required string Password { get; set; }
+    }
 }

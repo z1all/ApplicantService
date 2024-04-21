@@ -26,11 +26,16 @@ namespace UserService.Infrastructure.Identity.Services
             return GiveResult(result, "An error occurred when sending a notification about the creation of an applicant.");
         }
 
-        public async Task<ExecutionResult> CreatedManagerAsync(User user)
+        public async Task<ExecutionResult> CreatedManagerAsync(User user, string password)
         {
             bool result = await _bus.PubSub
-                .PublishAsync(UserMapTo<ManagerCreatedNotification>(user))
-                .ContinueWith(task => task.IsCompletedSuccessfully);
+                .PublishAsync(new ManagerCreatedNotification()
+                {
+                    Id = user.Id,
+                    FullName = user.FullName,
+                    Email = user.Email,
+                    Password = password,
+                }).ContinueWith(task => task.IsCompletedSuccessfully);
 
             return GiveResult(result, "An error occurred when sending a notification about the creation of a manager.");
         }
