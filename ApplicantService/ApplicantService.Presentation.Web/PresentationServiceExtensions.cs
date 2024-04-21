@@ -11,6 +11,8 @@ namespace ApplicantService.Presentation.Web
             services.AddSwaggerConfigure();
             services.AddEasyNetQ();
 
+            services.AddModalStateConfigure();
+
             services.AddScoped<BackgroundListener>();
 
             return services;
