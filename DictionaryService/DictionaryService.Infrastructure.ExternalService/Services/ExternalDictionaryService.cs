@@ -4,8 +4,7 @@ using System.Net.Http.Json;
 using DictionaryService.Core.Application.DTOs;
 using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Infrastructure.ExternalService.Configurations;
-using Common.Models;
-using Microsoft.AspNetCore.Routing;
+using Common.Models.Models;
 
 namespace DictionaryService.Infrastructure.ExternalService.Services
 {
@@ -23,8 +22,10 @@ namespace DictionaryService.Infrastructure.ExternalService.Services
             
             _httpClient.DefaultRequestHeaders
                 .Add(HeaderNames.Accept, "text/plain");
+
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes($"{_externalOptions.Username}:{_externalOptions.Password}");
             _httpClient.DefaultRequestHeaders
-                .Add(HeaderNames.Authorization, _externalOptions.AuthorizationHeader);
+                .Add(HeaderNames.Authorization, $"Basic {Convert.ToBase64String(plainTextBytes)}");
         }
 
         public async Task<ExecutionResult<List<EducationDocumentTypeExternalDTO>>> GetEducationDocumentTypesAsync() =>

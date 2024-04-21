@@ -1,6 +1,6 @@
 ﻿using DictionaryService.Core.Domain;
 using DictionaryService.Infrastructure.Persistence.Contexts;
-using Common.Enums;
+using Common.Models.Enums;
 
 namespace DictionaryService.Infrastructure.Persistence
 {

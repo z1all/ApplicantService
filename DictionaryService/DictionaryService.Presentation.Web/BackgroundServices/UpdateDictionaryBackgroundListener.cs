@@ -1,5 +1,5 @@
 ﻿using DictionaryService.Core.Application.Interfaces.Services;
-using Common.ServiceBusDTOs.FromDictionaryService;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
 using EasyNetQ.AutoSubscribe;
 
 namespace DictionaryService.Presentation.Web.BackgroundServices

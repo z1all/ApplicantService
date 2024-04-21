@@ -20,7 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common.csproj" />
+
+    <ProjectReference Include="..\..\Common.API\Common.API.csproj" />
+
+    <ProjectReference Include="..\..\Common.ServiceBus\Common.ServiceBus.csproj" />
+
     <ProjectReference Include="..\UserService.Infrastructure.Identity\UserService.Infrastructure.Identity.csproj" />
   </ItemGroup>
 

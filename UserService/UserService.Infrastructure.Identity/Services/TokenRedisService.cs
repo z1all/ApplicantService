@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using UserService.Core.Application.Interfaces;
-using Common.Configurations.Authorization;
+using Common.API.Configurations.Authorization;
 using StackExchange.Redis;
 
 namespace UserService.Infrastructure.Identity.Services

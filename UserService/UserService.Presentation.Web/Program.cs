@@ -1,6 +1,6 @@
 using UserService.Infrastructure.Identity;
-using Common.Configurations.Extensions;
-using Common.Middlewares.Extensions;
+using Common.API.Middlewares.Extensions;
+using Common.API.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 

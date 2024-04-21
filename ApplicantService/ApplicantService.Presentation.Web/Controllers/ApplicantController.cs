@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Application.Interfaces.Services;
-using Common.Controllers;
+using Common.API.Controllers;
 
 namespace ApplicantService.Presentation.Web.Controllers
 {

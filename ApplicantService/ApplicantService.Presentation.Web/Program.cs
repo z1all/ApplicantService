@@ -1,8 +1,8 @@
 using ApplicantService.Core.Application;
 using ApplicantService.Infrastructure.Persistence;
 using ApplicantService.Presentation.Web;
-using Common.Middlewares.Extensions;
-using Common.EasyNetQAutoSubscriber;
+using Common.API.Middlewares.Extensions;
+using Common.ServiceBus.EasyNetQAutoSubscriber;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

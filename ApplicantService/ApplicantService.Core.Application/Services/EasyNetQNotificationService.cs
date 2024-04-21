@@ -1,8 +1,8 @@
 ﻿using ApplicantService.Core.Application.Interfaces.Services;
-using Common.ServiceBusDTOs.FromApplicantService;
-using Common.ServiceBusDTOs.FromApplicantService.Base;
-using Common.Models;
+using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
+using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Base;
 using EasyNetQ;
+using Common.Models.Models;
 
 namespace ApplicantService.Core.Application.Services
 {

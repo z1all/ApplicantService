@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Immutable;
-using Common.DTOs;
+using Common.API.DTOs;
 
-namespace Common.Attributes
+namespace Common.API.Attributes
 {
     public class ValidateModelStateAttribute : ActionFilterAttribute
     {

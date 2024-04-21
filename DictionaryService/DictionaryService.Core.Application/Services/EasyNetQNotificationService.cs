@@ -1,8 +1,8 @@
 ﻿using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Domain;
-using Common.Models;
-using Common.ServiceBusDTOs.FromDictionaryService;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
 using EasyNetQ;
+using Common.Models.Models;
 
 namespace DictionaryService.Core.Application.Services
 {

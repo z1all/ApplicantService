@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
-using Common.Models;
-using Common.Controllers;
-using Common.Helpers;
+using Common.API.Controllers;
+using Common.API.Helpers;
+using Common.Models.Models;
 
 namespace UserService.Presentation.Web.Controllers
 {

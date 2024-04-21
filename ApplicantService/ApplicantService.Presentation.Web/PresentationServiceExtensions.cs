@@ -1,4 +1,5 @@
-﻿using Common.Configurations.Extensions;
+﻿using Common.API.Configurations;
+using Common.ServiceBus.Configurations;
 
 namespace ApplicantService.Presentation.Web
 {
@@ -9,6 +10,8 @@ namespace ApplicantService.Presentation.Web
             services.AddJwtAuthentication();
             services.AddSwaggerConfigure();
             services.AddEasyNetQ();
+
+            services.AddModalStateConfigure();
 
             services.AddScoped<BackgroundListener>();
 

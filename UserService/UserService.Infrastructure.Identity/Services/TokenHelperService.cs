@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using UserService.Core.Domain.Entities;
-using Common.Configurations.Authorization;
+using Common.API.Configurations.Authorization;
 
 namespace UserService.Infrastructure.Identity.Services
 {

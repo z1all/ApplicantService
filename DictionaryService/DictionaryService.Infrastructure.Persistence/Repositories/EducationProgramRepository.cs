@@ -3,7 +3,7 @@ using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Domain;
 using DictionaryService.Infrastructure.Persistence.Contexts;
 using Common.Repositories;
-using Common.DTOs;
+using Common.Models.DTOs;
 
 namespace DictionaryService.Infrastructure.Persistence.Repositories
 {

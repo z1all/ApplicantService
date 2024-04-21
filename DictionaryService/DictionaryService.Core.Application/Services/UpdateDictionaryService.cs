@@ -5,10 +5,9 @@ using DictionaryService.Core.Application.Interfaces.Transaction;
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base;
-using Common.Enums;
-using Common.Models;
-using Common.DTOs;
-using System.Collections.Generic;
+using Common.Models.Models;
+using Common.Models.DTOs;
+using Common.Models.Enums;
 
 namespace DictionaryService.Core.Application.Services
 {

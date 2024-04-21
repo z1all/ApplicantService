@@ -1,5 +1,5 @@
-﻿using Common.Models;
-using Common.DTOs;
+﻿using Common.Models.DTOs;
+using Common.Models.Models;
 
 namespace DictionaryService.Core.Application.Interfaces.Services
 {

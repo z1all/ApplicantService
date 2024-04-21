@@ -8,7 +8,8 @@ using UserService.Infrastructure.Identity.Services;
 using UserService.Infrastructure.Identity.Contexts;
 using UserService.Infrastructure.Identity.Configurations.Authorization;
 using UserService.Infrastructure.Identity.Configurations.Other;
-using Common.Configurations.Extensions;
+using Common.API.Configurations;
+using Common.ServiceBus.Configurations;
 using EasyNetQ;
 using StackExchange.Redis;
 

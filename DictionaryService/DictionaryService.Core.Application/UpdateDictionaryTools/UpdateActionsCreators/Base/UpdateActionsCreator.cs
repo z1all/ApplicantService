@@ -1,9 +1,9 @@
 ﻿using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Interfaces.Repositories;
-using Common.Enums;
-using Common.Models;
 using Common.Repositories;
+using Common.Models.Models;
+using Common.Models.Enums;
 
 namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base
 {
