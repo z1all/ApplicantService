@@ -69,7 +69,7 @@ namespace UserService.Infrastructure.Identity.Services
             IdentityResult addingRoleResult = await _userManager.AddToRolesAsync(user, roles);
             if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError();
 
-            ExecutionResult sendNotification = await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user));
+            ExecutionResult sendNotification = await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user), createAdmin.Password);
             if(!sendNotification.IsSuccess) return sendNotification;
 
             sendNotification = await _serviceBusProvider.Notification.CreatedApplicantAsync(MapCustomUserToUser(user));
@@ -97,7 +97,7 @@ namespace UserService.Infrastructure.Identity.Services
             ExecutionResult creatingRequestResult = await _serviceBusProvider.Request.CreateManagerAsync(MapCustomUserToManager(user, createManager.FacultyId));
             if (creatingRequestResult.IsSuccess)
             {
-                return await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user));
+                return await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user), createManager.Password);
             }
 
             IdentityResult deletingResult = await _userManager.DeleteAsync(user);
