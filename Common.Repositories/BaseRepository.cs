@@ -2,7 +2,7 @@
 
 namespace Common.Repositories
 {
-    public class BaseRepository<TEntity, TDbContext> : IBaseRepository<TEntity> where TEntity : BaseEntity where TDbContext : DbContext
+    public class BaseRepository<TDbContext> : IBaseRepository where TDbContext : DbContext
     {
         protected readonly TDbContext _dbContext;
 
@@ -10,6 +10,19 @@ namespace Common.Repositories
         {
             _dbContext = dbContext;
         }
+
+        public async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
+    public class BaseRepository<TEntity, TDbContext> : 
+        BaseRepository<TDbContext>, IBaseRepository<TEntity> 
+        where TEntity : BaseEntity 
+        where TDbContext : DbContext
+    {
+        public BaseRepository(TDbContext dbContext) : base(dbContext) { }
 
         public virtual async Task<TEntity?> GetByIdAsync(Guid id)
         {
@@ -40,11 +53,6 @@ namespace Common.Repositories
         public virtual async Task UpdateAsync(TEntity entity)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task SaveChangesAsync()
-        {
             await _dbContext.SaveChangesAsync();
         }
     }
