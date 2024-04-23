@@ -9,7 +9,6 @@ namespace AdmissioningService.Core.Domain
         public Guid? FacultyId { get; set; }
         public FacultyCache? Faculty { get; set; }
 
-        public required Guid UserId { get; set; }
         public UserCache? User { get; set; }
     }
 }
