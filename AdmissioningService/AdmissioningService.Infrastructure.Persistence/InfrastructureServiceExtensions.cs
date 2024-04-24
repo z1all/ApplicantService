@@ -1,4 +1,6 @@
-﻿using AdmissioningService.Infrastructure.Persistence.Contexts;
+﻿using AdmissioningService.Core.Application.Interfaces.Repositories;
+using AdmissioningService.Infrastructure.Persistence.Contexts;
+using AdmissioningService.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +13,18 @@ namespace AdmissioningService.Infrastructure.Persistence
         {
             // Databases
             services.AddEntityFrameworkDbContext(configuration);
+
+            //Repositories
+            services.AddScoped<IUserCacheRepository, UserCacheRepository>();
+            services.AddScoped<IManagerRepository, ManagerRepository>();
+            services.AddScoped<IFacultyCacheRepository, FacultyCacheRepository>();
+            services.AddScoped<IEducationProgramCacheRepository, EducationProgramCacheRepository>();
+            services.AddScoped<IEducationLevelCacheRepository, EducationLevelCacheRepository>();
+            services.AddScoped<IEducationDocumentTypeCacheRepository, EducationDocumentTypeCacheRepository>();
+            services.AddScoped<IApplicantCacheRepository, ApplicantCacheRepository>();
+            services.AddScoped<IApplicantAdmissionRepository, ApplicantAdmissionRepository>();
+            services.AddScoped<IAdmissionProgramRepository, AdmissionProgramRepository>();
+            services.AddScoped<IAdmissionCompanyRepository, AdmissionCompanyRepository>();
 
             return services;
         }
