@@ -5,5 +5,7 @@ namespace AdmissioningService.Core.Application.Interfaces.Repositories
 {
     public interface IAdmissionCompanyRepository : IBaseRepository<AdmissionCompany>
     {
+        Task<List<AdmissionCompany>> GetAllWithApplicantAdmissionAsync(Guid applicantId);
+        Task<AdmissionCompany?> GetCurrentAsync();
     }
 }

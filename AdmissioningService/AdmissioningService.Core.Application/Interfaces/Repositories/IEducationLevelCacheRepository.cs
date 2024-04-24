@@ -5,5 +5,6 @@ namespace AdmissioningService.Core.Application.Interfaces.Repositories
 {
     public interface IEducationLevelCacheRepository : IBaseRepository<EducationLevelCache>
     {
+        Task<List<EducationLevelCache>> GetAllAsync();
     }
 }

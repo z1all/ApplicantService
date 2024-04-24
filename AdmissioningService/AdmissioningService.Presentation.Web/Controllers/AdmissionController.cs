@@ -18,16 +18,16 @@ namespace AdmissioningService.Presentation.Web.Controllers
             _admissionService = admissionService;
         }
 
-        [HttpGet("reception_companies")]
-        public async Task<ActionResult<List<AdmissionCompanyDTO>>> GetReceptionCompanies()
+        [HttpGet("admission_companies")]
+        public async Task<ActionResult<List<AdmissionCompanyDTO>>> GetAdmissionCompanies()
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(_admissionService.GetAdmissionCompaniesAsync);
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateReceptionCompany()
+        public async Task<ActionResult> CreateAdmission()
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync(_admissionService.CreateAdmissionAsync);
         }
 
         [HttpGet("{admissionId}")]
