@@ -1,4 +1,5 @@
-﻿using Common.API.Configurations;
+﻿using AdmissioningService.Presentation.Web.BackgroundServices;
+using Common.API.Configurations;
 
 namespace AdmissioningService.Presentation.Web
 {
@@ -9,6 +10,8 @@ namespace AdmissioningService.Presentation.Web
             services.AddJwtAuthentication();
             services.AddSwaggerConfigure();
             services.AddModalStateConfigure();
+
+            services.AddScoped<BackgroundListener>();
 
             return services;
         }

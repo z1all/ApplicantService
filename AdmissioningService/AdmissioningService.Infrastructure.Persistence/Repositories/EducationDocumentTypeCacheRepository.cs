@@ -14,5 +14,11 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
         {
             return await _dbContext.EducationDocumentTypeCaches.ToListAsync();
         }
+
+        public override async Task<EducationDocumentTypeCache?> GetByIdAsync(Guid id)
+        {
+            return await _dbContext.EducationDocumentTypeCaches
+                .FirstOrDefaultAsync(documentType => documentType.Id == id);
+        }
     }
 }

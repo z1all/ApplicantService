@@ -2,7 +2,9 @@
 using DictionaryService.Core.Domain;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
 using Common.Models.Models;
+using Common.Models.DTOs;
 using EasyNetQ;
+using DictionaryService.Core.Application.Mappers;
 
 namespace DictionaryService.Core.Application.Services
 {
@@ -15,28 +17,15 @@ namespace DictionaryService.Core.Application.Services
             _bus = bus;
         }
 
-        public async Task<ExecutionResult> AddedEducationLevelAsync(EducationLevel educationLevel)
+        public async Task<ExecutionResult> AddedEducationDocumentTypeAndEducationLevelAsync(List<EducationDocumentType> documentTypes, List<EducationLevel> levels)
         {
-            bool result = await SendingHandler(new EducationLevelAddedNotification()
+            bool result = await SendingHandler(new EducationLevelAndEducationDocumentTypeAddedNotification()
             {
-                Id = educationLevel.Id,
-                Name = educationLevel.Name,
-                Deprecated = educationLevel.Deprecated,
+                EducationLevels = levels.Select(level =>level.ToEducationLevelDTO()).ToList(),
+                EducationDocumentTypes = documentTypes.Select(documentType => documentType.ToEducationDocumentTypeDTO()).ToList(),
             });
 
-            return GiveResult(result, "An error occurred when sending a notification about education level added.");
-        }
-
-        public async Task<ExecutionResult> AddedEducationDocumentTypeAsync(EducationDocumentType documentType)
-        {
-            bool result = await SendingHandler(new EducationDocumentTypeAddedNotification()
-            {
-                Id = documentType.Id,
-                Name = documentType.Name,
-                Deprecated = documentType.Deprecated,
-            });
-
-            return GiveResult(result, "An error occurred when sending a notification about education document type added.");
+            return GiveResult(result, "An error occurred when sending a notification about education levels and education document types added.");
         }
 
         public async Task<ExecutionResult> ChangedEducationDocumentTypeAsync(EducationDocumentType documentType)

@@ -97,9 +97,9 @@ namespace DictionaryService.Core.Application.Services
                     DictionaryType.EducationProgram => await SendNotificationHandlerAsync(
                         await UpdateEducationProgramAsync(), _notificationService.ChangedEducationProgramAsync),
                     DictionaryType.EducationLevel => await SendNotificationHandlerAsync(
-                        await UpdateEducationLevelAsync(), _notificationService.ChangedEducationLevelAsync),
+                        await UpdateEducationLevelAsync(), _notificationService.ChangedEducationLevelAsync, SendLAddedEducationLevelsNotificationAsync),
                     DictionaryType.EducationDocumentType => await SendNotificationHandlerAsync(
-                        await UpdateEducationDocumentTypeAsync(), _notificationService.ChangedEducationDocumentTypeAsync),
+                        await UpdateEducationDocumentTypeAsync(), _notificationService.ChangedEducationDocumentTypeAsync, SendLAddedEducationDocumentTypeNotificationAsync),
                     _ => new(keyError: "WrongDictionaryType", error: "Wrong dictionary type"),
                 };
 
@@ -139,13 +139,17 @@ namespace DictionaryService.Core.Application.Services
             ExecutionResult result = await SendNotificationHandlerAsync(updateFaculty, _notificationService.ChangedFacultiesAsync);
             if (!result.IsSuccess) return result;
 
-            result = await SendNotificationHandlerAsync(updateEducationLevel, _notificationService.ChangedEducationLevelAsync, _notificationService.AddedEducationLevelAsync);
+            result = await SendNotificationHandlerAsync(updateEducationLevel, _notificationService.ChangedEducationLevelAsync);
             if (!result.IsSuccess) return result;
 
             result = await SendNotificationHandlerAsync(updateEducationProgram, _notificationService.ChangedEducationProgramAsync);
             if (!result.IsSuccess) return result;
 
-            result = await SendNotificationHandlerAsync(updateEducationDocumentType, _notificationService.ChangedEducationDocumentTypeAsync, _notificationService.AddedEducationDocumentTypeAsync);
+            result = await SendNotificationHandlerAsync(updateEducationDocumentType, _notificationService.ChangedEducationDocumentTypeAsync);
+            if (!result.IsSuccess) return result;
+
+            result = await _notificationService.AddedEducationDocumentTypeAndEducationLevelAsync(
+                updateEducationDocumentType.Result!.Item2, updateEducationLevel.Result!.Item2);
             if (!result.IsSuccess) return result;
 
             return new(isSuccess: true);
@@ -153,8 +157,7 @@ namespace DictionaryService.Core.Application.Services
 
         private async Task<ExecutionResult> SendNotificationHandlerAsync<TEntity>(
             ExecutionResult<Tuple<List<TEntity>, List<TEntity>>> changedEntities, 
-            Func<TEntity, Task<ExecutionResult>> changedNotificationAsync, 
-            Func<TEntity, Task<ExecutionResult>>? addedNotificationAsync = null)
+            Func<TEntity, Task<ExecutionResult>> changedNotificationAsync)
         {
             if (!changedEntities.IsSuccess) return changedEntities;
 
@@ -163,15 +166,34 @@ namespace DictionaryService.Core.Application.Services
                 await changedNotificationAsync(entity);
             }
 
-            if(addedNotificationAsync is not null)
+            return new(isSuccess: true);
+        }
+
+        private async Task<ExecutionResult> SendNotificationHandlerAsync<TEntity>(
+            ExecutionResult<Tuple<List<TEntity>, List<TEntity>>> changedEntities,
+            Func<TEntity, Task<ExecutionResult>> changedNotificationAsync,
+            Func<List<TEntity>, Task<ExecutionResult>> addedNotificationAsync)
+        {
+            if (!changedEntities.IsSuccess) return changedEntities;
+
+            foreach (var entity in changedEntities.Result!.Item1)
             {
-                foreach (var entity in changedEntities.Result!.Item2)
-                {
-                    await addedNotificationAsync(entity);
-                }
+                await changedNotificationAsync(entity);
             }
 
+            await addedNotificationAsync(changedEntities.Result!.Item2);
+
             return new(isSuccess: true);
+        }
+
+        private async Task<ExecutionResult> SendLAddedEducationLevelsNotificationAsync(List<EducationLevel> levels)
+        {
+            return await _notificationService.AddedEducationDocumentTypeAndEducationLevelAsync(new(), levels);
+        }
+
+        private async Task<ExecutionResult> SendLAddedEducationDocumentTypeNotificationAsync(List<EducationDocumentType> documentTypes)
+        {
+            return await _notificationService.AddedEducationDocumentTypeAndEducationLevelAsync(documentTypes, new());
         }
 
         private async Task<ExecutionResult> UpdateDictionaryHandlerAsync(Func<Task<ExecutionResult>> updateOperationAsync, Func<bool, string, Task> onErrorAsync)
