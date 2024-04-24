@@ -1,6 +1,6 @@
-﻿namespace Common.ServiceBus.ServiceBusDTOs.FromDictionaryService
+﻿namespace Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications
 {
-    public class GetEducationDocumentTypeResponse
+    public class EducationDocumentTypeUpdatedNotification
     {
         public required Guid Id { get; set; }
         public required string Name { get; set; }

@@ -19,20 +19,6 @@ namespace AdmissioningService.Core.Application.Services
 
         private readonly DictionaryHelper _dictionaryHelper;
 
-        // сейчас
-        // При запросе абитуриента добавляются типы документов и уровни образования
-        // Будут обновляться при получении уведомлений
-        // Также будут добавляться при добавлении документов абитуриента, и при добавлении программы
-        // Минусы: много дполнительных проверок 
-        //
-        //
-        //было 
-        // При обновлении справочников если добавляется записи в типах документов и уровней образования, то 
-        // отправляеться уведомление в сервис постепления.
-        // Обновляются при обновлении справочников.
-        // Минусы: 
-        // .
-
         public AdmissionService(
             IAdmissionCompanyRepository companyRepository, IApplicantCacheRepository applicantCacheRepository,
             IApplicantAdmissionStateMachin applicantAdmissionStateMachin,

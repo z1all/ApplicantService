@@ -1,6 +1,6 @@
 ﻿using DictionaryService.Core.Application.Interfaces.Services;
-using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
 using EasyNetQ.AutoSubscribe;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
 
 namespace DictionaryService.Presentation.Web.BackgroundServices
 {

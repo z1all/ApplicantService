@@ -1,8 +1,8 @@
 ﻿using DictionaryService.Core.Application.Interfaces.Services;
 using Common.ServiceBus.EasyNetQAutoSubscriber;
-using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
 using EasyNetQ;
 using Common.Models.Models;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 
 namespace DictionaryService.Presentation.Web.RPCHandlers
 {

@@ -1,8 +1,8 @@
 ﻿using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Domain;
-using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
-using EasyNetQ;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
 using Common.Models.Models;
+using EasyNetQ;
 
 namespace DictionaryService.Core.Application.Services
 {
@@ -13,6 +13,30 @@ namespace DictionaryService.Core.Application.Services
         public EasyNetQNotificationService(IBus bus) 
         {
             _bus = bus;
+        }
+
+        public async Task<ExecutionResult> AddedEducationLevelAsync(EducationLevel educationLevel)
+        {
+            bool result = await SendingHandler(new EducationLevelAddedNotification()
+            {
+                Id = educationLevel.Id,
+                Name = educationLevel.Name,
+                Deprecated = educationLevel.Deprecated,
+            });
+
+            return GiveResult(result, "An error occurred when sending a notification about education level added.");
+        }
+
+        public async Task<ExecutionResult> AddedEducationDocumentTypeAsync(EducationDocumentType documentType)
+        {
+            bool result = await SendingHandler(new EducationDocumentTypeAddedNotification()
+            {
+                Id = documentType.Id,
+                Name = documentType.Name,
+                Deprecated = documentType.Deprecated,
+            });
+
+            return GiveResult(result, "An error occurred when sending a notification about education document type added.");
         }
 
         public async Task<ExecutionResult> ChangedEducationDocumentTypeAsync(EducationDocumentType documentType)

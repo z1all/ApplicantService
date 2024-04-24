@@ -8,6 +8,8 @@ namespace DictionaryService.Core.Application.Interfaces.Services
         Task<ExecutionResult> ChangedFacultiesAsync(Faculty faculty);
         Task<ExecutionResult> ChangedEducationProgramAsync(EducationProgram program);
         Task<ExecutionResult> ChangedEducationLevelAsync(EducationLevel educationLevel);
+        Task<ExecutionResult> AddedEducationLevelAsync(EducationLevel educationLevel);
         Task<ExecutionResult> ChangedEducationDocumentTypeAsync(EducationDocumentType documentType);
+        Task<ExecutionResult> AddedEducationDocumentTypeAsync(EducationDocumentType documentType);
     }
 }
