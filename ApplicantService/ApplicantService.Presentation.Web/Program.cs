@@ -1,6 +1,7 @@
 using ApplicantService.Core.Application;
 using ApplicantService.Infrastructure.Persistence;
 using ApplicantService.Presentation.Web;
+using ApplicantService.Presentation.Web.RPCHandlers;
 using Common.API.Middlewares.Extensions;
 using Common.ServiceBus.EasyNetQAutoSubscriber;
 using System.Reflection;
@@ -17,11 +18,13 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddPresentationServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddEasyNetQAutoSubscriber("ApplicantService");
+builder.Services.AddRPCHandlers();
 
 var app = builder.Build();
 
 // EasyNetQAutoSubscriber extensions
 app.Services.UseEasyNetQAutoSubscriber(Assembly.GetExecutingAssembly());
+app.Services.UseRPCHandlers();
 
 // AppDbContext extensions
 app.Services.AddAutoMigration();

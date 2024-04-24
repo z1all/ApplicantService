@@ -23,5 +23,12 @@ namespace ApplicantService.Infrastructure.Persistence.Repositories
             return await _dbContext.EducationDocuments
                .AnyAsync(document => document.EducationDocumentTypeId == documentTypeId && document.ApplicantId == applicantId);
         }
+
+        public async Task<List<EducationDocument>> GetAllByApplicantIdAsync(Guid applicantId)
+        {
+            return await _dbContext.EducationDocuments
+                .Include(educationDocument => educationDocument.EducationDocumentType)
+                .ToListAsync();
+        }
     }
 }

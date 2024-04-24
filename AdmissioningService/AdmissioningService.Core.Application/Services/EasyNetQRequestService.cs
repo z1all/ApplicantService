@@ -1,6 +1,4 @@
 ﻿using AdmissioningService.Core.Application.Interfaces.Services;
-using AdmissioningService.Core.Application.Mappers;
-using AdmissioningService.Core.Domain;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
 using EasyNetQ;

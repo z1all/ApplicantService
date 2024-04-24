@@ -56,7 +56,7 @@ namespace AdmissioningService.Core.DictionaryHelpers
             {
                 var documentTypeFromDb = await _educationDocumentTypeCacheRepository.GetByIdAsync(documentTypeId);
 
-                documentTypesFromDb.Add(documentTypeFromDb!); 
+                documentTypesFromDb.Add(documentTypeFromDb ?? throw new NullReferenceException()); 
             }
             return documentTypesFromDb;
         }
