@@ -2,7 +2,7 @@
 
 namespace Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests
 {
-    public class GetDocumentTypeResponse
+    public class GetDocumentTypesResponse
     {
         public required List<EducationDocumentTypeDTO> DocumentTypes { get; set; }
     }

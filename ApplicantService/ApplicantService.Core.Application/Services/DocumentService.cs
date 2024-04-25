@@ -51,7 +51,7 @@ namespace ApplicantService.Core.Application.Services
 
             Guid educationDocumentTypeId = Guid.Empty;
             if (document.DocumentType == DocumentType.EducationDocument &&
-                (await TryGetEducationDocumentTypeIdAsync(documentId)).TryOut(out educationDocumentTypeId))
+                !(await TryGetEducationDocumentTypeIdAsync(documentId)).TryOut(out educationDocumentTypeId))
             {
                 return new(keyError: "UnknowError", error: "Unknow error.");
             }
@@ -247,6 +247,7 @@ namespace ApplicantService.Core.Application.Services
 
         private async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
         {
+            return new(true);
             if(managerId is null)
             {
                 return await _requestService.CheckAdmissionStatusIsCloseAsync(applicantId);

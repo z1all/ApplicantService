@@ -21,7 +21,7 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
             _bus.Rpc.Respond<GetEducationLevelsRequest, ExecutionResult<GetEducationLevelsResponse>>(async (_) =>
                 await ExceptionHandlerAsync(GetEducationLevelsAsync));
 
-            _bus.Rpc.Respond<GetDocumentTypeRequest, ExecutionResult<GetDocumentTypeResponse>>(async (_) =>
+            _bus.Rpc.Respond<GetDocumentTypesRequest, ExecutionResult<GetDocumentTypesResponse>>(async (_) =>
                 await ExceptionHandlerAsync(GetDocumentTypeAsync));
 
             _bus.Rpc.Respond<GetEducationDocumentTypeRequest, ExecutionResult<GetEducationDocumentTypeResponse>>(async (request) =>
@@ -51,11 +51,11 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
                 async (_dictionaryInfoService) => await _dictionaryInfoService.GetEducationLevelsAsync(), 
                 (educationLevels) => new GetEducationLevelsResponse() { EducationLevels = educationLevels });
         }
-        private async Task<ExecutionResult<GetDocumentTypeResponse>> GetDocumentTypeAsync(IServiceProvider service)
+        private async Task<ExecutionResult<GetDocumentTypesResponse>> GetDocumentTypeAsync(IServiceProvider service)
         {
             return await GetDictionaryHandlerAsync(service,
                 async (_dictionaryInfoService) => await _dictionaryInfoService.GetDocumentTypesAsync(),
-                (documentTypes) => new GetDocumentTypeResponse() { DocumentTypes = documentTypes });
+                (documentTypes) => new GetDocumentTypesResponse() { DocumentTypes = documentTypes });
         }
 
         private async Task<ExecutionResult<GetEducationDocumentTypeResponse>> GetDocumentTypeAsync(IServiceProvider service, GetEducationDocumentTypeRequest request)
@@ -64,8 +64,7 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
                 async (_dictionaryInfoService) => await _dictionaryInfoService.GetDocumentTypeByIdAsync(request.DocumentId),
                 (documentTypes) => new GetEducationDocumentTypeResponse() 
                 { 
-                   Id = documentTypes.Id,
-                   Name = documentTypes.Name,
+                   EducationDocumentType = documentTypes,
                    Deprecated = false,
                 });
         }

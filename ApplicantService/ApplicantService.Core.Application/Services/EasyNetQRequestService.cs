@@ -49,8 +49,8 @@ namespace ApplicantService.Core.Application.Services
             {
                 Result = new()
                 {
-                    Id = response.Result!.Id,
-                    Name = response.Result!.Name,
+                    Id = response.Result!.EducationDocumentType.Id,
+                    Name = response.Result!.EducationDocumentType.Name,
                     Deprecated = response.Result!.Deprecated,
                 }
             };

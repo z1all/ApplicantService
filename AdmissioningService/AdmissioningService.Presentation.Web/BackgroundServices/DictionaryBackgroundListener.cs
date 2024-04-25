@@ -9,38 +9,31 @@ using EasyNetQ.AutoSubscribe;
 
 namespace AdmissioningService.Presentation.Web.BackgroundServices
 {
-    public class BackgroundListener : 
+    public class DictionaryBackgroundListener : 
         IConsumeAsync<EducationLevelAndEducationDocumentTypeAddedNotification>,
         IConsumeAsync<EducationDocumentTypeUpdatedNotification>,
         IConsumeAsync<EducationLevelUpdatedNotification>,
         IConsumeAsync<EducationProgramUpdatedNotification>,
-        IConsumeAsync<FacultyUpdatedNotification>,
-        IConsumeAsync<UserUpdatedNotification>
+        IConsumeAsync<FacultyUpdatedNotification>
     {
         private readonly IEducationLevelCacheRepository _educationLevelCacheRepository;
         private readonly IEducationDocumentTypeCacheRepository _educationDocumentTypeCacheRepository;
         private readonly IEducationProgramCacheRepository _educationProgramCacheRepository;
         private readonly IFacultyCacheRepository _facultyCacheRepository;
-        private readonly IUserCacheRepository _userCacheRepository;
-        private readonly IApplicantCacheRepository _applicantCacheRepository;
-
+        
         private readonly DictionaryHelper _dictionaryHelper;
 
-        public BackgroundListener(
+        public DictionaryBackgroundListener(
             IEducationLevelCacheRepository educationLevelCacheRepository, 
             IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository,
             IEducationProgramCacheRepository educationProgramCacheRepository,
             IFacultyCacheRepository facultyCacheRepository,
-            IUserCacheRepository userCacheRepository,
-            IApplicantCacheRepository applicantCacheRepository,
             DictionaryHelper dictionaryHelper) 
         {
             _educationLevelCacheRepository = educationLevelCacheRepository;
             _educationDocumentTypeCacheRepository = educationDocumentTypeCacheRepository;
             _educationProgramCacheRepository = educationProgramCacheRepository;
             _facultyCacheRepository = facultyCacheRepository;
-            _userCacheRepository = userCacheRepository;
-            _applicantCacheRepository = applicantCacheRepository;
 
             _dictionaryHelper = dictionaryHelper;
         }
@@ -146,29 +139,6 @@ namespace AdmissioningService.Presentation.Web.BackgroundServices
 
                 await _facultyCacheRepository.UpdateAsync(faculty);
             }
-        }
-
-        public async Task ConsumeAsync(UserUpdatedNotification message, CancellationToken cancellationToken = default)
-        {
-            UserCache? manager = await _userCacheRepository.GetByIdAsync(message.Id);
-            if(manager is not null)
-            {
-                manager.FullName = message.FullName;
-                manager.Email = message.Email;
-
-                await _userCacheRepository.UpdateAsync(manager);
-            }
-            else
-            {
-                ApplicantCache? applicant = await _applicantCacheRepository.GetByIdAsync(message.Id);
-                if (applicant is not null)
-                {
-                    applicant.FullName = message.FullName;
-                    applicant.Email = message.Email;
-
-                    await _applicantCacheRepository.UpdateAsync(applicant);
-                }
-            } 
         }
     }
 }

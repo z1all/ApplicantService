@@ -73,7 +73,7 @@ namespace DictionaryService.Presentation.Web.Controllers
         [HttpGet("DocumentTypes")]
         public async Task<List<EducationDocumentTypeDTO>> GetDocumentTypes()
         {
-            var response = await bus.Rpc.RequestAsync<GetDocumentTypeRequest, ExecutionResult<GetDocumentTypeResponse>>(new());
+            var response = await bus.Rpc.RequestAsync<GetDocumentTypesRequest, ExecutionResult<GetDocumentTypesResponse>>(new());
 
             return response.Result!.DocumentTypes;
         }
