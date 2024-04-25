@@ -11,6 +11,7 @@ namespace AdmissioningService.Core.Application
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IAdmissionService, AdmissionService>();
+            services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IRequestService, EasyNetQRequestService>();
             services.AddScoped<INotificationService, EasyNetQNotificationService>();
             services.AddEasyNetQ();

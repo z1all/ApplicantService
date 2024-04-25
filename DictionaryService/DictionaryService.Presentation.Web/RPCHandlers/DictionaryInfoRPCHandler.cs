@@ -27,14 +27,8 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
             _bus.Rpc.Respond<GetEducationDocumentTypeRequest, ExecutionResult<GetEducationDocumentTypeResponse>>(async (request) =>
                 await ExceptionHandlerAsync(async (service) => await GetDocumentTypeAsync(service, request)));
 
-
-            /*
-                await _dictionaryInfoService.GetFacultiesAsync();
-                await _dictionaryInfoService.GetProgramsAsync(request.ProgramFilter);
-                await _dictionaryInfoService.GetEducationLevelsAsync();
-                await _dictionaryInfoService.GetDocumentTypesAsync();
-                await _dictionaryInfoService.GetDocumentTypeByIdAsync(requests.DocumentId);
-            */
+            _bus.Rpc.Respond<GetFacultyRequest, ExecutionResult<GetFacultyResponse>>(async (request) =>
+                await ExceptionHandlerAsync(async (service) => await GetFacultyAsync(service, request)));
         }
 
         private async Task<ExecutionResult<GetFacultiesResponse>> GetFacultiesAsync(IServiceProvider service)
@@ -64,10 +58,10 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
                 (documentTypes) => new GetDocumentTypeResponse() { DocumentTypes = documentTypes });
         }
 
-        private async Task<ExecutionResult<GetEducationDocumentTypeResponse>> GetDocumentTypeAsync(IServiceProvider service, GetEducationDocumentTypeRequest requests)
+        private async Task<ExecutionResult<GetEducationDocumentTypeResponse>> GetDocumentTypeAsync(IServiceProvider service, GetEducationDocumentTypeRequest request)
         {
             return await GetDictionaryHandlerAsync(service,
-                async (_dictionaryInfoService) => await _dictionaryInfoService.GetDocumentTypeByIdAsync(requests.DocumentId),
+                async (_dictionaryInfoService) => await _dictionaryInfoService.GetDocumentTypeByIdAsync(request.DocumentId),
                 (documentTypes) => new GetEducationDocumentTypeResponse() 
                 { 
                    Id = documentTypes.Id,
@@ -76,6 +70,12 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
                 });
         }
 
+        private async Task<ExecutionResult<GetFacultyResponse>> GetFacultyAsync(IServiceProvider service, GetFacultyRequest request)
+        {
+            return await GetDictionaryHandlerAsync(service,
+               async (_dictionaryInfoService) => await _dictionaryInfoService.GetFacultyAsync(request.FacultyId),
+               (faculty) => new GetFacultyResponse() { Faculty = faculty });
+        }
 
         private async Task<ExecutionResult<TResponse>> GetDictionaryHandlerAsync<TResponse, TDictionaryResponse>(
             IServiceProvider service, 

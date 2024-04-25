@@ -1,6 +1,7 @@
 ﻿using AdmissioningService.Core.Application.Interfaces.Services;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 using EasyNetQ;
 
 namespace AdmissioningService.Core.Application.Services
@@ -18,6 +19,12 @@ namespace AdmissioningService.Core.Application.Services
         {
             return await RequestHandlerAsync<ExecutionResult<GetApplicantResponse>, GetApplicantRequest>(
                 new() { ApplicantId = applicantId }, "GetApplicantFail");
+        }
+
+        public async Task<ExecutionResult<GetFacultyResponse>> GetFacultyAsync(Guid facultyId)
+        {
+            return await RequestHandlerAsync<ExecutionResult<GetFacultyResponse>, GetFacultyRequest>(
+                new() { FacultyId = facultyId}, "GetFacultyFail");
         }
 
         private async Task<TResponse> RequestHandlerAsync<TResponse, TRequest>(TRequest request, string keyError) where TResponse : ExecutionResult, new()

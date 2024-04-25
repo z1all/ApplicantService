@@ -10,5 +10,6 @@ namespace DictionaryService.Core.Application.Interfaces.Services
         Task<ExecutionResult<List<EducationDocumentTypeDTO>>> GetDocumentTypesAsync();
         Task<ExecutionResult<EducationDocumentTypeDTO>> GetDocumentTypeByIdAsync(Guid documentTypeId);
         Task<ExecutionResult<List<FacultyDTO>>> GetFacultiesAsync();
+        Task<ExecutionResult<FacultyDTO>> GetFacultyAsync(Guid facultyId);
     }
 }

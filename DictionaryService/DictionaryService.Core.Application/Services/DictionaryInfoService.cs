@@ -116,5 +116,16 @@ namespace DictionaryService.Core.Application.Services
 
             // +++ await _educationDocumentTypeRepository.GetByIdAsync(documentTypeId);
         }
+
+        public async Task<ExecutionResult<FacultyDTO>> GetFacultyAsync(Guid facultyId)
+        {
+            Faculty? faculty =  await _facultyRepository.GetByIdAsync(facultyId);
+            if(faculty is null)
+            {
+                return new(keyError: "FacultyNotFound", error: $"Faculty with id {facultyId} not found!");
+            }
+
+            return new() { Result = faculty.ToFacultyDTO() };
+        }
     }
 }
