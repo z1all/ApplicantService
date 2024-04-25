@@ -27,7 +27,6 @@ namespace Common.Repositories
         public virtual async Task<TEntity?> GetByIdAsync(Guid id)
         {
             return await _dbContext.Set<TEntity>()
-               .AsNoTracking()
                .FirstOrDefaultAsync(entity => entity.Id == id);
         }
 

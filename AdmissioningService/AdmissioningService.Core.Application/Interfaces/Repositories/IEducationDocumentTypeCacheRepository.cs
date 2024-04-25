@@ -5,6 +5,5 @@ namespace AdmissioningService.Core.Application.Interfaces.Repositories
 {
     public interface IEducationDocumentTypeCacheRepository : IBaseRepository<EducationDocumentTypeCache>
     {
-        Task<List<EducationDocumentTypeCache>> GetAllAsync();
     }
 }

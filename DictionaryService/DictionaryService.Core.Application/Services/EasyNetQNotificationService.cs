@@ -1,10 +1,9 @@
 ﻿using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Domain;
+using DictionaryService.Core.Application.Mappers;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
 using Common.Models.Models;
-using Common.Models.DTOs;
 using EasyNetQ;
-using DictionaryService.Core.Application.Mappers;
 
 namespace DictionaryService.Core.Application.Services
 {
@@ -12,7 +11,7 @@ namespace DictionaryService.Core.Application.Services
     {
         private readonly IBus _bus;
 
-        public EasyNetQNotificationService(IBus bus) 
+        public EasyNetQNotificationService(IBus bus)
         {
             _bus = bus;
         }
@@ -21,7 +20,7 @@ namespace DictionaryService.Core.Application.Services
         {
             bool result = await SendingHandler(new EducationLevelAndEducationDocumentTypeAddedNotification()
             {
-                EducationLevels = levels.Select(level =>level.ToEducationLevelDTO()).ToList(),
+                EducationLevels = levels.Select(level => level.ToEducationLevelDTO()).ToList(),
                 EducationDocumentTypes = documentTypes.Select(documentType => documentType.ToEducationDocumentTypeDTO()).ToList(),
             });
 
@@ -32,8 +31,7 @@ namespace DictionaryService.Core.Application.Services
         {
             bool result = await SendingHandler(new EducationDocumentTypeUpdatedNotification()
             {
-                Id = documentType.Id,
-                Name = documentType.Name,
+                EducationDocumentType = documentType.ToEducationDocumentTypeDTO(),
                 Deprecated = documentType.Deprecated,
             });
 
@@ -44,8 +42,7 @@ namespace DictionaryService.Core.Application.Services
         {
             bool result = await SendingHandler(new EducationLevelUpdatedNotification()
             {
-                Id = educationLevel.Id,
-                Name = educationLevel.Name,
+                EducationLevel = educationLevel.ToEducationLevelDTO(),
                 Deprecated = educationLevel.Deprecated,
             });
 
@@ -56,13 +53,7 @@ namespace DictionaryService.Core.Application.Services
         {
             bool result = await SendingHandler(new EducationProgramUpdatedNotification()
             {
-                Id = program.Id,
-                Name = program.Name,
-                Code = program.Code,
-                EducationForm = program.EducationForm,
-                Language = program.Language,
-                EducationLevelId = program.EducationLevelId,
-                FacultyId = program.FacultyId,
+                EducationProgram = program.ToEducationProgramDTO(),
                 Deprecated = program.Deprecated,
             });
 
@@ -73,8 +64,7 @@ namespace DictionaryService.Core.Application.Services
         {
             bool result = await SendingHandler(new FacultyUpdatedNotification()
             {
-                Id = faculty.Id,
-                Name = faculty.Name,
+                Faculty = faculty.ToFacultyDTO(),
                 Deprecated = faculty.Deprecated,
             });
 

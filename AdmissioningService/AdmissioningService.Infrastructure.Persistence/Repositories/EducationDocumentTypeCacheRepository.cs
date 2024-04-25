@@ -10,14 +10,10 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
     {
         public EducationDocumentTypeCacheRepository(AppDbContext dbContext) : base(dbContext) { }
 
-        public async Task<List<EducationDocumentTypeCache>> GetAllAsync()
-        {
-            return await _dbContext.EducationDocumentTypeCaches.ToListAsync();
-        }
-
         public override async Task<EducationDocumentTypeCache?> GetByIdAsync(Guid id)
         {
             return await _dbContext.EducationDocumentTypeCaches
+                .Include(documentType => documentType.NextEducationLevel)
                 .FirstOrDefaultAsync(documentType => documentType.Id == id);
         }
     }

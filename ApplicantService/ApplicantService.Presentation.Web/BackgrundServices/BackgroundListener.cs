@@ -43,10 +43,10 @@ namespace ApplicantService.Presentation.Web
 
         public async Task ConsumeAsync(EducationDocumentTypeUpdatedNotification message, CancellationToken cancellationToken = default)
         {
-            EducationDocumentTypeCache? documentType  = await _educationDocumentTypeCacheRepository.GetByIdAsync(message.Id);
+            EducationDocumentTypeCache? documentType  = await _educationDocumentTypeCacheRepository.GetByIdAsync(message.EducationDocumentType.Id);
             if (documentType is null) return;
 
-            documentType.Name = message.Name;
+            documentType.Name = message.EducationDocumentType.Name;
             documentType.Deprecated = message.Deprecated;
 
             await _educationDocumentTypeCacheRepository.UpdateAsync(documentType);
