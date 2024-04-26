@@ -9,5 +9,6 @@ namespace AdmissioningService.Core.Application.Interfaces.Services
         Task<ExecutionResult<GetApplicantResponse>> GetApplicantAsync(Guid applicantId);
         Task<ExecutionResult<GetFacultyResponse>> GetFacultyAsync(Guid facultyId);
         Task<ExecutionResult<GetEducationDocumentTypeResponse>> GetEducationDocumentTypeAsync(Guid documentTypId);
+        Task<ExecutionResult<GetEducationProgramResponse>> GetEducationProgramAsync(Guid programId);
     }
 }

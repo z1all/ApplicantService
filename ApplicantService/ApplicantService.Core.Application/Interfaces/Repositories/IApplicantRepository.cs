@@ -3,5 +3,5 @@ using Common.Repositories;
 
 namespace ApplicantService.Core.Application.Interfaces.Repositories
 {
-    public interface IApplicantRepository : IBaseRepository<Applicant> { }
+    public interface IApplicantRepository : IBaseWithBaseEntityRepository<Applicant> { }
 }

@@ -33,13 +33,14 @@ namespace AdmissioningService.Presentation.Web.Controllers
         [HttpGet("{admissionId}")]
         public async Task<ActionResult<ApplicantAdmissionDTO>> GetAdmission([FromRoute] Guid admissionId)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync((applicantId) => _admissionService.GetApplicantAdmissionAsync(applicantId, admissionId));
         }
 
         [HttpPost("{admissionId}/program")]
         public async Task<ActionResult> AddProgramToAdmission([FromRoute] Guid admissionId, AddProgramDTO program)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync((applicantId) => 
+                _admissionService.AddProgramToAdmissionAsync(applicantId, admissionId, program.ProgramId));
         }
 
         [HttpPut("{admissionId}/program")]

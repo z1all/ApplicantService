@@ -5,7 +5,7 @@ using Common.Repositories;
 
 namespace AdmissioningService.Infrastructure.Persistence.Repositories
 {
-    internal class ManagerRepository : BaseRepository<Manager, AppDbContext>, IManagerRepository
+    internal class ManagerRepository : BaseWithBaseEntityRepository<Manager, AppDbContext>, IManagerRepository
     {
         public ManagerRepository(AppDbContext dbContext) : base(dbContext)
         {

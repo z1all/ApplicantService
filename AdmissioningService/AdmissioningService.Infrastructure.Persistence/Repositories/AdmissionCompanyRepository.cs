@@ -6,7 +6,7 @@ using Common.Repositories;
 
 namespace AdmissioningService.Infrastructure.Persistence.Repositories
 {
-    internal class AdmissionCompanyRepository : BaseRepository<AdmissionCompany, AppDbContext>, IAdmissionCompanyRepository
+    internal class AdmissionCompanyRepository : BaseWithBaseEntityRepository<AdmissionCompany, AppDbContext>, IAdmissionCompanyRepository
     {
         public AdmissionCompanyRepository(AppDbContext dbContext) : base(dbContext) { }
 

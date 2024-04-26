@@ -27,6 +27,12 @@ namespace AdmissioningService.Core.Application.Services
                 new() { DocumentId = documentTypId }, "GetEducationDocumentTypeFail");
         }
 
+        public async Task<ExecutionResult<GetEducationProgramResponse>> GetEducationProgramAsync(Guid programId)
+        {
+            return await RequestHandlerAsync<ExecutionResult<GetEducationProgramResponse>, GetEducationProgramRequest>(
+                new() { ProgramId = programId }, "GetEducationProgramFail");
+        }
+
         public async Task<ExecutionResult<GetFacultyResponse>> GetFacultyAsync(Guid facultyId)
         {
             return await RequestHandlerAsync<ExecutionResult<GetFacultyResponse>, GetFacultyRequest>(

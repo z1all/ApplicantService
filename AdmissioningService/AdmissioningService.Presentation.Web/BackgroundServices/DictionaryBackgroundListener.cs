@@ -4,7 +4,6 @@ using AdmissioningService.Core.DictionaryHelpers;
 using AdmissioningService.Core.Domain;
 using Common.Models.DTOs;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
-using Common.ServiceBusDTOs.FromUserService;
 using EasyNetQ.AutoSubscribe;
 
 namespace AdmissioningService.Presentation.Web.BackgroundServices

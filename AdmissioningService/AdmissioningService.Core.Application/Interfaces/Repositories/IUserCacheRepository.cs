@@ -3,7 +3,7 @@ using Common.Repositories;
 
 namespace AdmissioningService.Core.Application.Interfaces.Repositories
 {
-    public interface IUserCacheRepository : IBaseRepository<UserCache>
+    public interface IUserCacheRepository : IBaseWithBaseEntityRepository<UserCache>
     {
     }
 }

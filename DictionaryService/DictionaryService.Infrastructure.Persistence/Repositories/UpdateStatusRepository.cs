@@ -8,7 +8,7 @@ using Common.Models.Enums;
 
 namespace DictionaryService.Infrastructure.Persistence.Repositories
 {
-    public class UpdateStatusRepository : BaseRepository<UpdateStatus, UpdateStatusDbContext>, IUpdateStatusRepository
+    public class UpdateStatusRepository : BaseWithBaseEntityRepository<UpdateStatus, UpdateStatusDbContext>, IUpdateStatusRepository
     {
         public UpdateStatusRepository(UpdateStatusDbContext appDbContext) : base(appDbContext) { }
 

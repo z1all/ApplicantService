@@ -6,7 +6,7 @@ using Common.Repositories;
 
 namespace DictionaryService.Infrastructure.Persistence.Repositories
 {
-    public class EducationDocumentTypeRepository : BaseRepository<EducationDocumentType, AppDbContext>, IEducationDocumentTypeRepository
+    public class EducationDocumentTypeRepository : BaseWithBaseEntityRepository<EducationDocumentType, AppDbContext>, IEducationDocumentTypeRepository
     {
         public EducationDocumentTypeRepository(AppDbContext appDbContext) : base(appDbContext) { }
 

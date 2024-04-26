@@ -5,7 +5,7 @@ using Common.Repositories;
 
 namespace ApplicantService.Infrastructure.Persistence.Repositories
 {
-    public class ApplicantRepository : BaseRepository<Applicant, AppDbContext>, IApplicantRepository
+    public class ApplicantRepository : BaseWithBaseEntityRepository<Applicant, AppDbContext>, IApplicantRepository
     {
         public ApplicantRepository(AppDbContext appDbContext) : base(appDbContext) { }
     }

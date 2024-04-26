@@ -6,7 +6,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 {
     public class UpdateDictionaryActions<TEntity, TExternalEntity> where TEntity : BaseDictionaryEntity
     {
-        public required IBaseRepository<TEntity> Repository { get; set; }
+        public required IBaseWithBaseEntityRepository<TEntity> Repository { get; set; }
 
         public required Func<Task> BeforeActionsAsync { get; init; }
         public required Func<string, Task> AfterLoadingErrorAsync { get; init; }

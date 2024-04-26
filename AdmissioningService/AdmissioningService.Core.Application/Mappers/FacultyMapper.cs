@@ -14,5 +14,14 @@ namespace AdmissioningService.Core.Application.Mappers
                 Deprecated = false
             };
         }
+
+        public static FacultyDTO ToFacultyDTO(this FacultyCache faculty)
+        {
+            return new()
+            {
+                Id = faculty.Id,
+                Name = faculty.Name,
+            };
+        }
     }
 }

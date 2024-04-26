@@ -31,5 +31,16 @@ namespace AdmissioningService.Infrastructure.Persistence.StateMachines
         {
             return await _applicantAdmissionRepository.GetByAdmissionCompanyId(admissionCompanyId);
         }
+
+        public async Task<ApplicantAdmission?> GetByApplicantIdAndAdmissionIdAsync(Guid applicantId, Guid admissionId)
+        {
+            return await _applicantAdmissionRepository.GetByApplicantIdAndAdmissionIdAsync(applicantId, admissionId);
+        }
+
+        public async Task<bool> AnyByApplicantIdAndAdmissionIdAsync(Guid applicantId, Guid admissionId)
+        {
+            return await _applicantAdmissionRepository.AnyByApplicantIdAndAdmissionIdAsync(applicantId, admissionId);
+        }
+
     }
 }

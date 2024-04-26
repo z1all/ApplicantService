@@ -1,8 +1,8 @@
 ﻿using DictionaryService.Core.Application.Interfaces.Services;
 using Common.ServiceBus.EasyNetQAutoSubscriber;
-using EasyNetQ;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
+using EasyNetQ;
 
 namespace DictionaryService.Presentation.Web.RPCHandlers
 {
@@ -29,6 +29,9 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
 
             _bus.Rpc.Respond<GetFacultyRequest, ExecutionResult<GetFacultyResponse>>(async (request) =>
                 await ExceptionHandlerAsync(async (service) => await GetFacultyAsync(service, request)));
+
+            _bus.Rpc.Respond<GetEducationProgramRequest, ExecutionResult<GetEducationProgramResponse>>(async (request) =>
+                await ExceptionHandlerAsync(async (service) => await GetEducationProgramAsync(service, request)));
         }
 
         private async Task<ExecutionResult<GetFacultiesResponse>> GetFacultiesAsync(IServiceProvider service)
@@ -74,6 +77,13 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
             return await GetDictionaryHandlerAsync(service,
                async (_dictionaryInfoService) => await _dictionaryInfoService.GetFacultyAsync(request.FacultyId),
                (faculty) => new GetFacultyResponse() { Faculty = faculty });
+        }
+
+        private async Task<ExecutionResult<GetEducationProgramResponse>> GetEducationProgramAsync(IServiceProvider service, GetEducationProgramRequest request)
+        {
+            return await GetDictionaryHandlerAsync(service,
+               async (_dictionaryInfoService) => await _dictionaryInfoService.GetEducationProgramByIdAsync(request.ProgramId),
+               (educationProgram) => new GetEducationProgramResponse() { EducationProgram = educationProgram });
         }
 
         private async Task<ExecutionResult<TResponse>> GetDictionaryHandlerAsync<TResponse, TDictionaryResponse>(

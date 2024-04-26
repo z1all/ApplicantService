@@ -13,7 +13,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
     {
         protected abstract UpdateStatus UpdateStatusCache { get; }
         protected abstract IUpdateStatusRepository UpdateStatusRepository { get; }
-        protected abstract IBaseRepository<TEntity> Repository { get; }
+        protected abstract IBaseWithBaseEntityRepository<TEntity> Repository { get; }
 
         protected abstract bool CompareKey(TEntity entity, TExternalEntity externalEntity);
         protected abstract Task<List<TEntity>> GetEntityAsync();

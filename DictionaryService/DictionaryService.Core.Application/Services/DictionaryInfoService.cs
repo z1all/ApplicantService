@@ -23,14 +23,6 @@ namespace DictionaryService.Core.Application.Services
             _educationLevelRepository = educationLevelRepository;
             _educationDocumentTypeRepository = educationDocumentTypeRepository;
             _facultyRepository = facultyRepository;
-
-            /*
-               +++ await _dictionaryInfoService.GetFacultiesAsync(); +++
-               +++ await _dictionaryInfoService.GetProgramsAsync(request.ProgramFilter); +++
-               +++ await _dictionaryInfoService.GetEducationLevelsAsync(); +++
-               +++ await _dictionaryInfoService.GetDocumentTypesAsync(); +++
-               ??? await _dictionaryInfoService.GetDocumentTypeByIdAsync(requests.DocumentId); ???
-           */
         }
 
         public async Task<ExecutionResult<ProgramPagedDTO>> GetProgramsAsync(EducationProgramFilterDTO filter)
@@ -63,9 +55,6 @@ namespace DictionaryService.Core.Application.Services
                     },
                 },
             };
-
-            // +++ await _educationProgramRepository.GetAllCountAsync(filter);
-            // +++ await _educationProgramRepository.GetAllByFiltersAsync(filter);
         }
 
         public async Task<ExecutionResult<List<EducationLevelDTO>>> GetEducationLevelsAsync()
@@ -76,8 +65,6 @@ namespace DictionaryService.Core.Application.Services
             {
                 Result = educationLevels.Select(educationLevel => educationLevel.ToEducationLevelDTO()).ToList(),
             };
-
-            // +++ await _educationLevelRepository.GetAllAsync();
         }
 
         public async Task<ExecutionResult<List<EducationDocumentTypeDTO>>> GetDocumentTypesAsync()
@@ -88,8 +75,6 @@ namespace DictionaryService.Core.Application.Services
             {
                 Result = documentTypes.Select(documentType => documentType.ToEducationDocumentTypeDTO()).ToList(),
             };
-
-            // +++ await _educationDocumentTypeRepository.GetAllAsync()
         }
 
         public async Task<ExecutionResult<List<FacultyDTO>>> GetFacultiesAsync()
@@ -100,8 +85,6 @@ namespace DictionaryService.Core.Application.Services
             {
                 Result = faculties.Select(faculty => faculty.ToFacultyDTO()).ToList(),
             };
-
-            // +++ await _facultyRepository.GetAllAsync();
         }
 
         public async Task<ExecutionResult<EducationDocumentTypeDTO>> GetDocumentTypeByIdAsync(Guid documentTypeId)
@@ -113,8 +96,6 @@ namespace DictionaryService.Core.Application.Services
             }
 
             return new() {  Result = documentType.ToEducationDocumentTypeDTO() };
-
-            // +++ await _educationDocumentTypeRepository.GetByIdAsync(documentTypeId);
         }
 
         public async Task<ExecutionResult<FacultyDTO>> GetFacultyAsync(Guid facultyId)
@@ -126,6 +107,17 @@ namespace DictionaryService.Core.Application.Services
             }
 
             return new() { Result = faculty.ToFacultyDTO() };
+        }
+
+        public async Task<ExecutionResult<EducationProgramDTO>> GetEducationProgramByIdAsync(Guid programId)
+        {
+            EducationProgram? program = await _educationProgramRepository.GetByIdWithFacultyAndLevelAsync(programId);
+            if (program is null)
+            {
+                return new(keyError: "ProgramNotFound", error: $"Education program with id {programId} not found!");
+            }
+
+            return new() { Result = program.ToEducationProgramDTO() };
         }
     }
 }

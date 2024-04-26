@@ -14,5 +14,14 @@ namespace AdmissioningService.Core.Application.Mappers
                 Deprecated = false,
             };
         }
+
+        public static EducationLevelDTO ToEducationLevelDTO(this EducationLevelCache educationLevel)
+        {
+            return new()
+            {
+                Id = educationLevel.Id,
+                Name = educationLevel.Name,
+            };
+        }
     }
 }

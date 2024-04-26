@@ -12,15 +12,21 @@ namespace AdmissioningService.Core.DictionaryHelpers
     {
         private readonly IEducationDocumentTypeCacheRepository _educationDocumentTypeCacheRepository;
         private readonly IEducationLevelCacheRepository _educationLevelCacheRepository;
+        private readonly IEducationProgramCacheRepository _educationProgramCacheRepository;
+        private readonly IFacultyCacheRepository _facultyCacheRepository;
         private readonly IRequestService _requestService;
 
         public DictionaryHelper(
             IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository, 
             IEducationLevelCacheRepository educationLevelCacheRepository,
+            IEducationProgramCacheRepository educationProgramCacheRepository,
+            IFacultyCacheRepository facultyCacheRepository,
             IRequestService requestService)
         {
             _educationDocumentTypeCacheRepository = educationDocumentTypeCacheRepository;
             _educationLevelCacheRepository = educationLevelCacheRepository;
+            _educationProgramCacheRepository = educationProgramCacheRepository;
+            _facultyCacheRepository = facultyCacheRepository;
             _requestService = requestService;
         }
 
@@ -43,9 +49,39 @@ namespace AdmissioningService.Core.DictionaryHelpers
             {
                 var documentTypeFromDb = await _educationDocumentTypeCacheRepository.GetByIdAsync(documentTypeId);
 
-                documentTypesFromDb.Add(documentTypeFromDb ?? throw new NullReferenceException()); 
+                documentTypesFromDb.Add(documentTypeFromDb ?? throw new NullReferenceException());
             }
             return documentTypesFromDb;
+        }
+
+        public async Task<ExecutionResult> CheckProgramAsync(Guid programId)
+        {
+            bool programExist = await _educationProgramCacheRepository.AnyByIdAsync(programId);
+            if (!programExist)
+            {
+                ExecutionResult<GetEducationProgramResponse> result = await _requestService.GetEducationProgramAsync(programId);
+                if (!result.IsSuccess) return result;
+                EducationProgramDTO program = result.Result!.EducationProgram;
+
+                await CheckEducationLevelAsync(program.EducationLevel);
+                await CheckFacultyAsync(program.Faculty);
+
+                EducationProgramCache newProgram = new()
+                {
+                    Id = program.Id,
+                    Code = program.Code,
+                    Name = program.Name,
+                    EducationForm = program.EducationForm, 
+                    Language = program.Language,
+                    EducationLevelId = program.EducationLevel.Id,
+                    FacultyId = program.Faculty.Id,
+                    Deprecated = false,
+                };
+
+                await _educationProgramCacheRepository.AddAsync(newProgram);
+            }
+
+            return new(isSuccess: true);
         }
 
         public async Task<ExecutionResult<EducationDocumentTypeCache>> GetEducationDocumentTypeAsync(Guid documentTypeId)
@@ -54,7 +90,7 @@ namespace AdmissioningService.Core.DictionaryHelpers
             if (!result.IsSuccess) return new() { Errors = result.Errors };
             EducationDocumentTypeDTO documentType = result.Result!.EducationDocumentType;
 
-            await CheckNextEducationLevelAsync(documentType.NextEducationLevel);
+            await CheckNextEducationLevelsAsync(documentType.NextEducationLevel);
             await CheckEducationLevelAsync(documentType.EducationLevel);
 
             IEnumerable<Guid> newNextEducationLevelsId = documentType.NextEducationLevel.Select(educationLevel => educationLevel.Id);
@@ -72,7 +108,7 @@ namespace AdmissioningService.Core.DictionaryHelpers
             return new() { Result = newDocumentType };
         }
 
-        private async Task CheckNextEducationLevelAsync(IEnumerable<EducationLevelDTO> nextEducationLevels)
+        private async Task CheckNextEducationLevelsAsync(IEnumerable<EducationLevelDTO> nextEducationLevels)
         {
             foreach (var newNextEducationLevel in nextEducationLevels)
             {
@@ -80,13 +116,23 @@ namespace AdmissioningService.Core.DictionaryHelpers
             }
         }
 
-        private async Task CheckEducationLevelAsync(EducationLevelDTO educationLevels)
+        private async Task CheckEducationLevelAsync(EducationLevelDTO educationLevel)
         {
-            bool existLevel = await _educationLevelCacheRepository.AnyByIdAsync(educationLevels.Id);
+            bool existLevel = await _educationLevelCacheRepository.AnyByIdAsync(educationLevel.Id);
             if (!existLevel)
             {
-                EducationLevelCache educationLevel = educationLevels.ToEducationLevelCache();
-                await _educationLevelCacheRepository.AddAsync(educationLevel);
+                EducationLevelCache newEducationLevel = educationLevel.ToEducationLevelCache();
+                await _educationLevelCacheRepository.AddAsync(newEducationLevel);
+            }
+        }
+
+        private async Task CheckFacultyAsync(FacultyDTO faculty)
+        {
+            bool facultyExist = await _facultyCacheRepository.AnyByIdAsync(faculty.Id);
+            if (!facultyExist)
+            {
+                FacultyCache newFaculty = faculty.ToFacultyCache();
+                await _facultyCacheRepository.AddAsync(newFaculty);
             }
         }
     }

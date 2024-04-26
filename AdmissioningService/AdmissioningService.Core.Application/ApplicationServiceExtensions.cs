@@ -2,6 +2,7 @@
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Application.Services;
 using AdmissioningService.Core.DictionaryHelpers;
+using AdmissioningService.Core.Application.Configurations;
 using Common.ServiceBus.Configurations;
 
 namespace AdmissioningService.Core.Application
@@ -17,6 +18,8 @@ namespace AdmissioningService.Core.Application
             services.AddEasyNetQ();
             
             services.AddScoped<DictionaryHelper>();
+
+            services.ConfigureOptions<AdmissionOptionsConfigure>();
 
             return services;
         }

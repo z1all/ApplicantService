@@ -3,7 +3,7 @@ using Common.Repositories;
 
 namespace AdmissioningService.Core.Application.Interfaces.Repositories
 {
-    public interface IManagerRepository : IBaseRepository<Manager>
+    public interface IManagerRepository : IBaseWithBaseEntityRepository<Manager>
     {
     }
 }
