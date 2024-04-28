@@ -40,7 +40,7 @@ namespace ApplicantService.Core.Application.Services
 
         public async Task<ExecutionResult> DeleteApplicantScanAsync(Guid documentId, Guid scanId, Guid applicantId, Guid? managerId = null)
         {
-            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
                 return new() { Errors = canEdit.Errors };
@@ -60,7 +60,7 @@ namespace ApplicantService.Core.Application.Services
 
         public async Task<ExecutionResult> AddApplicantScanAsync(Guid documentId, Guid applicantId, FileDTO file, Guid? managerId = null)
         {
-            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
                 return new() { Errors = canEdit.Errors };
@@ -93,15 +93,6 @@ namespace ApplicantService.Core.Application.Services
             }
 
             return new() { Result = documentFileInfo };
-        }
-
-        private async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
-        {
-            if (managerId is null)
-            {
-                return await _requestService.CheckAdmissionStatusIsCloseAsync(applicantId);
-            }
-            return await _requestService.CheckManagerEditPermissionAsync(applicantId, (Guid)managerId);
         }
     }
 }

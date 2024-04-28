@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Application.Services;
-using AdmissioningService.Core.DictionaryHelpers;
 using AdmissioningService.Core.Application.Configurations;
 using Common.ServiceBus.Configurations;
+using AdmissioningService.Core.Application.Helpers;
 
 namespace AdmissioningService.Core.Application
 {
@@ -20,6 +20,7 @@ namespace AdmissioningService.Core.Application
             services.AddEasyNetQ();
             
             services.AddScoped<DictionaryHelper>();
+            services.AddScoped<AdmissionHelper>();
 
             services.ConfigureOptions<AdmissionOptionsConfigure>();
 

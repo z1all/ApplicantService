@@ -6,7 +6,7 @@ namespace Common.ServiceBus.EasyNetQAutoSubscriber
 {
     public abstract class BaseEasyNetQRPCHandler
     {
-        protected readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
         protected readonly IBus _bus;
 
         public BaseEasyNetQRPCHandler(IServiceProvider serviceProvider, IBus bus)

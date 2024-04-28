@@ -11,23 +11,33 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
     {
         public ApplicantAdmissionRepository(AppDbContext dbContext) : base(dbContext) { }
 
-        public async Task<ApplicantAdmission?> GetByAdmissionCompanyId(Guid admissionCompanyId)
+        public async Task<ApplicantAdmission?> GetByAdmissionCompanyIdAndApplicantId(Guid admissionCompanyId, Guid applicantId)
         {
             return await _dbContext.ApplicantAdmissions
-                .FirstOrDefaultAsync(applicantAdmission => applicantAdmission.AdmissionCompanyId == admissionCompanyId);
+                .FirstOrDefaultAsync(applicantAdmission => applicantAdmission.AdmissionCompanyId == admissionCompanyId && 
+                                                           applicantAdmission.ApplicantId == applicantId);
         }
 
         public async Task<ApplicantAdmission?> GetByApplicantIdAndAdmissionIdAsync(Guid applicantId, Guid admissionId)
         {
             return await _dbContext.ApplicantAdmissions
                 .Include(applicantAdmissions => applicantAdmissions.AdmissionCompany)
-                .FirstOrDefaultAsync(applicantAdmissions => applicantAdmissions.ApplicantId == applicantId && applicantAdmissions.Id == admissionId);
+                .FirstOrDefaultAsync(applicantAdmissions => applicantAdmissions.ApplicantId == applicantId && 
+                                                            applicantAdmissions.Id == admissionId);
         }
 
         public async Task<bool> AnyByApplicantIdAndAdmissionIdAsync(Guid applicantId, Guid admissionId)
         {
             return await _dbContext.ApplicantAdmissions
-               .AnyAsync(applicantAdmissions => applicantAdmissions.ApplicantId == applicantId && applicantAdmissions.Id == admissionId);
+               .AnyAsync(applicantAdmissions => applicantAdmissions.ApplicantId == applicantId && 
+                                                applicantAdmissions.Id == admissionId);
+        }
+
+        public async Task<ApplicantAdmission?> GetCurrentByApplicantId(Guid applicantId)
+        {
+            return await _dbContext.ApplicantAdmissions
+                .FirstOrDefaultAsync(applicantAdmission => applicantAdmission.ApplicantId == applicantId &&
+                                                           applicantAdmission.AdmissionCompany!.IsCurrent);
         }
     }
 }

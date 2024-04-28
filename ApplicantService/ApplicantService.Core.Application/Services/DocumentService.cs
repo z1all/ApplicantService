@@ -37,7 +37,7 @@ namespace ApplicantService.Core.Application.Services
 
         public async Task<ExecutionResult> DeleteApplicantDocumentAsync(Guid documentId, Guid applicantId, Guid? managerId)
         {
-            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
                 return new() { Errors = canEdit.Errors };
@@ -95,7 +95,7 @@ namespace ApplicantService.Core.Application.Services
 
         public async Task<ExecutionResult> AddApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId, Guid? managerId)
         {
-            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
                 return new() { Errors = canEdit.Errors };
@@ -115,7 +115,7 @@ namespace ApplicantService.Core.Application.Services
 
         public async Task<ExecutionResult> UpdateApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId, Guid? managerId)
         {
-            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
                 return new() { Errors = canEdit.Errors };
@@ -224,7 +224,7 @@ namespace ApplicantService.Core.Application.Services
 
         private async Task<ExecutionResult> CheckPermissionsAndEducationDocumentTypeAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
         {
-            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
                 return new() { Errors = canEdit.Errors };
@@ -243,16 +243,6 @@ namespace ApplicantService.Core.Application.Services
             }
 
             return new(isSuccess: true);
-        }
-
-        private async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
-        {
-            return new(true);
-            if(managerId is null)
-            {
-                return await _requestService.CheckAdmissionStatusIsCloseAsync(applicantId);
-            }
-            return await _requestService.CheckManagerEditPermissionAsync(applicantId, (Guid)managerId);
         }
     }
 }

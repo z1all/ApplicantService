@@ -6,7 +6,7 @@ using Common.Models.DTOs;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 
-namespace AdmissioningService.Core.DictionaryHelpers
+namespace AdmissioningService.Core.Application.Helpers
 {
     public class DictionaryHelper
     {
@@ -17,7 +17,7 @@ namespace AdmissioningService.Core.DictionaryHelpers
         private readonly IRequestService _requestService;
 
         public DictionaryHelper(
-            IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository, 
+            IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository,
             IEducationLevelCacheRepository educationLevelCacheRepository,
             IEducationProgramCacheRepository educationProgramCacheRepository,
             IFacultyCacheRepository facultyCacheRepository,
@@ -71,7 +71,7 @@ namespace AdmissioningService.Core.DictionaryHelpers
                     Id = program.Id,
                     Code = program.Code,
                     Name = program.Name,
-                    EducationForm = program.EducationForm, 
+                    EducationForm = program.EducationForm,
                     Language = program.Language,
                     EducationLevelId = program.EducationLevel.Id,
                     FacultyId = program.Faculty.Id,

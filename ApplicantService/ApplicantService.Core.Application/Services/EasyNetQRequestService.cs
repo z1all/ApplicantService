@@ -16,21 +16,13 @@ namespace ApplicantService.Core.Application.Services
             _bus = bus;
         }
 
-        public async Task<ExecutionResult> CheckAdmissionStatusIsCloseAsync(Guid applicantId)
+        public async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
         {
-            return await RequestHandler<ExecutionResult, CheckAdmissionStatusIsCloseRequest>(new()
-            {
-                ApplicantId = applicantId
-            }, "CheckAdmissionStatusIsCloseFail");
-        }
-
-        public async Task<ExecutionResult> CheckManagerEditPermissionAsync(Guid applicantId, Guid managerId)
-        {
-            return await RequestHandler<ExecutionResult, CheckManagerEditPermissionRequest>(new()
+            return await RequestHandler<ExecutionResult, CheckPermissionsRequest>(new()
             {
                 ApplicantId = applicantId,
                 ManagerId = managerId
-            }, " CheckManagerEditPermissionFail");
+            }, "CheckPermissionsFail");
         }
 
         public async Task<ExecutionResult<EducationDocumentTypeCache>> GetEducationDocumentTypeAsync(Guid documentId)

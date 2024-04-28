@@ -1,7 +1,7 @@
 ﻿using AdmissioningService.Core.Application.DTOs;
+using AdmissioningService.Core.Application.Helpers;
 using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
-using AdmissioningService.Core.DictionaryHelpers;
 using AdmissioningService.Core.Domain;
 using Common.Models.Models;
 

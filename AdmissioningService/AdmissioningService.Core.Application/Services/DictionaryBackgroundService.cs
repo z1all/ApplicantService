@@ -1,7 +1,7 @@
-﻿using AdmissioningService.Core.Application.Interfaces.Repositories;
+﻿using AdmissioningService.Core.Application.Helpers;
+using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Application.Mappers;
-using AdmissioningService.Core.DictionaryHelpers;
 using AdmissioningService.Core.Domain;
 using Common.Models.DTOs;
 
@@ -57,7 +57,7 @@ namespace AdmissioningService.Core.Application.Services
 
         public async Task UpdateEducationDocumentTypeAsync(EducationDocumentTypeDTO newDocumentType, bool Deprecated)
         {
-            EducationDocumentTypeCache? documentType = await _educationDocumentTypeCacheRepository.GetByIdAsync(message.EducationDocumentType.Id);
+            EducationDocumentTypeCache? documentType = await _educationDocumentTypeCacheRepository.GetByIdAsync(newDocumentType.Id);
             if (documentType is not null)
             {
                 IEnumerable<Guid> NextEducationLevelIds = newDocumentType.NextEducationLevel.Select(educationLevel => educationLevel.Id);
