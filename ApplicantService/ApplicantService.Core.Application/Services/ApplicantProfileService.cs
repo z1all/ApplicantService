@@ -8,15 +8,19 @@ namespace ApplicantService.Core.Application.Services
 {
     public class ApplicantProfileService : IApplicantProfileService
     {
-        private readonly IApplicantRepository _profileRepository;
+        private readonly IApplicantRepository _applicantRepository;
+        private readonly IEducationDocumentRepository _educationDocumentRepository;
 
-        public ApplicantProfileService(IApplicantRepository profileRepository)
+        public ApplicantProfileService(
+            IApplicantRepository profileRepository, IEducationDocumentRepository educationDocumentRepository)
         {
-            _profileRepository = profileRepository;
+            _applicantRepository = profileRepository;
+            _educationDocumentRepository = educationDocumentRepository;
         }
+
         public async Task<ExecutionResult<ApplicantProfile>> GetApplicantProfileAsync(Guid applicantId)
         {
-            Applicant? applicant = await _profileRepository.GetByIdAsync(applicantId);
+            Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
             if(applicant == null)
             {
                 return new(keyError: "GetProfileFail", error: "Applicant not found! Try again later.");
@@ -38,7 +42,7 @@ namespace ApplicantService.Core.Application.Services
 
         public async Task<ExecutionResult> EditApplicantProfileAsync(EditApplicantProfile applicantProfile, Guid applicantId)
         {
-            Applicant? applicant = await _profileRepository.GetByIdAsync(applicantId);
+            Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
             if (applicant == null)
             {
                 return new(keyError: "GetProfileFail", error: "Applicant not found! Try again later.");
@@ -49,9 +53,31 @@ namespace ApplicantService.Core.Application.Services
             applicant.Gender = applicantProfile.Gender;
             applicant.PhoneNumber = applicantProfile.PhoneNumber;
 
-            await _profileRepository.UpdateAsync(applicant);
+            await _applicantRepository.UpdateAsync(applicant);
 
             return new(isSuccess: true);
+        }
+
+        public async Task<ExecutionResult<ApplicantAndAddedDocumentTypesDTO>> GetApplicantAndAddedDocumentTypesAsync(Guid applicantId)
+        {
+            Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
+            if (applicant is null)
+            {
+                return new(keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
+            }
+
+            List<EducationDocument> educationDocuments = await _educationDocumentRepository.GetAllByApplicantIdAsync(applicantId);
+
+            return new()
+            {
+                Result = new()
+                {
+                    Id = applicant.Id,
+                    FullName = applicant.FullName,
+                    Email = applicant.Email,
+                    AddedDocumentTypesId = educationDocuments.Select(document => document.EducationDocumentType!.Id).ToList()
+                },
+            };
         }
     }
 }

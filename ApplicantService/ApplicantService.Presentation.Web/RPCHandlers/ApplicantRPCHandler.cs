@@ -1,5 +1,5 @@
-﻿using ApplicantService.Core.Application.Interfaces.Repositories;
-using ApplicantService.Core.Domain;
+﻿using ApplicantService.Core.Application.DTOs;
+using ApplicantService.Core.Application.Interfaces.Services;
 using Common.Models.Models;
 using Common.ServiceBus.EasyNetQAutoSubscriber;
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
@@ -19,17 +19,11 @@ namespace ApplicantService.Presentation.Web.RPCHandlers
 
         private async Task<ExecutionResult<GetApplicantResponse>> GetApplicantAsync(IServiceProvider service, GetApplicantRequest request)
         {
-            var _applicantRepository = service.GetRequiredService<IApplicantRepository>();
+            var _applicantProfileService = service.GetRequiredService<IApplicantProfileService>();
 
-            Applicant? applicant = await _applicantRepository.GetByIdAsync(request.ApplicantId);
-            if (applicant is null)
-            {
-                return new(keyError: "ApplicantNotFound", error: $"Applicant with id {request.ApplicantId} not found!");
-            }
-
-            var _educationDocumentRepository = service.GetRequiredService<IEducationDocumentRepository>();
-
-            List<EducationDocument> educationDocuments = await _educationDocumentRepository.GetAllByApplicantIdAsync(request.ApplicantId);
+            ExecutionResult<ApplicantAndAddedDocumentTypesDTO> result = await _applicantProfileService.GetApplicantAndAddedDocumentTypesAsync(request.ApplicantId);
+            if (!result.IsSuccess) return new() { Errors = result.Errors };
+            ApplicantAndAddedDocumentTypesDTO applicant = result.Result!;
 
             return new()
             {
@@ -38,8 +32,8 @@ namespace ApplicantService.Presentation.Web.RPCHandlers
                     Id = applicant.Id,
                     FullName = applicant.FullName,
                     Email = applicant.Email,
-                    AddedDocumentTypesId = educationDocuments.Select(document => document.EducationDocumentType!.Id).ToList()
-                },
+                    AddedDocumentTypesId = applicant.AddedDocumentTypesId,
+                }
             };
         }
     }

@@ -7,5 +7,6 @@ namespace ApplicantService.Core.Application.Interfaces.Services
     {
         Task<ExecutionResult<ApplicantProfile>> GetApplicantProfileAsync(Guid applicantId);
         Task<ExecutionResult> EditApplicantProfileAsync(EditApplicantProfile applicantProfile, Guid applicantId);
+        Task<ExecutionResult<ApplicantAndAddedDocumentTypesDTO>> GetApplicantAndAddedDocumentTypesAsync(Guid applicantId);
     }
 }
