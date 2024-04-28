@@ -11,7 +11,7 @@ namespace AdmissioningService.Presentation.Web
             services.AddSwaggerConfigure();
             services.AddModalStateConfigure();
 
-            services.AddScoped<ApplicantBackgroundListener>();
+            services.AddScoped<AdmissionBackgroundListener>();
             services.AddScoped<DictionaryBackgroundListener>();
 
             return services;

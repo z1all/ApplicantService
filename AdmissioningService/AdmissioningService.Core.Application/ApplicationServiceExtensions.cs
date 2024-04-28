@@ -13,6 +13,8 @@ namespace AdmissioningService.Core.Application
         {
             services.AddScoped<IAdmissionService, AdmissionService>();
             services.AddScoped<IManagerService, ManagerService>();
+            services.AddScoped<IAdmissionBackgroundService, AdmissionBackgroundService>();
+            services.AddScoped<IDictionaryBackgroundService, DictionaryBackgroundService>();
             services.AddScoped<IRequestService, EasyNetQRequestService>();
             services.AddScoped<INotificationService, EasyNetQNotificationService>();
             services.AddEasyNetQ();

@@ -87,7 +87,7 @@ namespace AdmissioningService.Core.Application.Services
                 return new(keyError: "AdmissionNotFound", error: $"Applicant with id {applicantId} doesn't have admission with id {admissionId}!");
             }
 
-            List<AdmissionProgram> programs = await _admissionProgramRepository.GetAllByApplicantIdWithProgramAndLevelAndFacultyAsync(applicantId);
+            List<AdmissionProgram> programs = await _admissionProgramRepository.GetAllByApplicantIdWithProgramWithLevelAndFacultyAsync(applicantId);
 
             return new()
             {
