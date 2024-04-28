@@ -79,5 +79,28 @@ namespace ApplicantService.Core.Application.Services
                 },
             };
         }
+
+        public async Task CreateApplicantAsync(UserDTO user)
+        {
+            Applicant applicant = new()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FullName = user.FullName,
+            };
+
+            await _applicantRepository.AddAsync(applicant);
+        }
+
+        public async Task UpdateApplicantAsync(UserDTO newUser)
+        {
+            Applicant? applicant = await _applicantRepository.GetByIdAsync(newUser.Id);
+            if (applicant is null) return;
+
+            applicant.FullName = newUser.FullName;
+            applicant.Email = newUser.Email;
+
+            await _applicantRepository.UpdateAsync(applicant);
+        }
     }
 }

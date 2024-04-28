@@ -7,6 +7,7 @@ using ApplicantService.Core.Application.Mappers;
 using ApplicantService.Core.Domain;
 using ApplicantService.Core.Domain.Enums;
 using Common.Models.Models;
+using EasyNetQ;
 
 namespace ApplicantService.Core.Application.Services
 {
@@ -243,6 +244,17 @@ namespace ApplicantService.Core.Application.Services
             }
 
             return new(isSuccess: true);
+        }
+
+        public async Task UpdateEducationDocumentType(UpdateEducationDocumentTypeDTO newDocumentType)
+        {
+            EducationDocumentTypeCache? documentType = await _educationDocumentTypeCacheRepository.GetByIdAsync(newDocumentType.Id);
+            if (documentType is null) return;
+
+            documentType.Name = newDocumentType.Name;
+            documentType.Deprecated = newDocumentType.Deprecated;
+
+            await _educationDocumentTypeCacheRepository.UpdateAsync(documentType);
         }
     }
 }
