@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApplicantService.Infrastructure.Persistence.Repositories
 {
-    public class DocumentRepository : BaseRepository<Document, AppDbContext>, IDocumentRepository
+    public class DocumentRepository : BaseWithBaseEntityRepository<Document, AppDbContext>, IDocumentRepository
     {
         public DocumentRepository(AppDbContext dbContext) : base(dbContext) { }
 

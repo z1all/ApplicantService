@@ -7,11 +7,12 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
         where TEntity : BaseDictionaryEntity
         where TExternalEntity : class
     {
-        public static async Task<ExecutionResult<List<TEntity>>> UpdateAsync(
+        public static async Task<ExecutionResult<Tuple<List<TEntity>, List<TEntity>>>> UpdateAsync(
             bool deleteRelatedEntities,
             UpdateDictionaryActions<TEntity, TExternalEntity> actions)
         {
             List<TEntity> changedEntities = new List<TEntity>();
+            List<TEntity> addedEntities = new List<TEntity>();
 
             await actions.BeforeActionsAsync();
 
@@ -31,7 +32,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 
             // Пробуем обновлять и добавлять записи
             ExecutionResult<Dictionary<Guid, TEntity>> updatingAndAddingResult
-                = await DoUpdateAndAddEntitiesAsync(actions.ToUpdateAndAddActions(), externalEntities, existEntities, changedEntities);
+                = await DoUpdateAndAddEntitiesAsync(actions.ToUpdateAndAddActions(), externalEntities, existEntities, changedEntities, addedEntities);
             if (!updatingAndAddingResult.IsSuccess) 
             {
                 await actions.AfterUpdatingErrorAsync(updatingAndAddingResult.Errors.Values.FirstOrDefault()?[0] ?? "Unknow error");
@@ -52,12 +53,13 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 
             await actions.AfterUpdateAsync();
 
-            return new() { Result = changedEntities };
+            return new() { Result = new(changedEntities, addedEntities) };
         }
 
         private static async Task<ExecutionResult<Dictionary<Guid, TEntity>>> DoUpdateAndAddEntitiesAsync(
             UpdateAndAddDictionaryActions<TEntity, TExternalEntity> actions,
-            List<TExternalEntity> externalEntities, List<TEntity> existEntities, List<TEntity> changedEntities)
+            List<TExternalEntity> externalEntities, List<TEntity> existEntities, 
+            List<TEntity> changedEntities, List<TEntity> addedEntities)
         {
             // Словарь для хранения тех сущностей, которые существуют только в нашей бд, то есть были удалены во внешнем сервисе
             Dictionary<Guid, TEntity> existEntitiesForRemove = existEntities.ToDictionary(entity => entity.Id);
@@ -90,6 +92,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
                     // Добавляем запись...
                     TEntity newEntity = actions.AddEntity(externalEntity);
                     await actions.Repository.AddAsync(newEntity);
+                    addedEntities.Add(newEntity);
                 }
             }
 

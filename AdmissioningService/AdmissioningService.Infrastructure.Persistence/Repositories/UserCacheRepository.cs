@@ -5,7 +5,7 @@ using Common.Repositories;
 
 namespace AdmissioningService.Infrastructure.Persistence.Repositories
 {
-    internal class UserCacheRepository : BaseRepository<UserCache, AppDbContext>, IUserCacheRepository
+    internal class UserCacheRepository : BaseWithBaseEntityRepository<UserCache, AppDbContext>, IUserCacheRepository
     {
         public UserCacheRepository(AppDbContext dbContext) : base(dbContext) { }
     }

@@ -1,8 +1,8 @@
 ﻿using DictionaryService.Core.Application.Interfaces.Services;
 using Common.ServiceBus.EasyNetQAutoSubscriber;
-using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
-using EasyNetQ;
 using Common.Models.Models;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
+using EasyNetQ;
 
 namespace DictionaryService.Presentation.Web.RPCHandlers
 {
@@ -21,20 +21,17 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
             _bus.Rpc.Respond<GetEducationLevelsRequest, ExecutionResult<GetEducationLevelsResponse>>(async (_) =>
                 await ExceptionHandlerAsync(GetEducationLevelsAsync));
 
-            _bus.Rpc.Respond<GetDocumentTypeRequest, ExecutionResult<GetDocumentTypeResponse>>(async (_) =>
+            _bus.Rpc.Respond<GetDocumentTypesRequest, ExecutionResult<GetDocumentTypesResponse>>(async (_) =>
                 await ExceptionHandlerAsync(GetDocumentTypeAsync));
 
             _bus.Rpc.Respond<GetEducationDocumentTypeRequest, ExecutionResult<GetEducationDocumentTypeResponse>>(async (request) =>
                 await ExceptionHandlerAsync(async (service) => await GetDocumentTypeAsync(service, request)));
 
+            _bus.Rpc.Respond<GetFacultyRequest, ExecutionResult<GetFacultyResponse>>(async (request) =>
+                await ExceptionHandlerAsync(async (service) => await GetFacultyAsync(service, request)));
 
-            /*
-                await _dictionaryInfoService.GetFacultiesAsync();
-                await _dictionaryInfoService.GetProgramsAsync(request.ProgramFilter);
-                await _dictionaryInfoService.GetEducationLevelsAsync();
-                await _dictionaryInfoService.GetDocumentTypesAsync();
-                await _dictionaryInfoService.GetDocumentTypeByIdAsync(requests.DocumentId);
-            */
+            _bus.Rpc.Respond<GetEducationProgramRequest, ExecutionResult<GetEducationProgramResponse>>(async (request) =>
+                await ExceptionHandlerAsync(async (service) => await GetEducationProgramAsync(service, request)));
         }
 
         private async Task<ExecutionResult<GetFacultiesResponse>> GetFacultiesAsync(IServiceProvider service)
@@ -57,25 +54,37 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
                 async (_dictionaryInfoService) => await _dictionaryInfoService.GetEducationLevelsAsync(), 
                 (educationLevels) => new GetEducationLevelsResponse() { EducationLevels = educationLevels });
         }
-        private async Task<ExecutionResult<GetDocumentTypeResponse>> GetDocumentTypeAsync(IServiceProvider service)
+        private async Task<ExecutionResult<GetDocumentTypesResponse>> GetDocumentTypeAsync(IServiceProvider service)
         {
             return await GetDictionaryHandlerAsync(service,
                 async (_dictionaryInfoService) => await _dictionaryInfoService.GetDocumentTypesAsync(),
-                (documentTypes) => new GetDocumentTypeResponse() { DocumentTypes = documentTypes });
+                (documentTypes) => new GetDocumentTypesResponse() { DocumentTypes = documentTypes });
         }
 
-        private async Task<ExecutionResult<GetEducationDocumentTypeResponse>> GetDocumentTypeAsync(IServiceProvider service, GetEducationDocumentTypeRequest requests)
+        private async Task<ExecutionResult<GetEducationDocumentTypeResponse>> GetDocumentTypeAsync(IServiceProvider service, GetEducationDocumentTypeRequest request)
         {
             return await GetDictionaryHandlerAsync(service,
-                async (_dictionaryInfoService) => await _dictionaryInfoService.GetDocumentTypeByIdAsync(requests.DocumentId),
+                async (_dictionaryInfoService) => await _dictionaryInfoService.GetDocumentTypeByIdAsync(request.DocumentId),
                 (documentTypes) => new GetEducationDocumentTypeResponse() 
                 { 
-                   Id = documentTypes.Id,
-                   Name = documentTypes.Name,
+                   EducationDocumentType = documentTypes,
                    Deprecated = false,
                 });
         }
 
+        private async Task<ExecutionResult<GetFacultyResponse>> GetFacultyAsync(IServiceProvider service, GetFacultyRequest request)
+        {
+            return await GetDictionaryHandlerAsync(service,
+               async (_dictionaryInfoService) => await _dictionaryInfoService.GetFacultyAsync(request.FacultyId),
+               (faculty) => new GetFacultyResponse() { Faculty = faculty });
+        }
+
+        private async Task<ExecutionResult<GetEducationProgramResponse>> GetEducationProgramAsync(IServiceProvider service, GetEducationProgramRequest request)
+        {
+            return await GetDictionaryHandlerAsync(service,
+               async (_dictionaryInfoService) => await _dictionaryInfoService.GetEducationProgramByIdAsync(request.ProgramId),
+               (educationProgram) => new GetEducationProgramResponse() { EducationProgram = educationProgram });
+        }
 
         private async Task<ExecutionResult<TResponse>> GetDictionaryHandlerAsync<TResponse, TDictionaryResponse>(
             IServiceProvider service, 

@@ -6,7 +6,7 @@ using Common.Repositories;
 
 namespace ApplicantService.Infrastructure.Persistence.Repositories
 {
-    public class PassportRepository : BaseRepository<Passport, AppDbContext>, IPassportRepository
+    public class PassportRepository : BaseWithBaseEntityRepository<Passport, AppDbContext>, IPassportRepository
     {
         public PassportRepository(AppDbContext dbContext) : base(dbContext) { }
 

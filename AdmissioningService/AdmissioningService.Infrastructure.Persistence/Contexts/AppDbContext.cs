@@ -45,7 +45,7 @@ namespace AdmissioningService.Infrastructure.Persistence.Contexts
 
             modelBuilder.Entity<ApplicantAdmission>()
                .HasOne(applicantAdmission => applicantAdmission.AdmissionCompany)
-               .WithMany()
+               .WithMany(admissionCompany => admissionCompany.ApplicantAdmissions)
                .HasForeignKey(applicantAdmission => applicantAdmission.AdmissionCompanyId)
                .IsRequired();
 

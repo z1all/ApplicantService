@@ -61,20 +61,20 @@ namespace UserService.Presentation.Web.Controllers
 
         private delegate Task<ExecutionResult> ChangeOperationAsync(Guid userId);
 
-        //[HttpPost("manager")]
-        //public async Task<ActionResult> CreateManagerAsync(CreateManagerRequest manager)
-        //{
-        //    var res = await _profileService.CreateManagerAsync(manager);
+        [HttpPost("manager")]
+        public async Task<ActionResult> CreateManagerAsync(CreateManagerRequest manager)
+        {
+            var res = await _profileService.CreateManagerAsync(manager);
 
-        //    return Ok(res);
-        //}
+            return Ok(res);
+        }
 
-        //[HttpDelete("manager")]
-        //public async Task<ActionResult> DeleteManagerAsync([FromQuery] Guid managerId)
-        //{
-        //    var res = await _profileService.DeleteManagerAsync(managerId);
+        [HttpDelete("manager")]
+        public async Task<ActionResult> DeleteManagerAsync([FromQuery] Guid managerId)
+        {
+            var res = await _profileService.DeleteManagerAsync(managerId);
 
-        //    return Ok(res);
-        //}
+            return Ok(res);
+        }
     }
 }

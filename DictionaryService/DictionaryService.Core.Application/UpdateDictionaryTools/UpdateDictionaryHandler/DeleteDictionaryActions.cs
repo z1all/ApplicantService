@@ -5,7 +5,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 {
     public class DeleteDictionaryActions<TEntity> where TEntity : BaseDictionaryEntity
     {
-        public required IBaseRepository<TEntity> Repository { get; set; }
+        public required IBaseWithBaseEntityRepository<TEntity> Repository { get; set; }
 
         public required Func<bool, TEntity, List<string>, Task<bool>> DeleteEntityAsync { get; init; }
     }

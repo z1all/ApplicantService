@@ -7,6 +7,7 @@ using ApplicantService.Core.Application.Mappers;
 using ApplicantService.Core.Domain;
 using ApplicantService.Core.Domain.Enums;
 using Common.Models.Models;
+using EasyNetQ;
 
 namespace ApplicantService.Core.Application.Services
 {
@@ -37,7 +38,7 @@ namespace ApplicantService.Core.Application.Services
 
         public async Task<ExecutionResult> DeleteApplicantDocumentAsync(Guid documentId, Guid applicantId, Guid? managerId)
         {
-            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
                 return new() { Errors = canEdit.Errors };
@@ -51,7 +52,7 @@ namespace ApplicantService.Core.Application.Services
 
             Guid educationDocumentTypeId = Guid.Empty;
             if (document.DocumentType == DocumentType.EducationDocument &&
-                (await TryGetEducationDocumentTypeIdAsync(documentId)).TryOut(out educationDocumentTypeId))
+                !(await TryGetEducationDocumentTypeIdAsync(documentId)).TryOut(out educationDocumentTypeId))
             {
                 return new(keyError: "UnknowError", error: "Unknow error.");
             }
@@ -95,7 +96,7 @@ namespace ApplicantService.Core.Application.Services
 
         public async Task<ExecutionResult> AddApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId, Guid? managerId)
         {
-            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
                 return new() { Errors = canEdit.Errors };
@@ -115,7 +116,7 @@ namespace ApplicantService.Core.Application.Services
 
         public async Task<ExecutionResult> UpdateApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId, Guid? managerId)
         {
-            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
                 return new() { Errors = canEdit.Errors };
@@ -224,7 +225,7 @@ namespace ApplicantService.Core.Application.Services
 
         private async Task<ExecutionResult> CheckPermissionsAndEducationDocumentTypeAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
         {
-            ExecutionResult canEdit = await CheckPermissionsAsync(applicantId, managerId);
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
                 return new() { Errors = canEdit.Errors };
@@ -245,13 +246,15 @@ namespace ApplicantService.Core.Application.Services
             return new(isSuccess: true);
         }
 
-        private async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
+        public async Task UpdateEducationDocumentType(UpdateEducationDocumentTypeDTO newDocumentType)
         {
-            if(managerId is null)
-            {
-                return await _requestService.CheckAdmissionStatusIsCloseAsync(applicantId);
-            }
-            return await _requestService.CheckManagerEditPermissionAsync(applicantId, (Guid)managerId);
+            EducationDocumentTypeCache? documentType = await _educationDocumentTypeCacheRepository.GetByIdAsync(newDocumentType.Id);
+            if (documentType is null) return;
+
+            documentType.Name = newDocumentType.Name;
+            documentType.Deprecated = newDocumentType.Deprecated;
+
+            await _educationDocumentTypeCacheRepository.UpdateAsync(documentType);
         }
     }
 }

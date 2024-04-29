@@ -139,11 +139,11 @@ namespace UserService.Infrastructure.Identity.Services
             IList<string> userRoles = await _userManager.GetRolesAsync(user);
             List<string> errors = new();
 
-            bool isManager = false;
-            if (!userRoles.Contains(Role.Manager) || !userRoles.Contains(Role.MainManager))
+            bool isManager = true;
+            if (!userRoles.Contains(Role.Manager) && !userRoles.Contains(Role.MainManager))
             {
                 errors.Add("This user is not manager or main manager!");
-                isManager = true;
+                isManager = false;
             }
 
             if (isManager && userRoles.Contains(Role.Admin))

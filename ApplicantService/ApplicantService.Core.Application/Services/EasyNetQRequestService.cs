@@ -1,9 +1,9 @@
 ﻿using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Domain;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService;
-using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
-using EasyNetQ;
 using Common.Models.Models;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
+using EasyNetQ;
 
 namespace ApplicantService.Core.Application.Services
 {
@@ -16,21 +16,13 @@ namespace ApplicantService.Core.Application.Services
             _bus = bus;
         }
 
-        public async Task<ExecutionResult> CheckAdmissionStatusIsCloseAsync(Guid applicantId)
+        public async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
         {
-            return await RequestHandler<ExecutionResult, CheckAdmissionStatusIsCloseRequest>(new()
-            {
-                ApplicantId = applicantId
-            }, "CheckAdmissionStatusIsCloseFail");
-        }
-
-        public async Task<ExecutionResult> CheckManagerEditPermissionAsync(Guid applicantId, Guid managerId)
-        {
-            return await RequestHandler<ExecutionResult, CheckManagerEditPermissionRequest>(new()
+            return await RequestHandler<ExecutionResult, CheckPermissionsRequest>(new()
             {
                 ApplicantId = applicantId,
                 ManagerId = managerId
-            }, " CheckManagerEditPermissionFail");
+            }, "CheckPermissionsFail");
         }
 
         public async Task<ExecutionResult<EducationDocumentTypeCache>> GetEducationDocumentTypeAsync(Guid documentId)
@@ -49,8 +41,8 @@ namespace ApplicantService.Core.Application.Services
             {
                 Result = new()
                 {
-                    Id = response.Result!.Id,
-                    Name = response.Result!.Name,
+                    Id = response.Result!.EducationDocumentType.Id,
+                    Name = response.Result!.EducationDocumentType.Name,
                     Deprecated = response.Result!.Deprecated,
                 }
             };

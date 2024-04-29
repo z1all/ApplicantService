@@ -6,5 +6,7 @@ namespace AdmissioningService.Core.Domain
     {
         public required int EventYear { get; set; }
         public required bool IsCurrent { get; set; }
+
+        public IEnumerable<ApplicantAdmission> ApplicantAdmissions { get; set; } = null!;
     }
 }

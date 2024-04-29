@@ -8,7 +8,7 @@ namespace AdmissioningService.Core.Domain
         public required bool Deprecated { get; set; }
 
         public required Guid EducationLevelId { get; set; }
-        public required EducationLevelCache EducationLevel { get; set; }
+        public EducationLevelCache? EducationLevel { get; set; }
 
         public IEnumerable<EducationLevelCache> NextEducationLevel { get; set; } = null!;
     }
