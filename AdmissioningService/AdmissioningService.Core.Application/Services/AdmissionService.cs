@@ -74,7 +74,7 @@ namespace AdmissioningService.Core.Application.Services
                 return new(keyError: "AdmissionNotFound", error: $"Applicant with id {applicantId} doesn't have admission with id {admissionId}!");
             }
 
-            List<AdmissionProgram> programs = await _admissionProgramRepository.GetAllByApplicantIdWithProgramWithLevelAndFacultyAsync(applicantId);
+            List<AdmissionProgram> programs = await _admissionProgramRepository.GetAllByApplicantIdAndAdmissionIdWithProgramWithLevelAndFacultyOrderByPriorityAsync(applicantId, admissionId);
 
             return new()
             {
@@ -88,7 +88,7 @@ namespace AdmissioningService.Core.Application.Services
             };
         }
 
-        public async Task<ExecutionResult> AddProgramToAdmissionAsync(Guid applicantId, Guid admissionId, Guid programId, Guid? managerId)
+        public async Task<ExecutionResult> AddProgramToCurrentAdmissionAsync(Guid applicantId, Guid programId, Guid? managerId)
         {
             ExecutionResult canEdit = await _admissionHelper.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess) return canEdit;
@@ -96,19 +96,19 @@ namespace AdmissioningService.Core.Application.Services
             ExecutionResult result = await _dictionaryHelper.CheckProgramAsync(programId);
             if (!result.IsSuccess) return result;
 
-            bool admissionExist = await _applicantAdmissionStateMachin.AnyByApplicantIdAndAdmissionIdAsync(applicantId, admissionId);
-            if (!admissionExist)
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionStateMachin.GetCurrentByApplicantIdAsync(applicantId);
+            if (applicantAdmission is null)
             {
-                return new(keyError: "AdmissionNotFound", error: $"Applicant with id {applicantId} doesn't have admission with id {admissionId}!");
+                return new(keyError: "AdmissionNotFound", error: $"Applicant with id {applicantId} doesn't have admission in current company!");
             }
 
-            ExecutionResult<int> checkingResult = await _admissionHelper.CheckAdmissionProgramAsync(applicantId, admissionId, programId);
+            ExecutionResult<int> checkingResult = await _admissionHelper.CheckAdmissionProgramAsync(applicantId, applicantAdmission.Id, programId);
             if (!checkingResult.IsSuccess) return checkingResult;
 
             AdmissionProgram admissionProgram = new()
             {
                 Priority = checkingResult.Result!,
-                ApplicantAdmissionId = admissionId,
+                ApplicantAdmissionId = applicantAdmission.Id,
                 EducationProgramId = programId,
             };
 
@@ -117,14 +117,128 @@ namespace AdmissioningService.Core.Application.Services
             return new(isSuccess: true);
         }
 
-        public Task<ExecutionResult> ChangeAdmissionProgramPriorityAsync(Guid applicantId, Guid admissionId, ChangePrioritiesApplicantProgramDTO changePriorities, Guid? managerId)
+        public async Task<ExecutionResult> ChangeAdmissionProgramPriorityAsync(Guid applicantId, ChangePrioritiesApplicantProgramDTO changePriorities, Guid? managerId)
         {
-            throw new NotImplementedException();
+            ExecutionResult canEdit = await _admissionHelper.CheckPermissionsAsync(applicantId, managerId);
+            if (!canEdit.IsSuccess) return canEdit;
+
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionStateMachin.GetCurrentByApplicantIdAsync(applicantId);
+            if (applicantAdmission is null)
+            {
+                return new(keyError: "AdmissionNotFound", error: $"Applicant with id {applicantId} doesn't have admission in current company!");
+            }
+
+            List<AdmissionProgram> admissionPrograms = await _admissionProgramRepository.GetAllByAdmissionIdWithOrderByPriorityAsync(applicantAdmission.Id);
+            if (admissionPrograms.Count != changePriorities.NewProgramPrioritiesOrder.Count)
+            {
+                return new(keyError: "WrongProgramCount", error: $"There are {admissionPrograms.Count} programs in the applicant's admission!");
+            }
+
+            ExecutionResult<List<AdmissionProgram>> result = GetNewProgramsOrder(changePriorities.NewProgramPrioritiesOrder, admissionPrograms);
+            if (!result.IsSuccess) return new() { Errors = result.Errors };
+            List<AdmissionProgram> newAdmissionProgramsPriorities = result.Result!;
+
+            await _admissionProgramRepository.UpdateRangeAsync(newAdmissionProgramsPriorities);
+
+            return new(isSuccess: true);
         }
 
-        public Task<ExecutionResult> DeleteAdmissionProgramAsync(Guid applicantId, Guid admissionId, Guid programId, Guid? managerId)
+        public async Task<ExecutionResult> DeleteAdmissionProgramAsync(Guid applicantId, Guid programId, Guid? managerId)
         {
-            throw new NotImplementedException();
+            ExecutionResult canEdit = await _admissionHelper.CheckPermissionsAsync(applicantId, managerId);
+            if (!canEdit.IsSuccess) return canEdit;
+
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionStateMachin.GetCurrentByApplicantIdAsync(applicantId);
+            if (applicantAdmission is null)
+            {
+                return new(keyError: "AdmissionNotFound", error: $"Applicant with id {applicantId} doesn't have admission in current company!");
+            }
+
+            var (admissionProgramForDelete, newAdmissionProgramsPriorities) = await GetProgramForDeleteAndNewProgramsOrderAsync(applicantAdmission.Id, programId);
+            if (admissionProgramForDelete is null)
+            {
+                return new(keyError: "ProgramNotFound", error: $"Applicant with id {applicantId} in current admission doesn't have program with id {programId}!");
+            }
+
+            await _admissionProgramRepository.DeleteAsync(admissionProgramForDelete);
+            await _admissionProgramRepository.UpdateRangeAsync(newAdmissionProgramsPriorities);
+
+            return new(isSuccess: true);
+        }
+
+        private async Task<Tuple<AdmissionProgram?, List<AdmissionProgram>>> GetProgramForDeleteAndNewProgramsOrderAsync(Guid admissionId, Guid programId)
+        {
+            List<AdmissionProgram> admissionPrograms = await _admissionProgramRepository.GetAllByAdmissionIdWithOrderByPriorityAsync(admissionId);
+
+            AdmissionProgram? admissionProgramForDelete = null;
+            List<AdmissionProgram> newAdmissionProgramsPriorities = new();
+            for (int i = 0; i < admissionPrograms.Count; ++i)
+            {
+                AdmissionProgram admissionProgram = admissionPrograms[i];
+
+                if (admissionProgramForDelete is null)
+                {
+                    if (admissionProgram.EducationProgramId == programId)
+                    {
+                        admissionProgramForDelete = admissionProgram;
+                    }
+                    else
+                    {
+                        admissionProgram.Priority = i;
+                        newAdmissionProgramsPriorities.Add(admissionProgram);
+                    }
+                }
+                else
+                {
+                    admissionProgram.Priority = i - 1;
+                    newAdmissionProgramsPriorities.Add(admissionProgram);
+                }
+            }
+
+            return new(admissionProgramForDelete, newAdmissionProgramsPriorities);
+        }
+
+        private ExecutionResult<List<AdmissionProgram>> GetNewProgramsOrder(List<Guid> newProgramPrioritiesOrder, List<AdmissionProgram> admissionPrograms)
+        {
+            ExecutionResult result = CheckDuplicate(newProgramPrioritiesOrder);
+            if(!result.IsSuccess) return new() { Errors = result.Errors };
+
+            List<string> comments = new();
+            List<AdmissionProgram> newAdmissionProgramsPriorities = new();
+            for (int i = 0; i < newProgramPrioritiesOrder.Count; ++i)
+            {
+                Guid newProgramPriorityOrderId = newProgramPrioritiesOrder[i];
+                AdmissionProgram? admissionProgram = admissionPrograms.FirstOrDefault(admissionProgram => admissionProgram.EducationProgramId == newProgramPriorityOrderId);
+                if (admissionProgram is null)
+                {
+                    comments.Add($"Program with id {newProgramPriorityOrderId} not found!");
+                    continue;
+                }
+                admissionProgram.Priority = i;
+            }
+
+            if (comments.Count > 0)
+            {
+                return new(keyError: "ProgramNotFound", error: comments.ToArray());
+            }
+
+            return new() { Result = newAdmissionProgramsPriorities };
+        }
+
+        private ExecutionResult CheckDuplicate(List<Guid> newProgramPrioritiesOrder)
+        {
+            for (int i = 0; i < newProgramPrioritiesOrder.Count; ++i)
+            {
+                for (int j = i + 1; j < newProgramPrioritiesOrder.Count; ++j)
+                {
+                    if (newProgramPrioritiesOrder[i] == newProgramPrioritiesOrder[j])
+                    {
+                        return new(keyError: "DuplicateProgramIDs", error: $"ProgramId {newProgramPrioritiesOrder[i]} is duplicated!");
+                    }
+                }
+            }
+
+            return new(isSuccess: true);
         }
     }
 }

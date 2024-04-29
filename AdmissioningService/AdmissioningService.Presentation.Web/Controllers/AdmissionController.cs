@@ -36,23 +36,25 @@ namespace AdmissioningService.Presentation.Web.Controllers
             return await ExecutionResultHandlerAsync((applicantId) => _admissionService.GetApplicantAdmissionAsync(applicantId, admissionId));
         }
 
-        [HttpPost("{admissionId}/program")]
-        public async Task<ActionResult> AddProgramToAdmission([FromRoute] Guid admissionId, AddProgramDTO program)
+        [HttpPost("program")]
+        public async Task<ActionResult> AddProgramToCurrentAdmission(AddProgramDTO program)
         {
             return await ExecutionResultHandlerAsync((applicantId) => 
-                _admissionService.AddProgramToAdmissionAsync(applicantId, admissionId, program.ProgramId));
+                _admissionService.AddProgramToCurrentAdmissionAsync(applicantId, program.ProgramId));
         }
 
-        [HttpPut("{admissionId}/program")]
-        public async Task<ActionResult> ChangeAdmissionProgramPriority([FromRoute] Guid admissionId, ChangePrioritiesApplicantProgramDTO changePriorities)
+        [HttpPut("program")]
+        public async Task<ActionResult> ChangeCurrentAdmissionProgramPriority(ChangePrioritiesApplicantProgramDTO changePriorities)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync((applicantId) =>
+                _admissionService.ChangeAdmissionProgramPriorityAsync(applicantId, changePriorities));
         }
 
-        [HttpDelete("{admissionId}/program/{programId}")]
-        public async Task<ActionResult> DeleteAdmissionProgram([FromRoute] Guid admissionId, [FromRoute] Guid programId)
+        [HttpDelete("program/{programId}")]
+        public async Task<ActionResult> DeleteCurrentAdmissionProgram([FromRoute] Guid programId)
         {
-            throw new NotImplementedException();
+            return await ExecutionResultHandlerAsync((applicantId) =>
+               _admissionService.DeleteAdmissionProgramAsync(applicantId, programId));
         }
     }
 }

@@ -37,14 +37,14 @@ namespace AdmissioningService.Infrastructure.Persistence.StateMachines
             return await _applicantAdmissionRepository.GetByApplicantIdAndAdmissionIdAsync(applicantId, admissionId);
         }
 
-        public async Task<bool> AnyByApplicantIdAndAdmissionIdAsync(Guid applicantId, Guid admissionId)
+        public async Task<ApplicantAdmission?> GetCurrentByApplicantIdAsync(Guid applicantId)
         {
-            return await _applicantAdmissionRepository.AnyByApplicantIdAndAdmissionIdAsync(applicantId, admissionId);
+            return await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
         }
 
         public async Task<bool> CheckManagerEditPermissionAsync(Guid applicantId, Guid managerId)
         {
-            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantId(applicantId);
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
             if (applicantAdmission is null) return true;
 
             if(applicantAdmission.ManagerId == managerId) return true;
@@ -53,7 +53,7 @@ namespace AdmissioningService.Infrastructure.Persistence.StateMachines
 
         public async Task<bool> CheckAdmissionStatusIsCloseAsync(Guid applicantId)
         {
-            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantId(applicantId);
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
             if (applicantAdmission is null) return true;
 
             if(applicantAdmission.AdmissionStatus != Common.Models.Enums.AdmissionStatus.Closed) return true;

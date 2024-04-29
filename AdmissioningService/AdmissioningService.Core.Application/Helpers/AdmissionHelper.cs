@@ -77,7 +77,7 @@ namespace AdmissioningService.Core.Application.Helpers
 
         public async Task<ExecutionResult<int>> CheckAdmissionProgramAsync(Guid applicantId, Guid admissionId, Guid programId)
         {
-            List<AdmissionProgram> admissionProgramsCache = await _admissionProgramRepository.GetAllByAdmissionIdAsync(admissionId);
+            List<AdmissionProgram> admissionProgramsCache = await _admissionProgramRepository.GetAllByAdmissionIdWithOrderByPriorityAsync(admissionId);
 
             int currentCountPrograms = admissionProgramsCache.Count();
             if (currentCountPrograms >= _admissionOptions.MaxCountAdmissionPrograms)
