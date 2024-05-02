@@ -2,6 +2,7 @@
 using AdmissioningService.Core.Application.Helpers;
 using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
+using AdmissioningService.Core.Application.Interfaces.StateMachines;
 using AdmissioningService.Core.Domain;
 using Common.Models.Models;
 
@@ -13,26 +14,28 @@ namespace AdmissioningService.Core.Application.Services
         private readonly IApplicantCacheRepository _applicantCacheRepository;
         private readonly IEducationDocumentTypeCacheRepository _educationDocumentTypeCacheRepository;
         private readonly IAdmissionProgramRepository _admissionProgramRepository;
+        private readonly IApplicantAdmissionStateMachin _applicantAdmissionStateMachin;
 
         private readonly DictionaryHelper _dictionaryHelper;
 
         public AdmissionBackgroundService(
-            IUserCacheRepository userCacheRepository, 
-            IApplicantCacheRepository applicantCacheRepository, 
-            IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository,
-            IAdmissionProgramRepository admissionProgramRepository,
-            DictionaryHelper dictionaryHelper)
+            IAdmissionProgramRepository admissionProgramRepository, IApplicantCacheRepository applicantCacheRepository, 
+            IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository, IUserCacheRepository userCacheRepository,
+            IApplicantAdmissionStateMachin applicantAdmissionStateMachin, DictionaryHelper dictionaryHelper)
         {
             _userCacheRepository = userCacheRepository;
             _applicantCacheRepository = applicantCacheRepository;
             _educationDocumentTypeCacheRepository = educationDocumentTypeCacheRepository;
             _admissionProgramRepository = admissionProgramRepository;
+            _applicantAdmissionStateMachin = applicantAdmissionStateMachin;
 
             _dictionaryHelper = dictionaryHelper;
         }
 
         public async Task UpdateUserAsync(UserDTO user)
         {
+            // Один и тот же пользователь (напр. админ) может быть менеджером
+            // и абитуриентом, поэтому пытаемся обновлять то и то
             UserCache? manager = await _userCacheRepository.GetByIdAsync(user.Id);
             if (manager is not null)
             {
@@ -41,20 +44,26 @@ namespace AdmissioningService.Core.Application.Services
 
                 await _userCacheRepository.UpdateAsync(manager);
             }
-            else
-            {
-                ApplicantCache? applicant = await _applicantCacheRepository.GetByIdAsync(user.Id);
-                if (applicant is not null)
-                {
-                    applicant.FullName = user.FullName;
-                    applicant.Email = user.Email;
 
-                    await _applicantCacheRepository.UpdateAsync(applicant);
-                }
+            ApplicantCache? applicant = await _applicantCacheRepository.GetByIdAsync(user.Id);
+            if (applicant is not null)
+            {
+                applicant.FullName = user.FullName;
+                applicant.Email = user.Email;
+
+                await _applicantCacheRepository.UpdateAsync(applicant);
+
+                // В User Service абитуриент обновился, поэтому нужно обновить статус поступления
+                await _applicantAdmissionStateMachin.ApplicantInfoUpdatedAsync(user.Id);
             }
         }
 
-        public async Task AddDocumentType(Guid applicantId, Guid documentTypeId)
+        public async Task ApplicantInfoUpdatedAsync(Guid applicantId)
+        {
+            await _applicantAdmissionStateMachin.ApplicantInfoUpdatedAsync(applicantId);
+        }
+
+        public async Task AddDocumentTypeAsync(Guid applicantId, Guid documentTypeId)
         {
             ApplicantCache? applicant = await _applicantCacheRepository.GetByIdAsync(applicantId);
             if (applicant is not null)
@@ -73,7 +82,7 @@ namespace AdmissioningService.Core.Application.Services
             }
         }
 
-        public async Task DeleteDocumentType(Guid applicantId, Guid documentTypeId)
+        public async Task DeleteDocumentTypeAsync(Guid applicantId, Guid documentTypeId)
         {
             ApplicantCache? applicant = await _applicantCacheRepository.GetByIdWithDocumentTypeAndLevelsAsync(applicantId);
             if (applicant is null) return;
@@ -87,7 +96,8 @@ namespace AdmissioningService.Core.Application.Services
 
                 if(!ExistRightLevel(applicant.AddedDocumentTypes, programLevelId))
                 {
-                    await _admissionProgramRepository.DeleteAsync(admissionProgram);
+                    // Если из поступления удаляется программа, нужно изменить статус поступления
+                    await _applicantAdmissionStateMachin.DeleteAdmissionProgramAsync(admissionProgram);
                 }
             }
 

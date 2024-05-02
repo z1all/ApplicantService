@@ -8,7 +8,6 @@ using Common.Repositories;
 
 namespace AdmissioningService.Infrastructure.Persistence.Repositories
 {
-    [Obsolete]
     internal class ApplicantAdmissionRepository : BaseWithBaseEntityRepository<ApplicantAdmission, AppDbContext>, IApplicantAdmissionRepository
     {
         public ApplicantAdmissionRepository(AppDbContext dbContext) : base(dbContext) { }

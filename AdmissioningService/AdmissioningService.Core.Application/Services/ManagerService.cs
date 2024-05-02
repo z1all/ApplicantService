@@ -97,9 +97,7 @@ namespace AdmissioningService.Core.Application.Services
                 return new(keyError: "ApplicantAdmissionAlreadyTaken", error: "This applicant admission was taken by this manager!");
             }
 
-            applicantAdmission.Manager = manager;
-
-            await _applicantAdmissionStateMachin.UpdateAsync(applicantAdmission, isUpdated: false);
+            await _applicantAdmissionStateMachin.AddManagerAsync(applicantAdmission, manager);
 
             return await _notificationService
                 .AddedManagerToApplicantAdmission(manager.User!.ToUserDTO(), applicantAdmission.Applicant!.ToUserDTO());
@@ -124,9 +122,7 @@ namespace AdmissioningService.Core.Application.Services
                 return new(keyError: "ApplicantNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
             }
 
-            applicantAdmission.ManagerId = null;
-
-            await _applicantAdmissionStateMachin.UpdateAsync(applicantAdmission, isUpdated: false);
+            await _applicantAdmissionStateMachin.DeleteManagerAsync(applicantAdmission);
 
             return new(isSuccess: true);
         }

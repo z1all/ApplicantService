@@ -64,7 +64,7 @@ namespace AdmissioningService.Core.Application.Services
             ExecutionResult checkingResult = await _admissionHelper.CheckApplicantAsync(applicantId);
             if (!checkingResult.IsSuccess) return new() { Errors = checkingResult.Errors };
 
-            await _applicantAdmissionStateMachin.AddAsync(applicantId, admissionCompany);
+            await _applicantAdmissionStateMachin.CreateApplicantAdmissionAsync(applicantId, admissionCompany);
 
             return new(isSuccess: true);
         }
@@ -115,7 +115,7 @@ namespace AdmissioningService.Core.Application.Services
                 EducationProgramId = programId,
             };
 
-            await _admissionProgramRepository.AddAsync(admissionProgram);
+            await _applicantAdmissionStateMachin.AddAdmissionProgramAsync(admissionProgram);
 
             return new(isSuccess: true);
         }
@@ -141,7 +141,7 @@ namespace AdmissioningService.Core.Application.Services
             if (!result.IsSuccess) return new() { Errors = result.Errors };
             List<AdmissionProgram> newAdmissionProgramsPriorities = result.Result!;
 
-            await _admissionProgramRepository.UpdateRangeAsync(newAdmissionProgramsPriorities);
+            await _applicantAdmissionStateMachin.UpdateAdmissionProgramRangeAsync(newAdmissionProgramsPriorities);
 
             return new(isSuccess: true);
         }
@@ -163,8 +163,8 @@ namespace AdmissioningService.Core.Application.Services
                 return new(keyError: "ProgramNotFound", error: $"Applicant with id {applicantId} in current admission doesn't have program with id {programId}!");
             }
 
-            await _admissionProgramRepository.DeleteAsync(admissionProgramForDelete);
-            await _admissionProgramRepository.UpdateRangeAsync(newAdmissionProgramsPriorities);
+            await _applicantAdmissionStateMachin.DeleteAdmissionProgramAsync(admissionProgramForDelete);
+            await _applicantAdmissionStateMachin.UpdateAdmissionProgramRangeAsync(newAdmissionProgramsPriorities);
 
             return new(isSuccess: true);
         }

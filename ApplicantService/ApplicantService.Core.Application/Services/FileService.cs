@@ -9,15 +9,19 @@ namespace ApplicantService.Core.Application.Services
 {
     public class FileService : IFileService
     {
-        private readonly IRequestService _requestService;
         private readonly IFileRepository _fileRepository;
         private readonly IDocumentRepository _documentRepository;
+        private readonly IRequestService _requestService;
+        private readonly INotificationService _notificationService;
 
-        public FileService(IRequestService requestService, IFileRepository fileRepository, IDocumentRepository documentRepository)
+        public FileService(
+            IFileRepository fileRepository, IDocumentRepository documentRepository,
+            IRequestService requestService, INotificationService notificationService)
         {
-            _requestService = requestService;
             _fileRepository = fileRepository;
             _documentRepository = documentRepository;
+            _requestService = requestService;
+            _notificationService = notificationService;
         }
 
         public async Task<ExecutionResult<FileDTO>> GetApplicantScanAsync(Guid documentId, Guid scanId, Guid applicantId)
@@ -55,7 +59,7 @@ namespace ApplicantService.Core.Application.Services
             DocumentFileInfo documentFileInfo = executionResult.Result!;
             await _fileRepository.DeleteAsync(documentFileInfo);
 
-            return new(isSuccess: true);
+            return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
 
         public async Task<ExecutionResult> AddApplicantScanAsync(Guid documentId, Guid applicantId, FileDTO file, Guid? managerId = null)
@@ -75,7 +79,7 @@ namespace ApplicantService.Core.Application.Services
             var (fileEntity, documentFileInfo) = file.ToFileEntityAndDocumentFileInfo(documentId);
             await _fileRepository.AddAsync(documentFileInfo, fileEntity);
 
-            return new(isSuccess: true);
+            return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
 
         private async Task<ExecutionResult<DocumentFileInfo>> GetDocumentFileInfoAsync(Guid documentId, Guid scanId, Guid applicantId)
