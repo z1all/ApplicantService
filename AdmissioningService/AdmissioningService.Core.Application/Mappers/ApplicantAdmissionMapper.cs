@@ -5,14 +5,27 @@ namespace AdmissioningService.Core.Application.Mappers
 {
     public static class ApplicantAdmissionMapper
     {
-        public static ApplicantAdmissionDTO ToApplicantAdmissionDTO(this ApplicantAdmission applicantAdmission)
+        public static ApplicantAdmissionDTO WithProgramsToApplicantAdmissionDTO(this ApplicantAdmission applicantAdmission)
         {
             return new()
             {
+                LastUpdate = applicantAdmission.LastUpdate,
+                ExistManager = applicantAdmission.ManagerId is not null,
+                AdmissionStatus = applicantAdmission.AdmissionStatus,
                 AdmissionCompany = applicantAdmission.AdmissionCompany!.ToAdmissionCompanyDTO(),
                 AdmissionPrograms = applicantAdmission.AdmissionPrograms.Select(admissionProgram => admissionProgram.ToAdmissionProgramDTO()).ToList(),
+            };
+        }
+
+        public static ApplicantAdmissionDTO ToApplicantAdmissionDTO(this ApplicantAdmission applicantAdmission, List<AdmissionProgram> programs)
+        {
+            return new()
+            {
+                LastUpdate = applicantAdmission.LastUpdate,
                 ExistManager = applicantAdmission.ManagerId is not null,
-                LastUpdate = applicantAdmission.LastUpdate
+                AdmissionStatus = applicantAdmission.AdmissionStatus,
+                AdmissionCompany = applicantAdmission.AdmissionCompany!.ToAdmissionCompanyDTO(),
+                AdmissionPrograms = programs.Select(program => program.ToAdmissionProgramDTO()).ToList()
             };
         }
 

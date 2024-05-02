@@ -156,7 +156,7 @@ namespace AdmissioningService.Core.Application.Services
 
         public async Task<ExecutionResult> ChangeApplicantAdmissionStatusAsync(Guid admissionId, ManagerChangeAdmissionStatus changeAdmissionStatus, Guid managerId)
         {
-            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(admissionId);
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdAsync(admissionId);
             if (applicantAdmission is null)
             {
                 return new(keyError: "AdmissionNotFound", error: $"Admission with id {admissionId} not found!");

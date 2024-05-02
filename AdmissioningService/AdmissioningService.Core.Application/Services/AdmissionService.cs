@@ -78,16 +78,9 @@ namespace AdmissioningService.Core.Application.Services
             }
 
             List<AdmissionProgram> programs = await _admissionProgramRepository.GetAllByApplicantIdAndAdmissionIdWithProgramWithLevelAndFacultyOrderByPriorityAsync(applicantId, admissionId);
-
             return new()
             {
-                Result = new()
-                {
-                    LastUpdate = admission.LastUpdate,
-                    ExistManager = admission.ManagerId != null,
-                    AdmissionCompany = admission.AdmissionCompany!.ToAdmissionCompanyDTO(),
-                    AdmissionPrograms = programs.Select(program => program.ToAdmissionProgramDTO()).ToList()
-                }
+                Result = admission.ToApplicantAdmissionDTO(programs)
             };
         }
 

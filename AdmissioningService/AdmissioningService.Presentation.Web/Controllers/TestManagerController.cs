@@ -43,7 +43,7 @@ namespace AdmissioningService.Presentation.Web.Controllers
             Guid ordinaryManagerId = Guid.Parse("c10a2e03-44d8-45ab-afed-2b6fb70e3ae7");
 
             return Ok(await _managerService
-                .ChangeApplicantAdmissionStatusAsync(changeApplicantAdmission.AdmissionId, changeApplicantAdmission.ChangeAdmissionStatus, ordinaryManagerId));
+                .ChangeApplicantAdmissionStatusAsync(changeApplicantAdmission.AdmissionId, changeApplicantAdmission.ChangeAdmissionStatus, mainManagerId));
         }
 
         [HttpGet("managers")]
