@@ -19,13 +19,11 @@ namespace AdmissioningService.Infrastructure.Persistence.StateMachines
         }
 
         public async Task CreateApplicantAdmissionAsync(Guid applicantId, AdmissionCompany admissionCompany)
-        {
-            throw new NotImplementedException("Нужно реализовать машину состояний");
-            
+        {            
             ApplicantAdmission applicantAdmission = new()
             {
                 LastUpdate = DateTime.UtcNow,
-                AdmissionStatus = Common.Models.Enums.AdmissionStatus.Created,
+                AdmissionStatus = AdmissionStatus.Created,
                 ApplicantId = applicantId,
                 AdmissionCompanyId = admissionCompany.Id
             };
@@ -35,60 +33,102 @@ namespace AdmissioningService.Infrastructure.Persistence.StateMachines
 
         public async Task AddManagerAsync(ApplicantAdmission applicantAdmission, Manager manager)
         {
-            throw new NotImplementedException("Нужно реализовать машину состояний");
-            
             applicantAdmission.Manager = manager;
+
+            if (applicantAdmission.AdmissionStatus == AdmissionStatus.Created)
+            {
+                applicantAdmission.AdmissionStatus = AdmissionStatus.UnderConsideration;
+            }
 
             await _applicantAdmissionRepository.UpdateAsync(applicantAdmission);
         }
 
         public async Task DeleteManagerAsync(ApplicantAdmission applicantAdmission)
         {
-            throw new NotImplementedException("Нужно реализовать машину состояний");
-            
             applicantAdmission.ManagerId = null;
+
+            if (applicantAdmission.AdmissionStatus == AdmissionStatus.UnderConsideration)
+            {
+                applicantAdmission.AdmissionStatus = AdmissionStatus.Created;
+            }
 
             await _applicantAdmissionRepository.UpdateAsync(applicantAdmission);
         }
 
-        public async Task ApplicantInfoUpdatedAsync(Guid applicantId)
+        public async Task<bool> ApplicantInfoUpdatedAsync(Guid applicantId)
         {
-            throw new NotImplementedException("Нужно реализовать машину состояний");
-            
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
-            if (applicantAdmission is null) return;
+            if (applicantAdmission is null) return false;
 
             applicantAdmission.LastUpdate = DateTime.UtcNow;
+
+            UpdateAdmissionStatusFromRejectedAndConfirmed(applicantAdmission);
+
+            await _applicantAdmissionRepository.UpdateAsync(applicantAdmission);
+
+            return true;
         }
 
-        public async Task AddAdmissionProgramAsync(AdmissionProgram admissionProgram)
+        public async Task<bool> AddAdmissionProgramAsync(AdmissionProgram admissionProgram)
         {
-            throw new NotImplementedException("Нужно реализовать машину состояний");
-            
+            bool isSuccess = await UpdateAdmissionStatusAsync(admissionProgram.ApplicantAdmissionId);
+            if (!isSuccess) return false;
+
             await _admissionProgramRepository.AddAsync(admissionProgram);
+
+            return true;
         }
 
-        public async Task DeleteAdmissionProgramAsync(AdmissionProgram admissionProgram)
+        public async Task<bool> DeleteAdmissionProgramAsync(AdmissionProgram admissionProgram)
         {
-            throw new NotImplementedException("Нужно реализовать машину состояний");
-            
+            bool isSuccess = await UpdateAdmissionStatusAsync(admissionProgram.ApplicantAdmissionId);
+            if (!isSuccess) return false;
+
             await _admissionProgramRepository.DeleteAsync(admissionProgram);
+
+            return true;
         }
 
-        public async Task UpdateAdmissionProgramRangeAsync(List<AdmissionProgram> admissionPrograms)
+        public async Task<bool> UpdateAdmissionProgramRangeAsync(List<AdmissionProgram> admissionPrograms, Guid admissionId)
         {
-            throw new NotImplementedException("Нужно реализовать машину состояний");
-            
+            bool isSuccess = await UpdateAdmissionStatusAsync(admissionId);
+            if (!isSuccess) return false;
+
             await _admissionProgramRepository.UpdateRangeAsync(admissionPrograms);
+
+            return true;
         }
 
         public async Task ChangeAdmissionStatusAsync(ApplicantAdmission applicantAdmission, ManagerChangeAdmissionStatus changeAdmissionStatus)
         {
-            throw new NotImplementedException("Нужно реализовать машину состояний");
-
+            applicantAdmission.LastUpdate = DateTime.UtcNow;
             applicantAdmission.AdmissionStatus = (AdmissionStatus)changeAdmissionStatus;
 
             await _applicantAdmissionRepository.UpdateAsync(applicantAdmission);
+        }
+
+        private async Task<bool> UpdateAdmissionStatusAsync(Guid admissionId)
+        {
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdAsync(admissionId);
+            if (applicantAdmission is null) return false;
+
+            UpdateAdmissionStatusFromRejectedAndConfirmed(applicantAdmission);
+
+            await _applicantAdmissionRepository.UpdateAsync(applicantAdmission);
+
+            return true;
+        }
+
+        private void UpdateAdmissionStatusFromRejectedAndConfirmed(ApplicantAdmission applicantAdmission)
+        {
+            applicantAdmission.LastUpdate = DateTime.UtcNow;
+
+            AdmissionStatus[] rejectedOrConfirmed = [AdmissionStatus.Rejected, AdmissionStatus.Confirmed];
+            if (rejectedOrConfirmed.Contains(applicantAdmission.AdmissionStatus))
+            {
+                applicantAdmission.AdmissionStatus 
+                    = (applicantAdmission.ManagerId is null ? AdmissionStatus.Created : AdmissionStatus.UnderConsideration);
+            }
         }
     }
 }

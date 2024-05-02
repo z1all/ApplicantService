@@ -5,7 +5,6 @@ using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Domain;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
-using Common.Repositories;
 
 namespace AdmissioningService.Core.Application.Helpers
 {

@@ -4,9 +4,10 @@ using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Application.Interfaces.StateMachines;
 using AdmissioningService.Core.Application.Mappers;
 using AdmissioningService.Core.Domain;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 using Common.Models.DTOs;
 using Common.Models.Models;
-using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
+using Common.Models.Enums;
 
 namespace AdmissioningService.Core.Application.Services
 {
@@ -119,7 +120,7 @@ namespace AdmissioningService.Core.Application.Services
 
             if (applicantAdmission.ManagerId != managerId)
             {
-                return new(keyError: "ApplicantNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
+                return new(keyError: "ApplicantAdmissionNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
             }
 
             await _applicantAdmissionStateMachin.DeleteManagerAsync(applicantAdmission);
@@ -149,6 +150,30 @@ namespace AdmissioningService.Core.Application.Services
                 FacultyCache newFaculty = faculty.ToFacultyCache();
                 await _facultyCacheRepository.AddAsync(newFaculty);
             }
+
+            return new(isSuccess: true);
+        }
+
+        public async Task<ExecutionResult> ChangeApplicantAdmissionStatusAsync(Guid admissionId, ManagerChangeAdmissionStatus changeAdmissionStatus, Guid managerId)
+        {
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(admissionId);
+            if (applicantAdmission is null)
+            {
+                return new(keyError: "AdmissionNotFound", error: $"Admission with id {admissionId} not found!");
+            }
+
+            Manager? manager = await _managerRepository.GetByIdAsync(managerId);
+            if (manager is null)
+            {
+                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+            }
+
+            if (manager.FacultyId is not null && managerId != applicantAdmission.ManagerId)
+            {
+                return new(keyError: "ApplicantAdmissionNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
+            }
+
+            await _applicantAdmissionStateMachin.ChangeAdmissionStatusAsync(applicantAdmission, changeAdmissionStatus);
 
             return new(isSuccess: true);
         }

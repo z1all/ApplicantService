@@ -115,7 +115,11 @@ namespace AdmissioningService.Core.Application.Services
                 EducationProgramId = programId,
             };
 
-            await _applicantAdmissionStateMachin.AddAdmissionProgramAsync(admissionProgram);
+            bool isSuccess = await _applicantAdmissionStateMachin.AddAdmissionProgramAsync(admissionProgram);
+            if (!isSuccess)
+            {
+                return new(keyError: "AddAdmissionProgramFail", error: "Unknown error.");
+            }
 
             return new(isSuccess: true);
         }
@@ -141,7 +145,11 @@ namespace AdmissioningService.Core.Application.Services
             if (!result.IsSuccess) return new() { Errors = result.Errors };
             List<AdmissionProgram> newAdmissionProgramsPriorities = result.Result!;
 
-            await _applicantAdmissionStateMachin.UpdateAdmissionProgramRangeAsync(newAdmissionProgramsPriorities);
+            bool isSuccess = await _applicantAdmissionStateMachin.UpdateAdmissionProgramRangeAsync(newAdmissionProgramsPriorities, applicantAdmission.Id);
+            if (!isSuccess)
+            {
+                return new(keyError: "ChangeAdmissionProgramPriorityFail", error: $"Unknown error");
+            }
 
             return new(isSuccess: true);
         }
@@ -163,8 +171,17 @@ namespace AdmissioningService.Core.Application.Services
                 return new(keyError: "ProgramNotFound", error: $"Applicant with id {applicantId} in current admission doesn't have program with id {programId}!");
             }
 
-            await _applicantAdmissionStateMachin.DeleteAdmissionProgramAsync(admissionProgramForDelete);
-            await _applicantAdmissionStateMachin.UpdateAdmissionProgramRangeAsync(newAdmissionProgramsPriorities);
+            bool deleteIsSuccess = await _applicantAdmissionStateMachin.DeleteAdmissionProgramAsync(admissionProgramForDelete);
+            if (!deleteIsSuccess)
+            {
+                return new(keyError: "DeleteAdmissionProgramFail", error: $"Unknown error");
+            }
+
+            bool updateIsSuccess = await _applicantAdmissionStateMachin.UpdateAdmissionProgramRangeAsync(newAdmissionProgramsPriorities, applicantAdmission.Id);
+            if (!updateIsSuccess)
+            {
+                return new(keyError: "DeleteAdmissionProgramFail", error: $"Unknown error");
+            }
 
             return new(isSuccess: true);
         }
