@@ -27,37 +27,23 @@ namespace AdmissioningService.Infrastructure.Persistence.StateMachines
             await _applicantAdmissionRepository.AddAsync(applicantAdmission);
         }
 
-        public async Task<ApplicantAdmission?> GetByAdmissionCompanyIdAndApplicantId(Guid admissionCompanyId, Guid applicantId)
+        public async Task UpdateAsync(ApplicantAdmission entity, bool isUpdated = true)
         {
-            return await _applicantAdmissionRepository.GetByAdmissionCompanyIdAndApplicantId(admissionCompanyId, applicantId);
-        }
-
-        public async Task<ApplicantAdmission?> GetByApplicantIdAndAdmissionIdAsync(Guid applicantId, Guid admissionId)
-        {
-            return await _applicantAdmissionRepository.GetByApplicantIdAndAdmissionIdAsync(applicantId, admissionId);
-        }
-
-        public async Task<ApplicantAdmission?> GetCurrentByApplicantIdAsync(Guid applicantId)
-        {
-            return await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
-        }
-
-        public async Task<bool> CheckManagerEditPermissionAsync(Guid applicantId, Guid managerId)
-        {
-            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
-            if (applicantAdmission is null) return true;
-
-            if(applicantAdmission.ManagerId == managerId) return true;
-            return false;
-        }
-
-        public async Task<bool> CheckAdmissionStatusIsCloseAsync(Guid applicantId)
-        {
-            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
-            if (applicantAdmission is null) return true;
-
-            if(applicantAdmission.AdmissionStatus != Common.Models.Enums.AdmissionStatus.Closed) return true;
-            return false;
+            await _applicantAdmissionRepository.UpdateAsync(entity);
         }
     }
 }
+/*
+ 
+ К изменению статуса поступления ведет:
+    1. Обновление данных абитуриента (данные пользователя и абитуриента, который относится к этому пользователю)
+    2. Добавление документов и сканов абитуриента (паспорт, документы об образовании)
+    3. Изменения статуса менеджером (Менеджер отклонил поступление, Менеджер принял поступление, Менеджер закрывает поступление)
+    4. Добавление программ поступления
+    5. Создание нового поступления
+    6. Взятие абитуриента менеджером 
+    7. Отказ от абитуриента менеджером 
+
+
+Переделать отправку уведомлений об изменении абитуриента
+ */

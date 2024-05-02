@@ -19,7 +19,7 @@ namespace NotificationService.Services
             return _smtpService.SendAsync(notification.FullName, notification.Email, "Изменен статус поступления",
                 $"<div>Здравствуйте, {notification.FullName}!</div>" +
                 "<br />" +
-                $"<div>Статус вашего поступления изменен на {notification.NewStatus.ToString()}.</div>" +
+                $"<div>Статус вашего поступления изменен на {notification.NewStatus}.</div>" +
                 "<br />" +
                 "<div>С уважением,</div>" +
                 "<div>Команда ApplicantService!</div>");

@@ -1,6 +1,7 @@
 ﻿using AdmissioningService.Core.Application.DTOs;
 using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
+using AdmissioningService.Core.Application.Interfaces.StateMachines;
 using AdmissioningService.Core.Application.Mappers;
 using AdmissioningService.Core.Domain;
 using Common.Models.DTOs;
@@ -14,18 +15,24 @@ namespace AdmissioningService.Core.Application.Services
         private readonly IUserCacheRepository _userCacheRepository;
         private readonly IManagerRepository _managerRepository;
         private readonly IFacultyCacheRepository _facultyCacheRepository;
+        private readonly IApplicantAdmissionRepository _applicantAdmissionRepository;
+        private readonly IApplicantAdmissionStateMachin _applicantAdmissionStateMachin;
         private readonly IRequestService _requestService;
+        private readonly INotificationService _notificationService;
 
         public ManagerService(
-            IUserCacheRepository userCacheRepository,
-            IManagerRepository managerRepository,
-            IFacultyCacheRepository facultyCacheRepository,
-            IRequestService requestService)
+            IUserCacheRepository userCacheRepository, INotificationService notificationService,
+            IFacultyCacheRepository facultyCacheRepository, IManagerRepository managerRepository,
+            IApplicantAdmissionStateMachin applicantAdmissionStateMachin, IRequestService requestService,
+            IApplicantAdmissionRepository applicantAdmissionRepository)
         {
             _userCacheRepository = userCacheRepository;
             _managerRepository = managerRepository;
             _facultyCacheRepository = facultyCacheRepository;
+            _applicantAdmissionRepository = applicantAdmissionRepository;
+            _applicantAdmissionStateMachin = applicantAdmissionStateMachin;
             _requestService = requestService;
+            _notificationService = notificationService;
         }
 
         public async Task<ExecutionResult> CreateManagerAsync(CreateManagerDTO createManager)
@@ -65,6 +72,73 @@ namespace AdmissioningService.Core.Application.Services
             await _userCacheRepository.DeleteAsync(user);
 
             return new(isSuccess: true);
+        }
+
+        public async Task<ExecutionResult> TakeApplicantAdmissionAsync(Guid admissionId, Guid managerId)
+        {
+            Manager? manager = await _managerRepository.GetByIdWithUserAsync(managerId);
+            if (manager is null)
+            {
+                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+            }
+
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdWithApplicantAsync(admissionId);
+            if (applicantAdmission is null)
+            {
+                return new(keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {managerId} not found!");
+            }
+
+            if (applicantAdmission.ManagerId is not null && applicantAdmission.ManagerId != managerId)
+            {
+                return new(keyError: "ManagerAlreadyExist", error: "This applicant admission was taken by other manager!");
+            }
+            else if (applicantAdmission.ManagerId == managerId)
+            {
+                return new(keyError: "ApplicantAdmissionAlreadyTaken", error: "This applicant admission was taken by this manager!");
+            }
+
+            applicantAdmission.Manager = manager;
+
+            await _applicantAdmissionStateMachin.UpdateAsync(applicantAdmission, isUpdated: false);
+
+            return await _notificationService
+                .AddedManagerToApplicantAdmission(manager.User!.ToUserDTO(), applicantAdmission.Applicant!.ToUserDTO());
+        }
+
+        public async Task<ExecutionResult> RefuseFromApplicantAdmissionAsync(Guid admissionId, Guid managerId)
+        {
+            Manager? manager = await _managerRepository.GetByIdAsync(managerId);
+            if (manager is null)
+            {
+                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+            }
+
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdAsync(admissionId);
+            if (applicantAdmission is null)
+            {
+                return new(keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {managerId} not found!");
+            }
+
+            if (applicantAdmission.ManagerId != managerId)
+            {
+                return new(keyError: "ApplicantNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
+            }
+
+            applicantAdmission.ManagerId = null;
+
+            await _applicantAdmissionStateMachin.UpdateAsync(applicantAdmission, isUpdated: false);
+
+            return new(isSuccess: true);
+        }
+
+        public async Task<ExecutionResult<List<ManagerDTO>>> GetManagersAsync()
+        {
+            List<Manager> managers = await _managerRepository.GetAllWithFacultyAndUserAsync();
+
+            return new()
+            {
+                Result = managers.Select(manager => manager.ToManagerDTO()).ToList(),
+            };
         }
 
         private async Task<ExecutionResult> CheckFacultyAsync(Guid facultyId)

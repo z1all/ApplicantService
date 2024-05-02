@@ -5,5 +5,7 @@ namespace AdmissioningService.Core.Application.Interfaces.Repositories
 {
     public interface IManagerRepository : IBaseWithBaseEntityRepository<Manager>
     {
+        Task<Manager?> GetByIdWithUserAsync(Guid managerId);
+        Task<List<Manager>> GetAllWithFacultyAndUserAsync();
     }
 }

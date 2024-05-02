@@ -3,18 +3,14 @@ using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Mappers;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
 using Common.Models.Models;
+using Common.ServiceBus.NotificationSender;
 using EasyNetQ;
 
 namespace DictionaryService.Core.Application.Services
 {
-    public class EasyNetQNotificationService : INotificationService
+    public class EasyNetQNotificationService : NotificationSender, INotificationService
     {
-        private readonly IBus _bus;
-
-        public EasyNetQNotificationService(IBus bus)
-        {
-            _bus = bus;
-        }
+        public EasyNetQNotificationService(IBus bus) : base(bus) { }
 
         public async Task<ExecutionResult> AddedEducationDocumentTypeAndEducationLevelAsync(List<EducationDocumentType> documentTypes, List<EducationLevel> levels)
         {
@@ -69,22 +65,6 @@ namespace DictionaryService.Core.Application.Services
             });
 
             return GiveResult(result, "An error occurred when sending a notification about faculty updated.");
-        }
-
-        private ExecutionResult GiveResult(bool result, string errorMassage)
-        {
-            if (!result)
-            {
-                return new("SendNotificationFail", errorMassage);
-            }
-            return new(isSuccess: true);
-        }
-
-        private async Task<bool> SendingHandler<T>(T notification) where T : class
-        {
-            return await _bus.PubSub
-                .PublishAsync(notification)
-                .ContinueWith(task => task.IsCompletedSuccessfully);
         }
     }
 }

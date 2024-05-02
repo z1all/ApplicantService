@@ -5,7 +5,7 @@ using Common.Models.DTOs;
 namespace DictionaryService.Core.Application.Interfaces.Repositories
 {
     public interface IEducationProgramRepository : IBaseWithBaseEntityRepository<EducationProgram>
-    { 
+    {
         Task<List<EducationProgram>> GetAllAsync();
         Task<List<EducationProgram>> GetAllByFacultyIdAsync(Guid facultyId);
         Task<List<EducationProgram>> GetAllByEducationLevelIdAsync(Guid educationLevelId);

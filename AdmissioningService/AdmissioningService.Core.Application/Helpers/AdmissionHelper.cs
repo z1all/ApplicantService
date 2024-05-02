@@ -2,10 +2,10 @@
 using AdmissioningService.Core.Application.Configurations;
 using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
-using AdmissioningService.Core.Application.Interfaces.StateMachines;
 using AdmissioningService.Core.Domain;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
+using Common.Repositories;
 
 namespace AdmissioningService.Core.Application.Helpers
 {
@@ -15,7 +15,7 @@ namespace AdmissioningService.Core.Application.Helpers
         private readonly IAdmissionProgramRepository _admissionProgramRepository;
         private readonly IEducationProgramCacheRepository _educationProgramCacheRepository;
         private readonly IEducationDocumentTypeCacheRepository _educationDocumentTypeCacheRepository;
-        private readonly IApplicantAdmissionStateMachin _applicantAdmissionStateMachin;
+        private readonly IApplicantAdmissionRepository _applicantAdmissionRepository;
         private readonly IRequestService _requestService;
 
         private readonly AdmissionOptions _admissionOptions;
@@ -24,33 +24,59 @@ namespace AdmissioningService.Core.Application.Helpers
         public AdmissionHelper(
             IAdmissionProgramRepository admissionProgramRepository, IOptions<AdmissionOptions> admissionOptions,
             IEducationProgramCacheRepository educationProgramCacheRepository, DictionaryHelper dictionaryHelper,
-            IApplicantCacheRepository applicantCacheRepository, IApplicantAdmissionStateMachin applicantAdmissionStateMachin,
+            IApplicantCacheRepository applicantCacheRepository, IApplicantAdmissionRepository applicantAdmissionRepository,
             IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository, IRequestService requestService)
         {
             _applicantCacheRepository = applicantCacheRepository;
             _admissionProgramRepository = admissionProgramRepository;
             _educationProgramCacheRepository = educationProgramCacheRepository;
             _educationDocumentTypeCacheRepository = educationDocumentTypeCacheRepository;
-            _applicantAdmissionStateMachin = applicantAdmissionStateMachin;
+            _applicantAdmissionRepository = applicantAdmissionRepository;
             _requestService = requestService;
 
             _admissionOptions = admissionOptions.Value;
             _dictionaryHelper = dictionaryHelper;
+            _applicantAdmissionRepository = applicantAdmissionRepository;
         }
+
+        #region CheckPermissionsAsync
 
         public async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
         {
             if (managerId is null)
             {
-                bool isNotClose = await _applicantAdmissionStateMachin.CheckAdmissionStatusIsCloseAsync(applicantId);
+                bool isNotClose = await CheckAdmissionStatusIsCloseAsync(applicantId);
                 if (isNotClose) return new(isSuccess: true);
                 return new(keyError: "AdmissionClosed", error: "You cannot change the data when the current admission is closed!");
             }
 
-            bool managerCanEdit = await _applicantAdmissionStateMachin.CheckManagerEditPermissionAsync(applicantId, (Guid)managerId);
+            bool managerCanEdit = await CheckManagerEditPermissionAsync(applicantId, (Guid)managerId);
             if (managerCanEdit) return new(isSuccess: true);
             return new(keyError: "NoEditPermission", error: $"Manager with id {managerId} doesn't have permission to edit applicant with id {applicantId}");
         }
+
+        private async Task<bool> CheckManagerEditPermissionAsync(Guid applicantId, Guid managerId)
+        {
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
+            if (applicantAdmission is null) return true;
+
+            if (applicantAdmission.ManagerId == managerId) return true;
+            return false;
+        }
+
+        private async Task<bool> CheckAdmissionStatusIsCloseAsync(Guid applicantId)
+        {
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
+            if (applicantAdmission is null) return true;
+
+            if (applicantAdmission.AdmissionStatus != Common.Models.Enums.AdmissionStatus.Closed) return true;
+            return false;
+        }
+
+
+        #endregion
+
+        #region CheckApplicantAsync
 
         public async Task<ExecutionResult> CheckApplicantAsync(Guid applicantId)
         {
@@ -75,11 +101,15 @@ namespace AdmissioningService.Core.Application.Helpers
             return new(isSuccess: true);
         }
 
+        #endregion
+
+        #region CheckAdmissionProgramAsync
+
         public async Task<ExecutionResult<int>> CheckAdmissionProgramAsync(Guid applicantId, Guid admissionId, Guid programId)
         {
             List<AdmissionProgram> admissionProgramsCache = await _admissionProgramRepository.GetAllByAdmissionIdWithOrderByPriorityAsync(admissionId);
 
-            int currentCountPrograms = admissionProgramsCache.Count();
+            int currentCountPrograms = admissionProgramsCache.Count;
             if (currentCountPrograms >= _admissionOptions.MaxCountAdmissionPrograms)
             {
                 return new(keyError: "MaxCountAdmissionPrograms", error: $"An applicant can have a maximum of {_admissionOptions.MaxCountAdmissionPrograms} admission programs");
@@ -100,7 +130,7 @@ namespace AdmissioningService.Core.Application.Helpers
             ExecutionResult checkingExistRightDocumentTypeResult = await CheckExistRightDocumentTypeAsync(applicantId, program.EducationLevelId);
             if (!checkingExistRightDocumentTypeResult.IsSuccess) return new() { Errors = checkingExistRightDocumentTypeResult.Errors };
 
-            if (admissionProgramsCache.Count() > 0)
+            if (admissionProgramsCache.Count > 0)
             {
                 Guid firstProgramsId = admissionProgramsCache.First().EducationProgramId;
 
@@ -166,5 +196,91 @@ namespace AdmissioningService.Core.Application.Helpers
 
             return new(keyError: "DocumentTypeNotOnCommonStage", error: $"Programs from different stages!");
         }
+
+        #endregion
+
+        #region GetProgramForDeleteAndNewProgramsOrderAsync
+
+        public async Task<Tuple<AdmissionProgram?, List<AdmissionProgram>>> GetProgramForDeleteAndNewProgramsOrderAsync(Guid admissionId, Guid programId)
+        {
+            List<AdmissionProgram> admissionPrograms = await _admissionProgramRepository.GetAllByAdmissionIdWithOrderByPriorityAsync(admissionId);
+
+            AdmissionProgram? admissionProgramForDelete = null;
+            List<AdmissionProgram> newAdmissionProgramsPriorities = [];
+            for (int i = 0; i < admissionPrograms.Count; ++i)
+            {
+                AdmissionProgram admissionProgram = admissionPrograms[i];
+
+                if (admissionProgramForDelete is null)
+                {
+                    if (admissionProgram.EducationProgramId == programId)
+                    {
+                        admissionProgramForDelete = admissionProgram;
+                    }
+                    else
+                    {
+                        admissionProgram.Priority = i;
+                        newAdmissionProgramsPriorities.Add(admissionProgram);
+                    }
+                }
+                else
+                {
+                    admissionProgram.Priority = i - 1;
+                    newAdmissionProgramsPriorities.Add(admissionProgram);
+                }
+            }
+
+            return new(admissionProgramForDelete, newAdmissionProgramsPriorities);
+        }
+
+        #endregion
+
+        #region GetNewProgramsOrder
+
+        public ExecutionResult<List<AdmissionProgram>> GetNewProgramsOrder(List<Guid> newProgramPrioritiesOrder, List<AdmissionProgram> admissionPrograms)
+        {
+            ExecutionResult result = CheckDuplicate(newProgramPrioritiesOrder);
+            if (!result.IsSuccess) return new() { Errors = result.Errors };
+
+            List<string> comments = [];
+            List<AdmissionProgram> newAdmissionProgramsPriorities = [];
+            for (int i = 0; i < newProgramPrioritiesOrder.Count; ++i)
+            {
+                Guid newProgramPriorityOrderId = newProgramPrioritiesOrder[i];
+                AdmissionProgram? admissionProgram = admissionPrograms.FirstOrDefault(admissionProgram => admissionProgram.EducationProgramId == newProgramPriorityOrderId);
+                if (admissionProgram is null)
+                {
+                    comments.Add($"Program with id {newProgramPriorityOrderId} not found!");
+                    continue;
+                }
+                admissionProgram.Priority = i;
+            }
+
+            if (comments.Count > 0)
+            {
+                return new(keyError: "ProgramNotFound", error: comments.ToArray());
+            }
+
+            return new() { Result = newAdmissionProgramsPriorities };
+        }
+
+        private ExecutionResult CheckDuplicate(List<Guid> newProgramPrioritiesOrder)
+        {
+            for (int i = 0; i < newProgramPrioritiesOrder.Count; ++i)
+            {
+                for (int j = i + 1; j < newProgramPrioritiesOrder.Count; ++j)
+                {
+                    if (newProgramPrioritiesOrder[i] == newProgramPrioritiesOrder[j])
+                    {
+                        return new(keyError: "DuplicateProgramIDs", error: $"ProgramId {newProgramPrioritiesOrder[i]} is duplicated!");
+                    }
+                }
+            }
+
+            return new(isSuccess: true);
+        }
+
+        #endregion
+
     }
 }
