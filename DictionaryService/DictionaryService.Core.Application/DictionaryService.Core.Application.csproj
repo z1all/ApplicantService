@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.ServiceBus\Common.ServiceBus.csproj" />
+    <ProjectReference Include="..\DictionaryService.Core.Domain\DictionaryService.Core.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
