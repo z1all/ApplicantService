@@ -164,7 +164,7 @@ namespace UserService.Infrastructure.Identity.Services
             }
 
             IList<string> roles = await _userManager.GetRolesAsync(user);
-            if (roles.Contains(Role.Applicant) && roles.Count == 0)
+            if (roles.Contains(Role.Applicant) && roles.Count == 1)
             {
                 ExecutionResult canEdit = await _serviceBusProvider.Request.CheckPermissionsAsync(userId, managerId);
                 if (!canEdit.IsSuccess)
