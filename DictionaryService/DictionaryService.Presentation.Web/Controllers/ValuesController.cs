@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
 using EasyNetQ;
 using Common.Models.DTOs;
 using Common.Models.Models;
 using Common.Models.Enums;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 
 namespace DictionaryService.Presentation.Web.Controllers
 {
@@ -72,7 +73,7 @@ namespace DictionaryService.Presentation.Web.Controllers
         [HttpGet("DocumentTypes")]
         public async Task<List<EducationDocumentTypeDTO>> GetDocumentTypes()
         {
-            var response = await bus.Rpc.RequestAsync<GetDocumentTypeRequest, ExecutionResult<GetDocumentTypeResponse>>(new());
+            var response = await bus.Rpc.RequestAsync<GetDocumentTypesRequest, ExecutionResult<GetDocumentTypesResponse>>(new());
 
             return response.Result!.DocumentTypes;
         }

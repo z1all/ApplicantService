@@ -1,26 +1,33 @@
 ﻿using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Domain;
-using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
-using EasyNetQ;
+using DictionaryService.Core.Application.Mappers;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
 using Common.Models.Models;
+using Common.ServiceBus.NotificationSender;
+using EasyNetQ;
 
 namespace DictionaryService.Core.Application.Services
 {
-    public class EasyNetQNotificationService : INotificationService
+    public class EasyNetQNotificationService : NotificationSender, INotificationService
     {
-        private readonly IBus _bus;
+        public EasyNetQNotificationService(IBus bus) : base(bus) { }
 
-        public EasyNetQNotificationService(IBus bus) 
+        public async Task<ExecutionResult> AddedEducationDocumentTypeAndEducationLevelAsync(List<EducationDocumentType> documentTypes, List<EducationLevel> levels)
         {
-            _bus = bus;
+            bool result = await SendingHandler(new EducationLevelAndEducationDocumentTypeAddedNotification()
+            {
+                EducationLevels = levels.Select(level => level.ToEducationLevelDTO()).ToList(),
+                EducationDocumentTypes = documentTypes.Select(documentType => documentType.ToEducationDocumentTypeDTO()).ToList(),
+            });
+
+            return GiveResult(result, "An error occurred when sending a notification about education levels and education document types added.");
         }
 
         public async Task<ExecutionResult> ChangedEducationDocumentTypeAsync(EducationDocumentType documentType)
         {
             bool result = await SendingHandler(new EducationDocumentTypeUpdatedNotification()
             {
-                Id = documentType.Id,
-                Name = documentType.Name,
+                EducationDocumentType = documentType.ToEducationDocumentTypeDTO(),
                 Deprecated = documentType.Deprecated,
             });
 
@@ -31,8 +38,7 @@ namespace DictionaryService.Core.Application.Services
         {
             bool result = await SendingHandler(new EducationLevelUpdatedNotification()
             {
-                Id = educationLevel.Id,
-                Name = educationLevel.Name,
+                EducationLevel = educationLevel.ToEducationLevelDTO(),
                 Deprecated = educationLevel.Deprecated,
             });
 
@@ -43,13 +49,7 @@ namespace DictionaryService.Core.Application.Services
         {
             bool result = await SendingHandler(new EducationProgramUpdatedNotification()
             {
-                Id = program.Id,
-                Name = program.Name,
-                Code = program.Code,
-                EducationForm = program.EducationForm,
-                Language = program.Language,
-                EducationLevelId = program.EducationLevelId,
-                FacultyId = program.FacultyId,
+                EducationProgram = program.ToEducationProgramDTO(),
                 Deprecated = program.Deprecated,
             });
 
@@ -60,28 +60,11 @@ namespace DictionaryService.Core.Application.Services
         {
             bool result = await SendingHandler(new FacultyUpdatedNotification()
             {
-                Id = faculty.Id,
-                Name = faculty.Name,
+                Faculty = faculty.ToFacultyDTO(),
                 Deprecated = faculty.Deprecated,
             });
 
             return GiveResult(result, "An error occurred when sending a notification about faculty updated.");
-        }
-
-        private ExecutionResult GiveResult(bool result, string errorMassage)
-        {
-            if (!result)
-            {
-                return new("SendNotificationFail", errorMassage);
-            }
-            return new(isSuccess: true);
-        }
-
-        private async Task<bool> SendingHandler<T>(T notification) where T : class
-        {
-            return await _bus.PubSub
-                .PublishAsync(notification)
-                .ContinueWith(task => task.IsCompletedSuccessfully);
         }
     }
 }

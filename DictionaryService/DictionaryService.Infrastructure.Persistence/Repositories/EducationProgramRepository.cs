@@ -7,7 +7,7 @@ using Common.Models.DTOs;
 
 namespace DictionaryService.Infrastructure.Persistence.Repositories
 {
-    public class EducationProgramRepository : BaseRepository<EducationProgram, AppDbContext>, IEducationProgramRepository
+    public class EducationProgramRepository : BaseWithBaseEntityRepository<EducationProgram, AppDbContext>, IEducationProgramRepository
     {
         public EducationProgramRepository(AppDbContext appDbContext) : base(appDbContext) { }
 
@@ -63,6 +63,14 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                                                                             || educationProgram.Name.Contains(filter.CodeOrNameProgram.ToLower()) : true) &&
                                            (filter.EducationLevel != null ? filter.EducationLevel.Contains(educationProgram.EducationLevel!.Id) : true) &&
                                            (getDeprecated ? true : !educationProgram.Deprecated && !educationProgram.EducationLevel!.Deprecated && !educationProgram.Faculty!.Deprecated));
+        }
+
+        public async Task<EducationProgram?> GetByIdWithFacultyAndLevelAsync(Guid programId)
+        {
+            return await _dbContext.EducationPrograms
+                .Include(program => program.Faculty)
+                .Include(program => program.EducationLevel)
+                .FirstOrDefaultAsync(program => program.Id == programId);
         }
     }
 }

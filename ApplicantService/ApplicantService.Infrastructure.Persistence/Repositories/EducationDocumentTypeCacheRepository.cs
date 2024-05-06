@@ -6,7 +6,7 @@ using Common.Repositories;
 
 namespace ApplicantService.Infrastructure.Persistence.Repositories
 {
-    public class EducationDocumentTypeCacheRepository : BaseRepository<EducationDocumentTypeCache, AppDbContext>, IEducationDocumentTypeCacheRepository
+    public class EducationDocumentTypeCacheRepository : BaseWithBaseEntityRepository<EducationDocumentTypeCache, AppDbContext>, IEducationDocumentTypeCacheRepository
     {
         public EducationDocumentTypeCacheRepository(AppDbContext dbContext) : base(dbContext) { }
 

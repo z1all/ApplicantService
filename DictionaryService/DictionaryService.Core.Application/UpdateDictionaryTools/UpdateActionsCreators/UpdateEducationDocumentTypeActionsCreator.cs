@@ -20,7 +20,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 
         protected override UpdateStatus UpdateStatusCache => _updateStatusCache!;
         protected override IUpdateStatusRepository UpdateStatusRepository => _updateStatusRepository;
-        protected override IBaseRepository<EducationDocumentType> Repository => _educationDocumentTypeRepository;
+        protected override IBaseWithBaseEntityRepository<EducationDocumentType> Repository => _educationDocumentTypeRepository;
 
         public UpdateEducationDocumentTypeActionsCreator(
             IEducationLevelRepository educationLevelRepository, IEducationDocumentTypeRepository educationDocumentTypeRepository, 

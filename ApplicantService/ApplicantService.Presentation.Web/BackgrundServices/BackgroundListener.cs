@@ -1,6 +1,5 @@
-﻿using ApplicantService.Core.Application.Interfaces.Repositories;
-using ApplicantService.Core.Domain;
-using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
+﻿using ApplicantService.Core.Application.Interfaces.Services;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService;
 using Common.ServiceBusDTOs.FromUserService;
 using EasyNetQ.AutoSubscribe;
@@ -9,47 +8,43 @@ namespace ApplicantService.Presentation.Web
 {
     public class BackgroundListener : IConsumeAsync<ApplicantCreatedNotification>, IConsumeAsync<UserUpdatedNotification>, IConsumeAsync<EducationDocumentTypeUpdatedNotification>
     {
-        private readonly IApplicantRepository _applicantRepository;
-        private readonly IEducationDocumentTypeCacheRepository _educationDocumentTypeCacheRepository;
+        private readonly IApplicantProfileService _applicantProfileService;
+        private readonly IDocumentService _documentService;
 
-        public BackgroundListener(IApplicantRepository profileRepository, IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository)
+        public BackgroundListener(IApplicantProfileService applicantProfileService, IDocumentService documentService)
         {
-            _applicantRepository = profileRepository;
-            _educationDocumentTypeCacheRepository = educationDocumentTypeCacheRepository;
+            _applicantProfileService = applicantProfileService;
+            _documentService = documentService;
         }
 
         public async Task ConsumeAsync(ApplicantCreatedNotification message, CancellationToken cancellationToken = default)
         {
-            Applicant applicant = new()
+            await _applicantProfileService.CreateApplicantAsync(new()
             {
                 Id = message.Id,
-                Email = message.Email,
                 FullName = message.FullName,
-            };
-
-            await _applicantRepository.AddAsync(applicant);
+                Email = message.Email,
+            });
         }
 
         public async Task ConsumeAsync(UserUpdatedNotification message, CancellationToken cancellationToken = default)
         {
-            Applicant? applicant = await _applicantRepository.GetByIdAsync(message.Id);
-            if (applicant is null) return;
-
-            applicant.FullName = message.FullName;
-            applicant.Email = message.Email;
-
-            await _applicantRepository.UpdateAsync(applicant);
+            await _applicantProfileService.UpdateApplicantAsync(new()
+            {
+                Id = message.Id,
+                FullName = message.FullName,
+                Email = message.Email,
+            });
         }
 
         public async Task ConsumeAsync(EducationDocumentTypeUpdatedNotification message, CancellationToken cancellationToken = default)
         {
-            EducationDocumentTypeCache? documentType  = await _educationDocumentTypeCacheRepository.GetByIdAsync(message.Id);
-            if (documentType is null) return;
-
-            documentType.Name = message.Name;
-            documentType.Deprecated = message.Deprecated;
-
-            await _educationDocumentTypeCacheRepository.UpdateAsync(documentType);
+            await _documentService.UpdateEducationDocumentType(new()
+            {
+                Id = message.EducationDocumentType.Id,
+                Name = message.EducationDocumentType.Name,
+                Deprecated = message.Deprecated,
+            });
         }
     }
 }
