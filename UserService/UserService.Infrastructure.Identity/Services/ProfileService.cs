@@ -19,9 +19,9 @@ namespace UserService.Infrastructure.Identity.Services
             _serviceBusProvider = serviceBusProvider;
         }
 
-        public async Task<ExecutionResult> ChangeEmailAsync(ChangeEmailRequest changeEmail, Guid userId)
+        public async Task<ExecutionResult> ChangeEmailAsync(ChangeEmailRequest changeEmail, Guid userId, Guid? managerId)
         {
-            return await ChangeHandlerAsync(userId, (user) =>
+            return await ChangeHandlerAsync(userId, managerId, (user) =>
             {
                 if (user.Email == changeEmail.NewEmail) return false;
                 user.Email = changeEmail.NewEmail;
@@ -29,9 +29,9 @@ namespace UserService.Infrastructure.Identity.Services
             });
         }
 
-        public async Task<ExecutionResult> ChangeProfileAsync(ChangeProfileRequest changeProfile, Guid userId)
+        public async Task<ExecutionResult> ChangeProfileAsync(ChangeProfileRequest changeProfile, Guid userId, Guid? managerId)
         {
-            return await ChangeHandlerAsync(userId, (user) =>
+            return await ChangeHandlerAsync(userId, managerId, (user) =>
             {
                 if (user.FullName == changeProfile.NewFullName) return false;
                 user.FullName = changeProfile.NewFullName;
@@ -155,12 +155,22 @@ namespace UserService.Infrastructure.Identity.Services
             return new(isSuccess: true);
         }
 
-        private async Task<ExecutionResult> ChangeHandlerAsync(Guid userId, ChangeOperation changeOperation)
+        private async Task<ExecutionResult> ChangeHandlerAsync(Guid userId, Guid? managerId, ChangeOperation changeOperation)
         {
             CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
                 return new(keyError: "ChangeFail", error: "User not found!");
+            }
+
+            IList<string> roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains(Role.Applicant) && roles.Count == 0)
+            {
+                ExecutionResult canEdit = await _serviceBusProvider.Request.CheckPermissionsAsync(userId, managerId);
+                if (!canEdit.IsSuccess)
+                {
+                    return new() { Errors = canEdit.Errors };
+                }
             }
 
             bool wasUpdated = changeOperation(user);

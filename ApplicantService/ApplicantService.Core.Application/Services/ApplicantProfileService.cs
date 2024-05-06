@@ -10,14 +10,16 @@ namespace ApplicantService.Core.Application.Services
     {
         private readonly IApplicantRepository _applicantRepository;
         private readonly IEducationDocumentRepository _educationDocumentRepository;
+        private readonly IRequestService _requestService;
         private readonly INotificationService _notificationService;
 
         public ApplicantProfileService(
             IApplicantRepository profileRepository, IEducationDocumentRepository educationDocumentRepository, 
-            INotificationService notificationService)
+            IRequestService requestService, INotificationService notificationService)
         {
             _applicantRepository = profileRepository;
             _educationDocumentRepository = educationDocumentRepository;
+            _requestService = requestService;
             _notificationService = notificationService;
         }
 
@@ -43,8 +45,14 @@ namespace ApplicantService.Core.Application.Services
             }; 
         }
 
-        public async Task<ExecutionResult> EditApplicantProfileAsync(EditApplicantProfile applicantProfile, Guid applicantId)
+        public async Task<ExecutionResult> EditApplicantProfileAsync(EditApplicantProfile applicantProfile, Guid applicantId, Guid? managerId)
         {
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
+            if (!canEdit.IsSuccess)
+            {
+                return new() { Errors = canEdit.Errors };
+            }
+
             Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
             if (applicant == null)
             {

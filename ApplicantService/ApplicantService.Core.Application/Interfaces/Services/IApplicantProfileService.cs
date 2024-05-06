@@ -7,7 +7,7 @@ namespace ApplicantService.Core.Application.Interfaces.Services
     public interface IApplicantProfileService
     {
         Task<ExecutionResult<ApplicantProfile>> GetApplicantProfileAsync(Guid applicantId);
-        Task<ExecutionResult> EditApplicantProfileAsync(EditApplicantProfile applicantProfile, Guid applicantId);
+        Task<ExecutionResult> EditApplicantProfileAsync(EditApplicantProfile applicantProfile, Guid applicantId, Guid? managerId = null);
         Task<ExecutionResult<ApplicantAndAddedDocumentTypesDTO>> GetApplicantAndAddedDocumentTypesAsync(Guid applicantId);
         Task CreateApplicantAsync(UserDTO user);
         Task UpdateApplicantAsync(UserDTO newUser);
