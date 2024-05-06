@@ -38,21 +38,21 @@ namespace AdmissioningService.Core.Application.Interfaces.StateMachines
         /// если поступлению прикреплен менеджер, иначе - Created.
         /// Если же был другой статус, то ничего не меняется.
         /// </summary>
-        Task<bool> AddAdmissionProgramAsync(AdmissionProgram admissionProgram);
+        Task<bool> AddAdmissionProgramAsync(Guid applicantId, AdmissionProgram admissionProgram);
 
         /// <summary>
         /// После удалении программы из поступления, если статус поступления был Confirmed или Rejected, то становится UnderConsideration, 
         /// если поступлению прикреплен менеджер, иначе - Created.
         /// Если же был другой статус, то ничего не меняется.
         /// </summary>
-        Task<bool> DeleteAdmissionProgramAsync(AdmissionProgram admissionProgram);
+        Task<bool> DeleteAdmissionProgramAsync(Guid applicantId, AdmissionProgram admissionProgram);
 
         /// <summary>
         /// После изменении программ поступлений, если статус поступления был Confirmed или Rejected, то становится UnderConsideration, 
         /// если поступлению прикреплен менеджер, иначе - Created.
         /// Если же был другой статус, то ничего не меняется.
         /// </summary>
-        Task<bool> UpdateAdmissionProgramRangeAsync(List<AdmissionProgram> admissionPrograms, Guid admissionId); 
+        Task<bool> UpdateAdmissionProgramRangeAsync(Guid applicantId, List<AdmissionProgram> admissionPrograms, Guid admissionId); 
 
         /// <summary>
         /// Меняет статус поступления абитуриента на Rejected, Confirmed или Closed.

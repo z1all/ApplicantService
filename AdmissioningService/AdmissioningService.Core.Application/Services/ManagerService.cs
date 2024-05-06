@@ -101,7 +101,7 @@ namespace AdmissioningService.Core.Application.Services
             await _applicantAdmissionStateMachin.AddManagerAsync(applicantAdmission, manager);
 
             return await _notificationService
-                .AddedManagerToApplicantAdmission(manager.User!.ToUserDTO(), applicantAdmission.Applicant!.ToUserDTO());
+                .AddedManagerToApplicantAdmissionAsync(manager.User!.ToUserDTO(), applicantAdmission.Applicant!.ToUserDTO());
         }
 
         public async Task<ExecutionResult> RefuseFromApplicantAdmissionAsync(Guid admissionId, Guid managerId)

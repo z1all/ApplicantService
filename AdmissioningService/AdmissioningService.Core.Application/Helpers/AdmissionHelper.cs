@@ -252,7 +252,12 @@ namespace AdmissioningService.Core.Application.Helpers
                     comments.Add($"Program with id {newProgramPriorityOrderId} not found!");
                     continue;
                 }
-                admissionProgram.Priority = i;
+
+                if (admissionProgram.Priority != i)
+                {
+                    admissionProgram.Priority = i;
+                    newAdmissionProgramsPriorities.Add(admissionProgram);
+                }
             }
 
             if (comments.Count > 0)

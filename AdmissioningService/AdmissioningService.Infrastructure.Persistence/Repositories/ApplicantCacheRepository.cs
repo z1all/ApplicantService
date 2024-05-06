@@ -10,18 +10,18 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
     {
         public ApplicantCacheRepository(AppDbContext dbContext) : base(dbContext) { }
 
-        public override Task<ApplicantCache?> GetByIdAsync(Guid applicantId)
-        {
-            return _dbContext.ApplicantCaches
-                .Include(applicant => applicant.AddedDocumentTypes)
-                .FirstOrDefaultAsync(applicant => applicant.Id == applicantId);
-        }
-
         public Task<ApplicantCache?> GetByIdWithDocumentTypeAndLevelsAsync(Guid applicantId)
         {
             return _dbContext.ApplicantCaches
                 .Include(applicant => applicant.AddedDocumentTypes)
                     .ThenInclude(documentType => documentType.NextEducationLevel)
+                .FirstOrDefaultAsync(applicant => applicant.Id == applicantId);
+        }
+
+        public Task<ApplicantCache?> GetByIdWithDocumentTypeAsync(Guid applicantId)
+        {
+            return _dbContext.ApplicantCaches
+                .Include(applicant => applicant.AddedDocumentTypes)
                 .FirstOrDefaultAsync(applicant => applicant.Id == applicantId);
         }
     }

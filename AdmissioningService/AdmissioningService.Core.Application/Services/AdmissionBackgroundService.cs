@@ -65,7 +65,7 @@ namespace AdmissioningService.Core.Application.Services
 
         public async Task AddDocumentTypeAsync(Guid applicantId, Guid documentTypeId)
         {
-            ApplicantCache? applicant = await _applicantCacheRepository.GetByIdAsync(applicantId);
+            ApplicantCache? applicant = await _applicantCacheRepository.GetByIdWithDocumentTypeAsync(applicantId);
             if (applicant is not null)
             {
                 EducationDocumentTypeCache? documentType = await _educationDocumentTypeCacheRepository.GetByIdAsync(documentTypeId);
@@ -97,7 +97,7 @@ namespace AdmissioningService.Core.Application.Services
                 if(!ExistRightLevel(applicant.AddedDocumentTypes, programLevelId))
                 {
                     // Если из поступления удаляется программа, нужно изменить статус поступления
-                    await _applicantAdmissionStateMachin.DeleteAdmissionProgramAsync(admissionProgram);
+                    await _applicantAdmissionStateMachin.DeleteAdmissionProgramAsync(applicantId, admissionProgram);
                 }
             }
 
