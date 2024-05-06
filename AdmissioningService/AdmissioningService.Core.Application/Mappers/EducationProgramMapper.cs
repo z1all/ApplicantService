@@ -1,4 +1,5 @@
-﻿using AdmissioningService.Core.Domain;
+﻿using AdmissioningService.Core.Application.DTOs;
+using AdmissioningService.Core.Domain;
 using Common.Models.DTOs;
 
 namespace AdmissioningService.Core.Application.Mappers
@@ -16,6 +17,17 @@ namespace AdmissioningService.Core.Application.Mappers
                 EducationForm = educationProgram.EducationForm,
                 EducationLevel = educationProgram.EducationLevel!.ToEducationLevelDTO(),
                 Faculty = educationProgram.Faculty!.ToFacultyDTO(),
+            };
+        }
+
+        public static EducationProgramShortInfoDTO ToEducationProgramShortInfoDTO(this EducationProgramCache educationProgram)
+        {
+            return new()
+            {
+                Id = educationProgram.Id,
+                Name = educationProgram.Name,
+                Code = educationProgram.Code,
+                Faculty = educationProgram.Faculty!.ToFacultyDTO()
             };
         }
     }

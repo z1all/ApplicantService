@@ -16,5 +16,7 @@ namespace AdmissioningService.Core.Domain
 
         public Guid? ManagerId { get; set; }
         public Manager? Manager { get; set; }
+
+        public IEnumerable<AdmissionProgram> AdmissionPrograms { get; set; } = null!;
     }
 }

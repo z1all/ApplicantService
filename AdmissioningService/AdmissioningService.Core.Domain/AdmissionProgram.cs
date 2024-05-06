@@ -1,6 +1,4 @@
-﻿using Common.Repositories;
-
-namespace AdmissioningService.Core.Domain
+﻿namespace AdmissioningService.Core.Domain
 {
     public class AdmissionProgram
     {

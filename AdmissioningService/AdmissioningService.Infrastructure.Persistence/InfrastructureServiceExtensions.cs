@@ -1,11 +1,11 @@
-﻿using AdmissioningService.Core.Application.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.StateMachines;
 using AdmissioningService.Infrastructure.Persistence.Contexts;
 using AdmissioningService.Infrastructure.Persistence.Repositories;
-using AdmissioningService.Infrastructure.Persistence.StateMachines;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using AdmissioningService.Core.Application.StateMachines;
 
 namespace AdmissioningService.Infrastructure.Persistence
 {

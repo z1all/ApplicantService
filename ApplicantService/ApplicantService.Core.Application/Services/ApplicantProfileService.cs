@@ -10,12 +10,15 @@ namespace ApplicantService.Core.Application.Services
     {
         private readonly IApplicantRepository _applicantRepository;
         private readonly IEducationDocumentRepository _educationDocumentRepository;
+        private readonly INotificationService _notificationService;
 
         public ApplicantProfileService(
-            IApplicantRepository profileRepository, IEducationDocumentRepository educationDocumentRepository)
+            IApplicantRepository profileRepository, IEducationDocumentRepository educationDocumentRepository, 
+            INotificationService notificationService)
         {
             _applicantRepository = profileRepository;
             _educationDocumentRepository = educationDocumentRepository;
+            _notificationService = notificationService;
         }
 
         public async Task<ExecutionResult<ApplicantProfile>> GetApplicantProfileAsync(Guid applicantId)
@@ -55,7 +58,7 @@ namespace ApplicantService.Core.Application.Services
 
             await _applicantRepository.UpdateAsync(applicant);
 
-            return new(isSuccess: true);
+            return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
 
         public async Task<ExecutionResult<ApplicantAndAddedDocumentTypesDTO>> GetApplicantAndAddedDocumentTypesAsync(Guid applicantId)

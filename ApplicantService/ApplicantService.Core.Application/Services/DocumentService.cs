@@ -7,33 +7,32 @@ using ApplicantService.Core.Application.Mappers;
 using ApplicantService.Core.Domain;
 using ApplicantService.Core.Domain.Enums;
 using Common.Models.Models;
-using EasyNetQ;
 
 namespace ApplicantService.Core.Application.Services
 {
     public class DocumentService : IDocumentService
     {
-        private readonly IRequestService _requestService;
-        private readonly INotificationService _notificationService;
         private readonly IDocumentRepository _documentRepository;
         private readonly IPassportRepository _passportRepository;
         private readonly IFileRepository _fileRepository;
         private readonly IEducationDocumentRepository _educationDocumentRepository;
         private readonly IEducationDocumentTypeCacheRepository _educationDocumentTypeCacheRepository;
+        private readonly IRequestService _requestService;
+        private readonly INotificationService _notificationService;
 
         public DocumentService(
-            IRequestService requestService, INotificationService notificationService,
             IDocumentRepository documentRepository, IPassportRepository passportRepository,
             IFileRepository fileRepository, IEducationDocumentRepository educationDocumentRepository, 
-            IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository)
+            IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository,
+            IRequestService requestService, INotificationService notificationService)
         {
-            _requestService = requestService;
-            _notificationService = notificationService;
             _documentRepository = documentRepository;
             _passportRepository = passportRepository;
             _fileRepository = fileRepository;
             _educationDocumentRepository = educationDocumentRepository;
             _educationDocumentTypeCacheRepository = educationDocumentTypeCacheRepository;
+            _requestService = requestService;
+            _notificationService = notificationService;
         }
 
         public async Task<ExecutionResult> DeleteApplicantDocumentAsync(Guid documentId, Guid applicantId, Guid? managerId)
@@ -66,7 +65,7 @@ namespace ApplicantService.Core.Application.Services
 
             await _documentRepository.DeleteAsync(document);
 
-            return new(isSuccess: true);
+            return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
 
         public async Task<ExecutionResult<List<DocumentInfo>>> GetApplicantDocumentsAsync(Guid applicantId)
@@ -111,7 +110,7 @@ namespace ApplicantService.Core.Application.Services
             Passport passport = documentInfo.ToPassport(applicantId);
             await _passportRepository.AddAsync(passport);
 
-            return new(isSuccess: true);
+            return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
 
         public async Task<ExecutionResult> UpdateApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId, Guid? managerId)
@@ -135,7 +134,7 @@ namespace ApplicantService.Core.Application.Services
 
             await _passportRepository.UpdateAsync(passport);
 
-            return new(isSuccess: true);
+            return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
 
         public async Task<ExecutionResult<EducationDocumentInfo>> GetApplicantEducationDocumentAsync(Guid documentId, Guid applicantId)
@@ -172,7 +171,7 @@ namespace ApplicantService.Core.Application.Services
                 return new() { Errors = notificationResult.Errors };
             }
 
-            return new(isSuccess: true);
+            return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
 
         public async Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
@@ -209,7 +208,18 @@ namespace ApplicantService.Core.Application.Services
                 return new() { Errors = notificationResult.Errors };
             }
 
-            return new(isSuccess: true);
+            return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
+        }
+
+        public async Task UpdateEducationDocumentType(UpdateEducationDocumentTypeDTO newDocumentType)
+        {
+            EducationDocumentTypeCache? documentType = await _educationDocumentTypeCacheRepository.GetByIdAsync(newDocumentType.Id);
+            if (documentType is null) return;
+
+            documentType.Name = newDocumentType.Name;
+            documentType.Deprecated = newDocumentType.Deprecated;
+
+            await _educationDocumentTypeCacheRepository.UpdateAsync(documentType);
         }
 
         private async Task<ValueTuple<bool, Guid>> TryGetEducationDocumentTypeIdAsync(Guid documentId)
@@ -244,17 +254,6 @@ namespace ApplicantService.Core.Application.Services
             }
 
             return new(isSuccess: true);
-        }
-
-        public async Task UpdateEducationDocumentType(UpdateEducationDocumentTypeDTO newDocumentType)
-        {
-            EducationDocumentTypeCache? documentType = await _educationDocumentTypeCacheRepository.GetByIdAsync(newDocumentType.Id);
-            if (documentType is null) return;
-
-            documentType.Name = newDocumentType.Name;
-            documentType.Deprecated = newDocumentType.Deprecated;
-
-            await _educationDocumentTypeCacheRepository.UpdateAsync(documentType);
         }
     }
 }

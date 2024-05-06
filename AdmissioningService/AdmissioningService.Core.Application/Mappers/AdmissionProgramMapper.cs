@@ -14,5 +14,14 @@ namespace AdmissioningService.Core.Application.Mappers
                 EducationProgram = admission.EducationProgram!.ToEducationProgramDTO(),
             };
         }
+
+        public static AdmissionProgramShortInfoDTO ToAdmissionProgramShortInfoDTO(this AdmissionProgram program)
+        {
+            return new AdmissionProgramShortInfoDTO()
+            {
+                Priority = program.Priority,
+                EducationProgram = program.EducationProgram!.ToEducationProgramShortInfoDTO(),
+            };
+        }
     }
 }

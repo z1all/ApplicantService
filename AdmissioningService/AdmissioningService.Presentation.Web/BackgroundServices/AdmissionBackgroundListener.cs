@@ -7,6 +7,7 @@ namespace AdmissioningService.Presentation.Web.BackgroundServices
 {
     public class AdmissionBackgroundListener :
         IConsumeAsync<UserUpdatedNotification>,
+        IConsumeAsync<ApplicantInfoUpdatedNotification>,
         IConsumeAsync<AddedEducationDocumentTypeNotification>,
         IConsumeAsync<DeletedEducationDocumentTypeNotification>
     {
@@ -27,14 +28,19 @@ namespace AdmissioningService.Presentation.Web.BackgroundServices
             });
         }
 
+        public async Task ConsumeAsync(ApplicantInfoUpdatedNotification message, CancellationToken cancellationToken = default)
+        {
+            await _backgroundService.ApplicantInfoUpdatedAsync(message.ApplicantId);
+        }
+
         public async Task ConsumeAsync(AddedEducationDocumentTypeNotification message, CancellationToken cancellationToken = default)
         {
-            await _backgroundService.AddDocumentType(message.ApplicantId, message.DocumentTypeId);
+            await _backgroundService.AddDocumentTypeAsync(message.ApplicantId, message.DocumentTypeId);
         }
 
         public async Task ConsumeAsync(DeletedEducationDocumentTypeNotification message, CancellationToken cancellationToken = default)
         {
-            await _backgroundService.DeleteDocumentType(message.ApplicantId, message.DocumentTypeId);
+            await _backgroundService.DeleteDocumentTypeAsync(message.ApplicantId, message.DocumentTypeId);
         }
     }
 }

@@ -3,10 +3,8 @@
 namespace Common.Models.Enums
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum AdmissionStatus
+    public enum ManagerChangeAdmissionStatus
     {
-        Created = 0,
-        UnderConsideration = 1,
         Confirmed = 2,
         Rejected = 3,
         Closed = 4,
