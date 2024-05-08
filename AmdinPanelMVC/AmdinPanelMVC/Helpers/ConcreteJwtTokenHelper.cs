@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,33 +14,32 @@ namespace AmdinPanelMVC.Helpers
 
     public static class ConcreteJwtTokenHelper
     {
-        public static ValidateStatus Validate(string? jwtToken, IOptions<JwtBearerOptions> options, out ClaimsPrincipal? claims)
+        public static async Task<(ValidateStatus status, ClaimsPrincipal? userClaims)> ValidateAsync(string? jwtToken, JwtBearerOptions jwtOptions)
         {
-            claims = null;
+            if (jwtToken is null) return (ValidateStatus.NotValid, null);
 
-            if (jwtToken is null) return ValidateStatus.NotValid;
-
-            JwtBearerOptions jwtOptions = options.Value;
-            TokenValidationParameters validationParameters = jwtOptions.TokenValidationParameters;
+            TokenValidationParameters validationParameters = jwtOptions.TokenValidationParameters.Clone();
+            bool validateLifetime = validationParameters.ValidateLifetime;
+            validationParameters.ValidateLifetime = false;
             
             var validator = new JwtSecurityTokenHandler();
             if (validator.CanReadToken(jwtToken))
             {
-                try
+                TokenValidationResult result = await validator.ValidateTokenAsync(jwtToken, validationParameters);
+
+                if (result.IsValid)
                 {
-                    claims = validator.ValidateToken(jwtToken, validationParameters, out SecurityToken validatedToken);
-                }
-                catch (Exception ex)
-                {
-                    return ex switch
+                    SecurityToken token = result.SecurityToken; 
+                    if (validateLifetime && token.ValidTo < DateTime.UtcNow.Add(validationParameters.ClockSkew)) 
                     {
-                        SecurityTokenExpiredException => ValidateStatus.TokenExpired,
-                        _ => ValidateStatus.NotValid,
-                    };
+                        return (ValidateStatus.TokenExpired, new ClaimsPrincipal(result.ClaimsIdentity));
+                    }
+
+                    return (ValidateStatus.Valid, new ClaimsPrincipal(result.ClaimsIdentity));
                 }
             }
 
-            return ValidateStatus.Valid;
+            return (ValidateStatus.NotValid, null);
         }
     }
 }

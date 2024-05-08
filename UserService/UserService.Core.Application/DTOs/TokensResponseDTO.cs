@@ -2,7 +2,7 @@
 
 namespace UserService.Core.Application.DTOs
 {
-    public class TokenResponse
+    public class TokensResponseDTO
     {
         [Required]
         public string Refresh { get; set; } = null!;

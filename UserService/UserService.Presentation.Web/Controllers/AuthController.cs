@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
 using UserService.Infrastructure.Identity.Configurations.Authorization;
-using UserService.Presentation.Web.Helpers;
 using Common.API.Controllers;
 using Common.API.Helpers;
 using Common.Models.Models;
@@ -22,18 +21,18 @@ namespace UserService.Presentation.Web.Controllers
         }
 
         [HttpPost("registration")]
-        public async Task<ActionResult<TokenResponse>> RegistrationAsync(RegistrationDTO request)
+        public async Task<ActionResult<TokensResponseDTO>> RegistrationAsync(RegistrationDTO request)
         {
-            ExecutionResult<TokenResponse> response = await _authService.ApplicantRegistrationAsync(request);
+            ExecutionResult<TokensResponseDTO> response = await _authService.ApplicantRegistrationAsync(request);
 
             if (!response.IsSuccess) return BadRequest(response);
             return Ok(response.Result!);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<TokenResponse>> LoginAsync(LoginDTO request)
+        public async Task<ActionResult<TokensResponseDTO>> LoginAsync(LoginDTO request)
         {
-            ExecutionResult<TokenResponse> response = await _authService.ApplicantLoginAsync(request);
+            ExecutionResult<TokensResponseDTO> response = await _authService.ApplicantLoginAsync(request);
 
             if (!response.IsSuccess) return BadRequest(response);
             return Ok(response.Result!);
@@ -56,14 +55,14 @@ namespace UserService.Presentation.Web.Controllers
 
         [HttpPost("access")]
         [Authorize(AuthenticationSchemes = CustomJwtBearerDefaults.CheckOnlySignature)]
-        public async Task<ActionResult<TokenResponse>> UpdateAccessTokenAsync(UpdateAccessRequest request)
+        public async Task<ActionResult<TokensResponseDTO>> UpdateAccessTokenAsync(UpdateAccessRequest request)
         {
             if (!HttpContext.TryGetAccessTokenJTI(out Guid accessTokenJTI) || !HttpContext.TryGetUserId(out Guid userId))
             {
                 return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
             }
 
-            ExecutionResult<TokenResponse> response = await _authService.UpdateAccessTokenAsync(request.Refresh, accessTokenJTI, userId);
+            ExecutionResult<TokensResponseDTO> response = await _authService.UpdateAccessTokenAsync(request.Refresh, accessTokenJTI, userId);
 
             if (!response.IsSuccess) return BadRequest(response);
             return Ok(response.Result!);

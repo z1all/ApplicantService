@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using EasyNetQ;
 using Common.Models.Models;
+using EasyNetQ;
 
-namespace Common.ServiceBus.EasyNetQAutoSubscriber
+namespace Common.ServiceBus.EasyNetQRPC
 {
     public abstract class BaseEasyNetQRPCHandler
     {
@@ -17,9 +17,17 @@ namespace Common.ServiceBus.EasyNetQAutoSubscriber
 
         public abstract void CreateRequestListeners();
 
+        protected ExecutionResult<TToResult> ResponseHandler<TToResult, TFromResult>(
+           ExecutionResult<TFromResult> response,
+           Func<TFromResult, TToResult> mapper)
+        {
+            if (!response.IsSuccess) return new() { Errors = response.Errors };
+
+            return new() { Result = mapper(response.Result!) };
+        }
+
         protected async Task<ExecutionResult> ExceptionHandlerAsync(Func<IServiceProvider, Task<ExecutionResult>> operationAsync) =>
              await ExceptionHandlerAsync(operationAsync, () => new(keyError: "UnknownError", error: "Unknown error"));
-        
 
         protected async Task<ExecutionResult<TResponse>> ExceptionHandlerAsync<TResponse>(Func<IServiceProvider, Task<ExecutionResult<TResponse>>> operationAsync) =>
              await ExceptionHandlerAsync(operationAsync, () => new(keyError: "UnknownError", error: "Unknown error"));

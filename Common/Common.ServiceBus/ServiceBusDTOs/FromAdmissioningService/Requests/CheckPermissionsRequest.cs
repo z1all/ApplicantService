@@ -1,4 +1,4 @@
-﻿namespace Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService
+﻿namespace Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests
 {
     public class CheckPermissionsRequest
     {

@@ -1,7 +1,7 @@
 ﻿using AdmissioningService.Core.Application.Helpers;
 using Common.Models.Models;
-using Common.ServiceBus.EasyNetQAutoSubscriber;
-using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService;
+using Common.ServiceBus.EasyNetQRPC;
+using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
 using EasyNetQ;
 
 namespace AdmissioningService.Presentation.Web.RPCHandlers

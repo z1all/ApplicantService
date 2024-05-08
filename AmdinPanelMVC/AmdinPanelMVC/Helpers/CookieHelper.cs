@@ -18,5 +18,11 @@
             refreshToken = null;
             return cookies.TryGetValue(_jwtToken, out jwtToken) && cookies.TryGetValue(_refreshToken, out refreshToken);
         }
+
+        public static void RemoveTokens(this IResponseCookies cookies)
+        {
+            cookies.Delete(_jwtToken);
+            cookies.Delete(_refreshToken);
+        }
     }
 }

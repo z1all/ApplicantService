@@ -1,7 +1,6 @@
 ﻿using ApplicantService.Core.Application.Interfaces.Services;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
-using Common.ServiceBus.ServiceBusDTOs.FromUserService;
-using Common.ServiceBusDTOs.FromUserService;
+using Common.ServiceBus.ServiceBusDTOs.FromUserService.Notifications;
 using EasyNetQ.AutoSubscribe;
 
 namespace ApplicantService.Presentation.Web

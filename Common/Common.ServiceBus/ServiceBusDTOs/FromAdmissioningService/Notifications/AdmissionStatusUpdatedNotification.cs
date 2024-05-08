@@ -1,6 +1,6 @@
 ﻿using Common.Models.Enums;
 
-namespace Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService
+namespace Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Notifications
 {
     public class AdmissionStatusUpdatedNotification
     {
