@@ -57,17 +57,33 @@ namespace UserService.Infrastructure.Identity.Services
             return creatingTokenResult;
         }
 
-        public async Task<ExecutionResult<TokenResponse>> ManagerLoginAsync(LoginDTO loginDTO)
+        public async Task<ExecutionResult<ManagerLoggedinResponse>> ManagerLoginAsync(LoginDTO loginDTO)
         {
-            return await LoginAsync(loginDTO, [Role.Manager, Role.MainManager]);
+            ExecutionResult<CustomUser> result = await LoginAsync(loginDTO, [Role.Manager, Role.MainManager]);
+            if (!result.IsSuccess) return new() { Errors = result.Errors };
+            CustomUser user = result.Result!;
+
+            return new()
+            {
+                Result = new()
+                {
+                    Id = Guid.Parse(user.Id),
+                    Email = user.Email!,
+                    FullName = user.FullName,
+                }
+            };
         }
 
         public async Task<ExecutionResult<TokenResponse>> ApplicantLoginAsync(LoginDTO loginDTO)
         {
-            return await LoginAsync(loginDTO, [Role.Applicant]);
+            ExecutionResult<CustomUser> result = await LoginAsync(loginDTO, [Role.Manager, Role.MainManager]);
+            if (!result.IsSuccess) return new() { Errors = result.Errors };
+            CustomUser user = result.Result!;
+
+            return await GetTokensAsync(user);
         }
 
-        private async Task<ExecutionResult<TokenResponse>> LoginAsync(LoginDTO loginDTO, string[] loginFor)
+        private async Task<ExecutionResult<CustomUser>> LoginAsync(LoginDTO loginDTO, string[] loginFor)
         {
             CustomUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
             if (user == null)
@@ -87,14 +103,14 @@ namespace UserService.Infrastructure.Identity.Services
                 return new(keyError: "LoginFail", error: "Invalid email or password.");
             }
 
-            return await GetTokensAsync(user);
+            return new() { Result = user };
         }
 
         private bool UserHaveRole(IList<string> userRoles, string[] haveAnyRole)
         {
-            foreach (string role in haveAnyRole) 
+            foreach (string role in haveAnyRole)
             {
-                if(userRoles.Contains(role)) return true;
+                if (userRoles.Contains(role)) return true;
             }
             return false;
         }
@@ -102,7 +118,7 @@ namespace UserService.Infrastructure.Identity.Services
         public async Task<ExecutionResult> LogoutAsync(Guid accessTokenJTI)
         {
             bool result = await _tokenDbService.RemoveTokensAsync(accessTokenJTI);
-            if(!result)
+            if (!result)
             {
                 return new(keyError: "LogoutFail", error: "The tokens have already been deleted.");
             }
