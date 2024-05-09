@@ -2,7 +2,7 @@
 
 namespace UserService.Core.Application.DTOs
 {
-    public class ChangePasswordRequest
+    public class ChangePasswordRequestDTO
     {
         [Required]
         public string CurrentPassword { get; set; } = null!;

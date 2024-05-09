@@ -19,7 +19,7 @@ namespace UserService.Infrastructure.Identity.Services
             _serviceBusProvider = serviceBusProvider;
         }
 
-        public async Task<ExecutionResult> ChangeEmailAsync(ChangeEmailRequest changeEmail, Guid userId, Guid? managerId)
+        public async Task<ExecutionResult> ChangeEmailAsync(ChangeEmailRequestDTO changeEmail, Guid userId, Guid? managerId)
         {
             return await ChangeHandlerAsync(userId, managerId, (user) =>
             {
@@ -29,7 +29,7 @@ namespace UserService.Infrastructure.Identity.Services
             });
         }
 
-        public async Task<ExecutionResult> ChangeProfileAsync(ChangeProfileRequest changeProfile, Guid userId, Guid? managerId)
+        public async Task<ExecutionResult> ChangeProfileAsync(ChangeProfileRequestDTO changeProfile, Guid userId, Guid? managerId)
         {
             return await ChangeHandlerAsync(userId, managerId, (user) =>
             {
@@ -39,7 +39,7 @@ namespace UserService.Infrastructure.Identity.Services
             });
         }
 
-        public async Task<ExecutionResult> ChangePasswordAsync(ChangePasswordRequest changePassword, Guid userId)
+        public async Task<ExecutionResult> ChangePasswordAsync(ChangePasswordRequestDTO changePassword, Guid userId)
         {
             CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
@@ -53,7 +53,7 @@ namespace UserService.Infrastructure.Identity.Services
             return new(isSuccess: true);
         }
 
-        public async Task<ExecutionResult> CreateAdminAsync(CreateAdminRequest createAdmin)
+        public async Task<ExecutionResult> CreateAdminAsync(CreateAdminRequestDTO createAdmin)
         {
             CustomUser user = new()
             {
@@ -78,7 +78,7 @@ namespace UserService.Infrastructure.Identity.Services
             return new(isSuccess: true);
         }
 
-        public async Task<ExecutionResult> CreateManagerAsync(CreateManagerRequest createManager)
+        public async Task<ExecutionResult> CreateManagerAsync(CreateManagerRequestDTO createManager)
         {
             CustomUser user = new()
             {
@@ -195,9 +195,9 @@ namespace UserService.Infrastructure.Identity.Services
             };
         }
 
-        private User MapCustomUserToUser(CustomUser user)
+        private UserDTO MapCustomUserToUser(CustomUser user)
         {
-            return new User()
+            return new UserDTO()
             {
                 Id = Guid.Parse(user.Id),
                 Email = user.Email!,

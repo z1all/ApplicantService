@@ -21,7 +21,7 @@ namespace UserService.Presentation.Web.Controllers
 
         [HttpPatch("email")]
         [Authorize]
-        public async Task<ActionResult> ChangeEmailAsync(ChangeEmailRequest changeEmail)
+        public async Task<ActionResult> ChangeEmailAsync(ChangeEmailRequestDTO changeEmail)
         {
             return await ChangeHandlerAsync(async (Guid userId) =>
                  await _profileService.ChangeEmailAsync(changeEmail, userId));
@@ -29,7 +29,7 @@ namespace UserService.Presentation.Web.Controllers
 
         [HttpPatch("password")]
         [Authorize]
-        public async Task<ActionResult> ChangePasswordAsync(ChangePasswordRequest changePassword)
+        public async Task<ActionResult> ChangePasswordAsync(ChangePasswordRequestDTO changePassword)
         {
             return await ChangeHandlerAsync(async (Guid userId) =>
                  await _profileService.ChangePasswordAsync(changePassword, userId));
@@ -37,7 +37,7 @@ namespace UserService.Presentation.Web.Controllers
 
         [HttpPatch("profile")]
         [Authorize]
-        public async Task<ActionResult> ChangeProfileAsync(ChangeProfileRequest changeProfile)
+        public async Task<ActionResult> ChangeProfileAsync(ChangeProfileRequestDTO changeProfile)
         {
             return await ChangeHandlerAsync(async (Guid userId) =>
                  await _profileService.ChangeProfileAsync(changeProfile, userId));
@@ -62,7 +62,7 @@ namespace UserService.Presentation.Web.Controllers
         private delegate Task<ExecutionResult> ChangeOperationAsync(Guid userId);
 
         [HttpPost("manager")]
-        public async Task<ActionResult> CreateManagerAsync(CreateManagerRequest manager)
+        public async Task<ActionResult> CreateManagerAsync(CreateManagerRequestDTO manager)
         {
             var res = await _profileService.CreateManagerAsync(manager);
 

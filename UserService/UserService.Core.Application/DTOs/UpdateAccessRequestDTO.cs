@@ -2,10 +2,9 @@
 
 namespace UserService.Core.Application.DTOs
 {
-    public class ChangeEmailRequest
+    public class UpdateAccessRequestDTO
     {
         [Required]
-        [EmailAddress]
-        public string NewEmail { get; set; } = null!;
+        public string Refresh { get; set; } = null!;
     }
 }

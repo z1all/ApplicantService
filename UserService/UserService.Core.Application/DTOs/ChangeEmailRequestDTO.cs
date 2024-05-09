@@ -2,9 +2,10 @@
 
 namespace UserService.Core.Application.DTOs
 {
-    public class ChangeProfileRequest
+    public class ChangeEmailRequestDTO
     {
         [Required]
-        public string NewFullName { get; set; } = null!;
+        [EmailAddress]
+        public string NewEmail { get; set; } = null!;
     }
 }

@@ -7,6 +7,8 @@ using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Mappers;
 using Common.Models.Models;
 using Common.API.Helpers;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AmdinPanelMVC.Controllers
 {
@@ -73,17 +75,45 @@ namespace AmdinPanelMVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RequiredAuthorize]
-        public async Task<IActionResult> Email(ChangeEmailViewModel changeEmail)
+        public async Task<IActionResult> Email(ProfileViewModel profile)
         {
-            return Redirect(changeEmail.Email);//View("Profile");
+            if (!HttpContext.TryGetUserId(out Guid managerId))
+            {
+                return Redirect("/Error");
+            }
+
+            ExecutionResult response = await _userService.ChangeEmailAsync(managerId, profile.Email);
+            if (!response.IsSuccess)
+            {
+                foreach (var error in response.Errors)
+                {
+                    ModelState.AddModelError("Email", error.Value[0]);
+                }
+            }
+
+            return View("Profile", profile);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RequiredAuthorize]
-        public async Task<IActionResult> FullName(ChangeFullNameViewModel changeFullName)
+        public async Task<IActionResult> FullName(ProfileViewModel profile)
         {
-            return Redirect(changeFullName.FullName);//View("Profile");
+            if (!HttpContext.TryGetUserId(out Guid managerId))
+            {
+                return Redirect("/Error");
+            }
+
+            ExecutionResult response = await _userService.ChangeFullNameAsync(managerId, profile.FullName);
+            if (!response.IsSuccess)
+            {
+                foreach (var error in response.Errors)
+                {
+                    ModelState.AddModelError("FullName", error.Value[0]);
+                }
+            }
+
+            return View("Profile", profile);
         }
 
         [HttpPost]

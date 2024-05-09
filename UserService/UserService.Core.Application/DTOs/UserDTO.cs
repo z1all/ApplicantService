@@ -1,6 +1,6 @@
 ﻿namespace UserService.Core.Application.DTOs
 {
-    public class User
+    public class UserDTO
     {
         public Guid Id { get; set; }
         public string FullName { get; set; } = null!;

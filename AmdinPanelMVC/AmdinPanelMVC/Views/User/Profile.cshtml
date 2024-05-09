@@ -11,11 +11,17 @@
         <hr />
 
         <form asp-action="FullName" method="post">
+            <input asp-for="Email" type="email" class="form-control" hidden>
+            @if (Model.Faculty is not null)
+            {
+                <input asp-for="Faculty!.Id" type="text" class="form-control" hidden>
+                <input asp-for="Faculty!.Name" type="text" class="form-control" hidden>
+            }
             <div class="form-group mb-3">
                 <label asp-for="FullName" class="col-form-label">ФИО</label>
                 <div class="row">
                     <div class="col">
-                        <input asp-for="FullName" type="text" class="form-control">
+                        <input required asp-for="FullName" type="text" class="form-control">
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-primary">Сохранить</buttons>
@@ -26,11 +32,17 @@
         </form>
 
         <form asp-action="Email" method="post">
+            <input asp-for="FullName" type="text" class="form-control" hidden>
+            @if (Model.Faculty is not null)
+            {
+                <input asp-for="Faculty!.Id" type="text" class="form-control" hidden>
+                <input asp-for="Faculty!.Name" type="text" class="form-control" hidden>
+            }
             <div class="form-group mb-3">
                 <label asp-for="Email" class="col-form-label">Email</label>
                 <div class="row">
                     <div class="col">
-                        <input asp-for="Email" type="email" class="form-control">
+                        <input required asp-for="Email" type="email" class="form-control">
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-primary">Сохранить</buttons>

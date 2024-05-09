@@ -2,7 +2,7 @@
 
 namespace UserService.Core.Application.DTOs
 {
-    public class CreateManagerRequest
+    public class CreateAdminRequestDTO
     {
         [Required]
         public string FullName { get; init; } = null!;
@@ -11,6 +11,5 @@ namespace UserService.Core.Application.DTOs
         public string Email { get; init; } = null!;
         [Required]
         public string Password { get; init; } = null!;
-        public Guid? FacultyId { get; init; } = null;
     }
 }

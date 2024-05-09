@@ -55,7 +55,7 @@ namespace UserService.Presentation.Web.Controllers
 
         [HttpPost("access")]
         [Authorize(AuthenticationSchemes = CustomJwtBearerDefaults.CheckOnlySignature)]
-        public async Task<ActionResult<TokensResponseDTO>> UpdateAccessTokenAsync(UpdateAccessRequest request)
+        public async Task<ActionResult<TokensResponseDTO>> UpdateAccessTokenAsync(UpdateAccessRequestDTO request)
         {
             if (!HttpContext.TryGetAccessTokenJTI(out Guid accessTokenJTI) || !HttpContext.TryGetUserId(out Guid userId))
             {

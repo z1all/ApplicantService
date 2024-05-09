@@ -22,6 +22,18 @@ namespace AmdinPanelMVC.Services
             return ResponseHandler(response, manager => manager.ToManagerDTO());
         }
 
+        public async Task<ExecutionResult> ChangeFullNameAsync(Guid managerId, string newFullName)
+        {
+            return await RequestHandlerAsync<ExecutionResult, ChangeFullNameRequest>(
+                new() { ManagerId = managerId, NewFullName = newFullName }, "ChangeFullNameFail");
+        }
+
+        public async Task<ExecutionResult> ChangeEmailAsync(Guid managerId, string newEmail)
+        {
+            return await RequestHandlerAsync<ExecutionResult, ChangeEmailRequest>(
+                new() { ManagerId = managerId, NewEmail = newEmail }, "ChangeEmailFail");
+        }
+
         public async Task<ExecutionResult<TokensResponseDTO>> LoginAsync(LoginRequestDTO login)
         {
             ExecutionResult<TokensResponse> response = await RequestHandlerAsync<ExecutionResult<TokensResponse>, ManagerLoginRequest>(

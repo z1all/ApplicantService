@@ -43,7 +43,7 @@ namespace UserService.Infrastructure.Identity.Services
             ExecutionResult<TokensResponseDTO> creatingTokenResult = await GetTokensAsync(user);
             if (!creatingTokenResult.IsSuccess) return creatingTokenResult;
 
-            ExecutionResult sendingResult = await _serviceBusProvider.Notification.CreatedApplicantAsync(new User()
+            ExecutionResult sendingResult = await _serviceBusProvider.Notification.CreatedApplicantAsync(new UserDTO()
             {
                 Id = Guid.Parse(user.Id),
                 FullName = user.FullName,

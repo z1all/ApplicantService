@@ -2,9 +2,9 @@
 
 namespace UserService.Core.Application.DTOs
 {
-    public class UpdateAccessRequest
+    public class ChangeProfileRequestDTO
     {
         [Required]
-        public string Refresh { get; set; } = null!;
+        public string NewFullName { get; set; } = null!;
     }
 }
