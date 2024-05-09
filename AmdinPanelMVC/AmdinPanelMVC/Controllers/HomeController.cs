@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using AmdinPanelMVC.Models;
+using AmdinPanelMVC.Filters;
 
 namespace AmdinPanelMVC.Controllers
 {
+    [RequiredAuthorize]
     public class HomeController : Controller
     {
         public IActionResult Index()

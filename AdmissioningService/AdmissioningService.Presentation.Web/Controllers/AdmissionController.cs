@@ -33,7 +33,8 @@ namespace AdmissioningService.Presentation.Web.Controllers
         [HttpGet("{admissionId}")]
         public async Task<ActionResult<ApplicantAdmissionDTO>> GetAdmission([FromRoute] Guid admissionId)
         {
-            return await ExecutionResultHandlerAsync((applicantId) => _admissionService.GetApplicantAdmissionAsync(applicantId, admissionId));
+            return await ExecutionResultHandlerAsync((applicantId) =>
+                _admissionService.GetApplicantAdmissionAsync(applicantId, admissionId));
         }
 
         [HttpPost("program")]

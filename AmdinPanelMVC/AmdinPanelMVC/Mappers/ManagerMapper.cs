@@ -1,4 +1,5 @@
 ﻿using AmdinPanelMVC.DTOs;
+using AmdinPanelMVC.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService.Requests;
 
@@ -16,6 +17,17 @@ namespace AmdinPanelMVC.Mappers
         }
 
         public static ManagerDTO ToManagerDTO(this GetManagerProfileResponse manager)
+        {
+            return new()
+            {
+                Id = manager.Id,
+                Email = manager.Email,
+                FullName = manager.FullName,
+                Faculty = manager.Faculty,
+            };
+        }
+
+        public static ProfileViewModel ToProfileViewModel(this ManagerDTO manager)
         {
             return new()
             {

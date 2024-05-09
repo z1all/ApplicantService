@@ -26,13 +26,14 @@ namespace AmdinPanelMVC.Helpers
             if (validator.CanReadToken(jwtToken))
             {
                 TokenValidationResult result = await validator.ValidateTokenAsync(jwtToken, validationParameters);
-
+                
                 if (result.IsValid)
                 {
                     SecurityToken token = result.SecurityToken; 
                     if (validateLifetime && token.ValidTo < DateTime.UtcNow.Add(validationParameters.ClockSkew)) 
                     {
-                        return (ValidateStatus.TokenExpired, new ClaimsPrincipal(result.ClaimsIdentity));
+                        ClaimsIdentity userIdentity = new (result.ClaimsIdentity.Claims, null);
+                        return (ValidateStatus.TokenExpired, new ClaimsPrincipal(userIdentity));
                     }
 
                     return (ValidateStatus.Valid, new ClaimsPrincipal(result.ClaimsIdentity));
@@ -40,6 +41,29 @@ namespace AmdinPanelMVC.Helpers
             }
 
             return (ValidateStatus.NotValid, null);
+        }
+
+        public static bool TryGetUserClaims(string? jwtToken, out ClaimsPrincipal userClaims)
+        {
+            var validator = new JwtSecurityTokenHandler();
+            if (validator.CanReadToken(jwtToken))
+            {
+                JwtSecurityToken jwtSecurityToken = validator.ReadJwtToken(jwtToken);
+
+                var map = JwtSecurityTokenHandler.DefaultInboundClaimTypeMap;
+
+                ClaimsIdentity userIdentity = new(jwtSecurityToken.Claims.Select(claim => 
+                    new Claim(map.TryGetValue(claim.Type, out string? value) ? value : claim.Type, claim.Value)), 
+                    "Bearer"
+                );
+
+                userClaims = new ClaimsPrincipal(userIdentity);
+
+                return true;
+            }
+
+            userClaims = new();
+            return false;    
         }
     }
 }
