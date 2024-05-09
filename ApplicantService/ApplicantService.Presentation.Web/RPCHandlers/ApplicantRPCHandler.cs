@@ -1,7 +1,7 @@
 ﻿using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Application.Interfaces.Services;
 using Common.Models.Models;
-using Common.ServiceBus.EasyNetQAutoSubscriber;
+using Common.ServiceBus.EasyNetQRPC;
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
 using EasyNetQ;
 
@@ -22,19 +22,14 @@ namespace ApplicantService.Presentation.Web.RPCHandlers
             var _applicantProfileService = service.GetRequiredService<IApplicantProfileService>();
 
             ExecutionResult<ApplicantAndAddedDocumentTypesDTO> result = await _applicantProfileService.GetApplicantAndAddedDocumentTypesAsync(request.ApplicantId);
-            if (!result.IsSuccess) return new() { Errors = result.Errors };
-            ApplicantAndAddedDocumentTypesDTO applicant = result.Result!;
 
-            return new()
+            return ResponseHandler(result, applicant => new GetApplicantResponse()
             {
-                Result = new()
-                {
-                    Id = applicant.Id,
-                    FullName = applicant.FullName,
-                    Email = applicant.Email,
-                    AddedDocumentTypesId = applicant.AddedDocumentTypesId,
-                }
-            };
+                Id = applicant.Id,
+                FullName = applicant.FullName,
+                Email = applicant.Email,
+                AddedDocumentTypesId = applicant.AddedDocumentTypesId,
+            });
         }
     }
 }

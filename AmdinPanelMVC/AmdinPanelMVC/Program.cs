@@ -1,3 +1,5 @@
+using AmdinPanelMVC;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
@@ -6,6 +8,9 @@ if(builder.Environment.IsDevelopment())
 {
     //builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 }
+
+// Services
+builder.Services.AddServices();
 
 var app = builder.Build();
 

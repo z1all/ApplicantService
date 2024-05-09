@@ -138,6 +138,17 @@ namespace AdmissioningService.Core.Application.Services
             };
         }
 
+        public async Task<ExecutionResult<ManagerDTO>> GetManagerAsync(Guid managerId)
+        {
+            Manager? manager = await _managerRepository.GetByIdWithFacultyAndUserAsync(managerId);
+            if (manager is null)
+            {
+                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+            }
+
+            return new() { Result = manager.ToManagerDTO() };
+        }
+
         private async Task<ExecutionResult> CheckFacultyAsync(Guid facultyId)
         {
             bool existFaculty = await _facultyCacheRepository.AnyByIdAsync(facultyId);

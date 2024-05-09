@@ -3,7 +3,7 @@ using AdmissioningService.Core.Application.Interfaces.Services;
 using Common.Models.Enums;
 using Common.Models.Models;
 using Common.ServiceBus.NotificationSender;
-using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService;
+using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Notifications;
 using EasyNetQ;
 
 namespace AdmissioningService.Core.Application.Services
