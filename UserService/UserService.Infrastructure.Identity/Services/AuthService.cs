@@ -25,7 +25,7 @@ namespace UserService.Infrastructure.Identity.Services
             _serviceBusProvider = serviceBusProvider;
         }
 
-        public async Task<ExecutionResult<TokenResponse>> ApplicantRegistrationAsync(RegistrationDTO registrationDTO)
+        public async Task<ExecutionResult<TokensResponseDTO>> ApplicantRegistrationAsync(RegistrationDTO registrationDTO)
         {
             CustomUser user = new()
             {
@@ -35,15 +35,15 @@ namespace UserService.Infrastructure.Identity.Services
             };
 
             IdentityResult creationResult = await _userManager.CreateAsync(user, registrationDTO.Password);
-            if (!creationResult.Succeeded) return creationResult.ToExecutionResultError<TokenResponse>();
+            if (!creationResult.Succeeded) return creationResult.ToExecutionResultError<TokensResponseDTO>();
 
             IdentityResult addingRoleResult = await _userManager.AddToRoleAsync(user, Role.Applicant);
-            if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError<TokenResponse>();
+            if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError<TokensResponseDTO>();
 
-            ExecutionResult<TokenResponse> creatingTokenResult = await GetTokensAsync(user);
+            ExecutionResult<TokensResponseDTO> creatingTokenResult = await GetTokensAsync(user);
             if (!creatingTokenResult.IsSuccess) return creatingTokenResult;
 
-            ExecutionResult sendingResult = await _serviceBusProvider.Notification.CreatedApplicantAsync(new User()
+            ExecutionResult sendingResult = await _serviceBusProvider.Notification.CreatedApplicantAsync(new UserDTO()
             {
                 Id = Guid.Parse(user.Id),
                 FullName = user.FullName,
@@ -57,17 +57,17 @@ namespace UserService.Infrastructure.Identity.Services
             return creatingTokenResult;
         }
 
-        public async Task<ExecutionResult<TokenResponse>> ManagerLoginAsync(LoginDTO loginDTO)
+        public async Task<ExecutionResult<TokensResponseDTO>> ManagerLoginAsync(LoginDTO loginDTO)
         {
             return await LoginAsync(loginDTO, [Role.Manager, Role.MainManager]);
         }
 
-        public async Task<ExecutionResult<TokenResponse>> ApplicantLoginAsync(LoginDTO loginDTO)
+        public async Task<ExecutionResult<TokensResponseDTO>> ApplicantLoginAsync(LoginDTO loginDTO)
         {
             return await LoginAsync(loginDTO, [Role.Applicant]);
         }
 
-        private async Task<ExecutionResult<TokenResponse>> LoginAsync(LoginDTO loginDTO, string[] loginFor)
+        private async Task<ExecutionResult<TokensResponseDTO>> LoginAsync(LoginDTO loginDTO, string[] loginFor)
         {
             CustomUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
             if (user == null)
@@ -109,7 +109,7 @@ namespace UserService.Infrastructure.Identity.Services
             return new(true);
         }
 
-        public async Task<ExecutionResult<TokenResponse>> UpdateAccessTokenAsync(string refresh, Guid accessTokenJTI, Guid userId)
+        public async Task<ExecutionResult<TokensResponseDTO>> UpdateAccessTokenAsync(string refresh, Guid accessTokenJTI, Guid userId)
         {
             bool tokenExist = await _tokenDbService.TokensExist(refresh, accessTokenJTI);
             if (!tokenExist)
@@ -132,7 +132,7 @@ namespace UserService.Infrastructure.Identity.Services
             return await GetTokensAsync(user);
         }
 
-        private async Task<ExecutionResult<TokenResponse>> GetTokensAsync(CustomUser user)
+        private async Task<ExecutionResult<TokensResponseDTO>> GetTokensAsync(CustomUser user)
         {
             (string accessToken, Guid tokenJTI) = await _tokenHelperService.GenerateJWTTokenAsync(user);
             string refreshToken = _tokenHelperService.GenerateRefreshToken();
@@ -145,7 +145,7 @@ namespace UserService.Infrastructure.Identity.Services
 
             return new()
             {
-                Result = new TokenResponse()
+                Result = new TokensResponseDTO()
                 {
                     Access = accessToken,
                     Refresh = refreshToken,

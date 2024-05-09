@@ -24,11 +24,19 @@ namespace Common.API.Configurations
         public static AuthenticationBuilder AddJwtAuthentication(this IServiceCollection services)
         {
             services.ConfigureOptions<AuthorizationOptionsConfigure>();
-            services.ConfigureOptions<JwtBearerOptionsConfigure>();
-            services.ConfigureOptions<JwtOptionsConfigure>();
+            
+            services.AddJwtBearerOptions();
 
             return services.AddAuthentication()
                     .AddJwtBearer();
+        }
+
+        public static IServiceCollection AddJwtBearerOptions(this IServiceCollection services)
+        {
+            services.ConfigureOptions<JwtBearerOptionsConfigure>();
+            services.ConfigureOptions<JwtOptionsConfigure>();
+
+            return services;
         }
     }
 }

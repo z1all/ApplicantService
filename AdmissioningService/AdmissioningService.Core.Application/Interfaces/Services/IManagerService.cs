@@ -11,6 +11,7 @@ namespace AdmissioningService.Core.Application.Interfaces.Services
         Task<ExecutionResult> TakeApplicantAdmissionAsync(Guid admissionId, Guid managerId);
         Task<ExecutionResult> RefuseFromApplicantAdmissionAsync(Guid admissionId, Guid managerId);
         Task<ExecutionResult<List<ManagerDTO>>> GetManagersAsync();
+        Task<ExecutionResult<ManagerDTO>> GetManagerAsync(Guid managerId);
         Task<ExecutionResult> ChangeApplicantAdmissionStatusAsync(Guid admissionId, ManagerChangeAdmissionStatus changeAdmissionStatus, Guid managerId);
     }
 }
