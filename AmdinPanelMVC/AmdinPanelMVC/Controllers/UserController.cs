@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc;
 using AmdinPanelMVC.Models;
 using AmdinPanelMVC.Services.Interfaces;
 using AmdinPanelMVC.Helpers;
@@ -7,8 +9,6 @@ using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Mappers;
 using Common.Models.Models;
 using Common.API.Helpers;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AmdinPanelMVC.Controllers
 {
@@ -51,20 +51,20 @@ namespace AmdinPanelMVC.Controllers
             TokensResponseDTO loginResponse = response.Result!;
             HttpContext.Response.Cookies.SetTokens(loginResponse.JwtToken, loginResponse.RefreshToken);
 
-            return Redirect("User/Profile");
+            return Redirect("Profile");
         }
 
         [HttpGet]
         [RequiredAuthorize]
         public async Task<IActionResult> Profile()
         {
-            if(!HttpContext.TryGetUserId(out Guid managerId))
+            if (!HttpContext.TryGetUserId(out Guid managerId))
             {
                 return Redirect("/Error");
             }
 
             ExecutionResult<ManagerDTO> result = await _userService.GetManagerProfileAsync(managerId);
-            if(!result.IsSuccess)
+            if (!result.IsSuccess)
             {
                 return Redirect("/Error");
             }
@@ -136,8 +136,10 @@ namespace AmdinPanelMVC.Controllers
                     HttpContext.Response.Cookies.RemoveTokens();
                 }
             }
-            
-            return View("Login");
+
+            StringValues from = HttpContext.Request.Headers["Referer"];
+            return Redirect(from.IsNullOrEmpty() ? "/" : from);
         }
+
     }
 }
