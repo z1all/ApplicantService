@@ -10,6 +10,7 @@ namespace AmdinPanelMVC
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, RpcAuthService>();
+            services.AddScoped<IAdminService, ServiceBusAdminService>();
             services.AddEasyNetQ();
 
             services.AddJwtBearerOptions();

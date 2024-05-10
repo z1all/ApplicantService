@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 
 //document.getElementById("logoutButtonId").addEventListener('click', () => {
-//    event.preventDefault(); 
+//    event.preventDefault();
 
 //    var xhr = new XMLHttpRequest();
 //    xhr.open('POST', '/User/Logout', true);
@@ -14,3 +14,4 @@
 //    };
 //    xhr.send('fieldName=value&otherField=otherValue');
 //});
+
