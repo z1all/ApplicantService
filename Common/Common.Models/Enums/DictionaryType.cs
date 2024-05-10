@@ -21,6 +21,7 @@ namespace Common.Models.Enums
                 DictionaryType.EducationProgram => "Программы образования",
                 DictionaryType.EducationLevel => "Уровни образования",
                 DictionaryType.EducationDocumentType => "Типы документов об образовании",
+                _ => ((int)type).ToString(),
             };
         }
     }

@@ -1,1 +1,52 @@
-﻿<div>Managers</div>
+﻿@{
+    ViewData["Title"] = "Работа с менеджерами";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-12 col-lg-8">
+        <h2>Работа с менеджерами</h2>
+        <hr />
+
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-success">Создать менеджера</button>
+        </div>
+
+        <hr />
+
+        <div id="managersContainerId">
+            @await Component.InvokeAsync("ManagerList")
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Understood</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* 
+
+    Список менеджеров с факультетами
+
+    Удаление менеджера
+    Создание менеджера
+    Редактирование менеджера
+
+*@
+
+@section Scripts {
+    <script src="~/js/managers.js"></script>
+}

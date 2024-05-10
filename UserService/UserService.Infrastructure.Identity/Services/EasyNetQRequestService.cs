@@ -1,9 +1,9 @@
 ﻿using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
 using Common.Models.Models;
-using EasyNetQ;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService.Requests;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
+using EasyNetQ;
 
 namespace UserService.Infrastructure.Identity.Services
 {
@@ -27,7 +27,7 @@ namespace UserService.Infrastructure.Identity.Services
 
         public async Task<ExecutionResult> CreateManagerAsync(Manager manager)
         {
-            ExecutionResult result = await _bus.Rpc.RequestAsync<Common.ServiceBus.ServiceBusDTOs.FromUserService.Requests.CreateManagerRequest, ExecutionResult>(new()
+            ExecutionResult result = await _bus.Rpc.RequestAsync<CreateManagerRequest, ExecutionResult>(new()
             {
                 Id = manager.Id,
                 Email = manager.Email,

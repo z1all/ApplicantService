@@ -3,6 +3,7 @@ using AmdinPanelMVC.Services.Interfaces;
 using Common.Models.DTOs;
 using Common.Models.Enums;
 using Common.Models.Models;
+using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 using EasyNetQ;
@@ -30,6 +31,30 @@ namespace AmdinPanelMVC.Services
         public async Task UpdateDictionaryAsync(DictionaryType dictionaryType)
         {
             await _bus.PubSub.PublishAsync<UpdateDictionaryNotificationRequest>(new() { DictionaryType = dictionaryType });
+        }
+
+        public async Task<ExecutionResult<List<ManagerProfileDTO>>> GetManagersAsync()
+        {
+            ExecutionResult<GetManagersResponse> response
+               = await RequestHandlerAsync<ExecutionResult<GetManagersResponse>, GetManagersRequest>(
+                    new(), "GetUpdateStatusesFail");
+
+            return ResponseHandler(response, managers => managers.Managers);
+        }
+
+        public Task<ExecutionResult> ChangeManagerAsync(Guid managerId, ManagerDTO manager)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ExecutionResult> AddManagerAsync(ManagerDTO manager)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ExecutionResult> DeleteManagerAsync(Guid managerId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

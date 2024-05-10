@@ -9,5 +9,10 @@ namespace AmdinPanelMVC.Services.Interfaces
         Task UpdateAllDictionaryAsync();
         Task UpdateDictionaryAsync(DictionaryType dictionaryType);
         Task<ExecutionResult<List<UpdateStatusDTO>>> GetUpdateStatusesAsync();
+
+        Task<ExecutionResult<List<ManagerProfileDTO>>> GetManagersAsync();
+        Task<ExecutionResult> ChangeManagerAsync(Guid managerId, ManagerDTO manager);
+        Task<ExecutionResult> AddManagerAsync(ManagerDTO manager);
+        Task<ExecutionResult> DeleteManagerAsync(Guid managerId);
     }
 }

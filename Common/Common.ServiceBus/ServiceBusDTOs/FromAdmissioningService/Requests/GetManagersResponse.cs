@@ -2,8 +2,8 @@
 
 namespace Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests
 {
-    public class GetManagerProfileResponse
+    public class GetManagersResponse
     {
-        public required ManagerProfileDTO Manager { get; set; }
+        public required List<ManagerProfileDTO> Managers { get; set; }
     }
 }

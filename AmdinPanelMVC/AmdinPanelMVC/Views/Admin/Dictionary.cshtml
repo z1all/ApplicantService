@@ -1,6 +1,9 @@
 ﻿@using Common.Models.Enums;
-
 @model AmdinPanelMVC.Models.UpdateDictionaryViewModel;
+
+@{
+    ViewData["Title"] = "Обновление справочник";
+}
 
 <div class="row justify-content-center">
     <div class="col-md-10 col-lg-8">
@@ -31,7 +34,9 @@
             @await Component.InvokeAsync("DictionaryUpdateStatus")
         </div>
 
-        <button id="updateButtonId">Обновить компонент</button>
+        <div class="d-flex justify-content-end">
+            <button id="updateButtonId" class="btn btn-primary">Обновить</button>
+        </div>
     </div>
 </div>
 

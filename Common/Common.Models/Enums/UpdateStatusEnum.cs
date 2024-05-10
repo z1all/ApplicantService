@@ -25,6 +25,7 @@ namespace Common.Models.Enums
                 UpdateStatusEnum.ErrorInUpdating => "Ошибка при обновлении",
                 UpdateStatusEnum.Updated => "Обновлен",
                 UpdateStatusEnum.Wait => "Ожидание",
+                _ => ((int)status).ToString(),
             };
         }
     }
