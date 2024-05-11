@@ -28,6 +28,12 @@ namespace UserService.Presentation.Web.RPCHandlers
 
             _bus.Rpc.Respond<ChangeEmailRequest, ExecutionResult>(async (request) =>
               await ExceptionHandlerAsync(async (service) => await ChangeEmailAsync(service, request)));
+
+            _bus.Rpc.Respond<CreateNewManagerRequest, ExecutionResult>(async (request) =>
+             await ExceptionHandlerAsync(async (service) => await CreateManagerAsync(service, request)));
+
+            _bus.Rpc.Respond<DeleteManagerRequest, ExecutionResult>(async (request) =>
+              await ExceptionHandlerAsync(async (service) => await DeleteManagerAsync(service, request)));
         }
 
         private async Task<ExecutionResult<TokensResponse>> ManagerLoginAsync(IServiceProvider service, ManagerLoginRequest request)
@@ -68,6 +74,26 @@ namespace UserService.Presentation.Web.RPCHandlers
             var _profileService = service.GetRequiredService<IProfileService>();
 
             return await _profileService.ChangeEmailAsync(new() { NewEmail = request.NewEmail }, request.ManagerId);
+        }
+
+        private async Task<ExecutionResult> CreateManagerAsync(IServiceProvider service, CreateNewManagerRequest request)
+        {
+            var _profileService = service.GetRequiredService<IProfileService>();
+
+            return await _profileService.CreateManagerAsync(new ()
+            {
+                Email = request.Manager.Email,
+                FullName = request.Manager.FullName,
+                Password = request.Password,
+                FacultyId = request.Manager.FacultyId,
+            });
+        }
+
+        private async Task<ExecutionResult> DeleteManagerAsync(IServiceProvider service, DeleteManagerRequest request)
+        {
+            var _profileService = service.GetRequiredService<IProfileService>();
+
+            return await _profileService.DeleteManagerAsync(request.ManagerId);
         }
     }
 }

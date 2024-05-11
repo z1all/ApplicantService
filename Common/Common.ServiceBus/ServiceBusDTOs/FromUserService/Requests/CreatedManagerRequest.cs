@@ -2,7 +2,7 @@
 
 namespace Common.ServiceBus.ServiceBusDTOs.FromUserService.Requests
 {
-    public class CreateManagerRequest : BaseUser
+    public class CreatedManagerRequest : BaseUser
     {
         public Guid? FacultyId { get; init; } = null;
     }

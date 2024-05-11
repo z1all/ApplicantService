@@ -12,7 +12,7 @@ namespace AmdinPanelMVC.Services.Interfaces
 
         Task<ExecutionResult<List<ManagerProfileDTO>>> GetManagersAsync();
         Task<ExecutionResult> ChangeManagerAsync(Guid managerId, ManagerDTO manager);
-        Task<ExecutionResult> AddManagerAsync(ManagerDTO manager);
+        Task<ExecutionResult> AddManagerAsync(ManagerDTO manager, string password);
         Task<ExecutionResult> DeleteManagerAsync(Guid managerId);
     }
 }

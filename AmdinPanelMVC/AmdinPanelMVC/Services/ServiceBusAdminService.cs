@@ -6,6 +6,7 @@ using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
+using Common.ServiceBus.ServiceBusDTOs.FromUserService.Requests;
 using EasyNetQ;
 
 namespace AmdinPanelMVC.Services
@@ -47,14 +48,16 @@ namespace AmdinPanelMVC.Services
             throw new NotImplementedException();
         }
 
-        public Task<ExecutionResult> AddManagerAsync(ManagerDTO manager)
+        public async Task<ExecutionResult> AddManagerAsync(ManagerDTO manager, string password)
         {
-            throw new NotImplementedException();
+            return await _bus.Rpc.RequestAsync<CreateNewManagerRequest, ExecutionResult>(
+                new() { Manager = manager, Password = password });
         }
 
-        public Task<ExecutionResult> DeleteManagerAsync(Guid managerId)
+        public async Task<ExecutionResult> DeleteManagerAsync(Guid managerId)
         {
-            throw new NotImplementedException();
+            return await _bus.Rpc.RequestAsync<DeleteManagerRequest, ExecutionResult>(
+                new() { ManagerId = managerId });
         }
     }
 }

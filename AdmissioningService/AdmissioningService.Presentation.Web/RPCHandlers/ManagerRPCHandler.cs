@@ -14,10 +14,10 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
 
         public override void CreateRequestListeners()
         {
-            _bus.Rpc.Respond<CreateManagerRequest, ExecutionResult>(async (request) =>
+            _bus.Rpc.Respond<CreatedManagerRequest, ExecutionResult>(async (request) =>
                 await ExceptionHandlerAsync(async (service) => await CreateManagerAsync(service, request)));
 
-            _bus.Rpc.Respond<DeleteManagerRequest, ExecutionResult>(async (request) =>
+            _bus.Rpc.Respond<DeletedManagerRequest, ExecutionResult>(async (request) =>
                 await ExceptionHandlerAsync(async (service) => await DeleteManagerAsync(service, request)));
             
             _bus.Rpc.Respond<GetManagerProfileRequest, ExecutionResult<GetManagerProfileResponse>>(async (request) =>
@@ -27,7 +27,7 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
                 await ExceptionHandlerAsync(async (service) => await GetManagersAsync(service)));
         }
 
-        private async Task<ExecutionResult> CreateManagerAsync(IServiceProvider service, CreateManagerRequest request)
+        private async Task<ExecutionResult> CreateManagerAsync(IServiceProvider service, CreatedManagerRequest request)
         {
             var managerService = service.GetRequiredService<IManagerService>();
 
@@ -39,7 +39,7 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
             });
         }
 
-        private async Task<ExecutionResult> DeleteManagerAsync(IServiceProvider service, DeleteManagerRequest request)
+        private async Task<ExecutionResult> DeleteManagerAsync(IServiceProvider service, DeletedManagerRequest request)
         {
             var managerService = service.GetRequiredService<IManagerService>();
 

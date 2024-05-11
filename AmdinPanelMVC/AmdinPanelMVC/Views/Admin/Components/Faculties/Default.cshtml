@@ -1,0 +1,6 @@
+﻿@model IEnumerable<Common.Models.DTOs.FacultyDTO>
+
+@foreach(var faculty in Model)
+{
+    <option value="@faculty.Id">@faculty.Name</option>
+}

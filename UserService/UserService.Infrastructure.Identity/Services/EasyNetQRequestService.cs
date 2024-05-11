@@ -27,7 +27,7 @@ namespace UserService.Infrastructure.Identity.Services
 
         public async Task<ExecutionResult> CreateManagerAsync(Manager manager)
         {
-            ExecutionResult result = await _bus.Rpc.RequestAsync<CreateManagerRequest, ExecutionResult>(new()
+            ExecutionResult result = await _bus.Rpc.RequestAsync<CreatedManagerRequest, ExecutionResult>(new()
             {
                 Id = manager.Id,
                 Email = manager.Email,
@@ -48,7 +48,7 @@ namespace UserService.Infrastructure.Identity.Services
 
         public async Task<ExecutionResult> DeleteManagerAsync(Guid managerId)
         {
-            ExecutionResult result = await _bus.Rpc.RequestAsync<DeleteManagerRequest, ExecutionResult>(new() { ManagerId = managerId });
+            ExecutionResult result = await _bus.Rpc.RequestAsync<DeletedManagerRequest, ExecutionResult>(new() { ManagerId = managerId });
 
             return result;
         }
