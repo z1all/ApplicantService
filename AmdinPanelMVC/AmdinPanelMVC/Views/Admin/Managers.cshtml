@@ -41,14 +41,14 @@
                     </div>
                     <div id="passwordContainerId" class="form-group mb-3" >
                         <label asp-for="Password" class="col-form-label">Пароль</label>
-                        <input asp-for="Password" id="passwordId" type="password" class="form-control" required>
+                        <input asp-for="Password" id="passwordId" type="text" class="form-control" required>
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label asp-for="FacultyId" class="col-form-label">Факультет</label>
                         <select asp-for="FacultyId" id="facultyId" class="form-control">
                             <option value="">Нет</option>
-                            @await Component.InvokeAsync("Faculties");
+                            @await Component.InvokeAsync("Faculties", Model?.FacultyId);
                         </select>
                         <span asp-validation-for="FacultyId" class="text-danger"></span>
                     </div>
@@ -72,20 +72,20 @@
     </div>
 </div>
 
-
-
 @* 
 
     +++ Список менеджеров с факультетами
     +++Создание менеджера
+    +++ Удаление менеджера
 
-    Удаление менеджера
     Редактирование менеджера
 
 *@
 
 @section Scripts {
+
     <script src="~/js/managers.js"></script>
+
     @if (!ViewData.ModelState.IsValid)
     {
         @if (Model.Id is null)
@@ -104,4 +104,5 @@
 
         </script>
     }
+
 }

@@ -8,7 +8,28 @@ function execute() {
             let store = this.parentNode.firstElementChild;
             let managerId = store.getAttribute("user-id");
 
-            updateManagerList();
+            const deleteManager = (data) => {
+                if (data.status === 200) {
+                    showSuccessToast(
+                        "Удаление менджера",
+                        "Менеджер успешно удален"
+                    );
+
+                    updateManagerList();
+                }
+                else {
+                    showErrorToast(
+                        "Удаление менджера",
+                        "Ошибка при удалении менеджера"
+                    );
+                }
+            }
+
+            const manager = {
+                managerId
+            }
+
+            request("/Admin/DeleteManager", "DELETE", deleteManager, manager);            
         });
     });
 
@@ -53,18 +74,19 @@ function cleanErrors() {
 
 function viewChangeForm(store) {
     $('#passwordContainerId').attr("hidden", true);
+    $('#passwordId').attr("type", "text");
     $('#createManagerButtonFormId').attr("hidden", true);
     $('#changeManagerButtonFormId').removeAttr("hidden");
 }
 
 function viewCreateForm() {
+    $('#passwordId').attr("type", "password");
     $('#passwordContainerId').removeAttr("hidden");
     $('#createManagerButtonFormId').removeAttr("hidden");
     $('#changeManagerButtonFormId').attr("hidden", true);
 }
 
 function updateManagerList() {
-
     fetch('/Admin/ManagerList')
         .then(response => response.text())
         .then(html => {
@@ -73,45 +95,3 @@ function updateManagerList() {
             execute();
         });
 }
-
-/*
-
-    document.getElementById("updateButtonId").addEventListener("click", function () {
-        fetch('/Admin/DictionaryUpdateStatus')
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById("dictionaryUpdateStatusContainer").innerHTML = html;
-            });
-    });
-
-    let buttons = document.querySelectorAll('.delete-user');
-    buttons.forEach(function (button) {
-        button.addEventListener('click', function () {
-            let store = this.parentNode.firstElementChild;
-            let managerId = store.getAttribute("user-id");
-            console.log(managerId);
-
-            fetch('/Admin/ManagerList')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById("managersContainerId").innerHTML = html;
-
-                    const scripts = document.getElementById('managersContainerId').getElementsByTagName('script');
-
-                    console.log(scripts)
-
-                    for (let i = 0; i < scripts.length; i++) {
-                        const script = scripts[i];
-                        if (script.src) {
-                            const newScript = document.createElement('script');
-                            newScript.src = script.src;
-                            document.head.appendChild(newScript);
-                        } else {
-                            eval(script.innerHTML);
-                        }
-                    }
-                });
-        });
-    });
-
-*/

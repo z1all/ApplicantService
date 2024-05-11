@@ -11,6 +11,8 @@ namespace AdmissioningService.Core.Application.Interfaces.Repositories
         [Obsolete("Don't use this repository, use IApplicantAdmissionStateMachin")]
         new Task UpdateAsync(ApplicantAdmission entity);
         [Obsolete("Don't use this repository, use IApplicantAdmissionStateMachin")]
+        Task UpdateRangeAsync(List<ApplicantAdmission> entities);
+        [Obsolete("Don't use this repository, use IApplicantAdmissionStateMachin")]
         new Task DeleteAsync(ApplicantAdmission entity);
         [Obsolete("Don't use this repository, use IApplicantAdmissionStateMachin")]
         new Task SaveChangesAsync();
@@ -21,5 +23,6 @@ namespace AdmissioningService.Core.Application.Interfaces.Repositories
         Task<ApplicantAdmission?> GetByApplicantIdAndAdmissionIdAsync(Guid applicantId, Guid admissionId);
         Task<int> CountAllAsync(ApplicantAdmissionFilterDTO admissionFilter, Guid managerId);
         Task<List<ApplicantAdmission>> GetAllByFiltersWithCompanyAndProgramsAsync(ApplicantAdmissionFilterDTO admissionFilter, Guid managerId);
+        Task<List<ApplicantAdmission>> GetAllByManagerIdAsync(Guid managerId);
     }
 }

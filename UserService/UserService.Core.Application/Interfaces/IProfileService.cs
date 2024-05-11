@@ -10,6 +10,7 @@ namespace UserService.Core.Application.Interfaces
         Task<ExecutionResult> ChangeProfileAsync(ChangeProfileRequestDTO changeProfile, Guid userId, Guid? managerId = null);
         Task<ExecutionResult> CreateAdminAsync(CreateAdminRequestDTO createAdmin);
         Task<ExecutionResult> CreateManagerAsync(CreateManagerRequestDTO createManager);
+        Task<ExecutionResult> ChangeManagerAsync(Manager manager);
         Task<ExecutionResult> DeleteManagerAsync(Guid managerId);
     }
 }

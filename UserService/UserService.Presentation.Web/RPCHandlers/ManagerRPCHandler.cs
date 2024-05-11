@@ -34,6 +34,9 @@ namespace UserService.Presentation.Web.RPCHandlers
 
             _bus.Rpc.Respond<DeleteManagerRequest, ExecutionResult>(async (request) =>
               await ExceptionHandlerAsync(async (service) => await DeleteManagerAsync(service, request)));
+            
+            _bus.Rpc.Respond<ChangeManagerRequest, ExecutionResult>(async (request) =>
+              await ExceptionHandlerAsync(async (service) => await ChangeManagerAsync(service, request)));
         }
 
         private async Task<ExecutionResult<TokensResponse>> ManagerLoginAsync(IServiceProvider service, ManagerLoginRequest request)
@@ -94,6 +97,19 @@ namespace UserService.Presentation.Web.RPCHandlers
             var _profileService = service.GetRequiredService<IProfileService>();
 
             return await _profileService.DeleteManagerAsync(request.ManagerId);
+        }
+
+        private async Task<ExecutionResult> ChangeManagerAsync(IServiceProvider service, ChangeManagerRequest request)
+        {
+            var _profileService = service.GetRequiredService<IProfileService>();
+
+            return await _profileService.ChangeManagerAsync(new()
+            {
+                Id = request.ManagerId,
+                FullName = request.Manager.FullName,
+                Email = request.Manager.Email,
+                FacultyId = request.Manager.FacultyId,
+            });
         }
     }
 }

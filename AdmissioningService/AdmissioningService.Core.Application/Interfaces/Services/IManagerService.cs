@@ -7,6 +7,7 @@ namespace AdmissioningService.Core.Application.Interfaces.Services
     public interface IManagerService
     {
         Task<ExecutionResult> CreateManagerAsync(Guid managerId, ManagerDTO createManager);
+        Task<ExecutionResult> ChangeManagerAsync(Guid managerId, ManagerDTO changeManager);
         Task<ExecutionResult> DeleteManagerAsync(Guid managerId);
         Task<ExecutionResult> TakeApplicantAdmissionAsync(Guid admissionId, Guid managerId);
         Task<ExecutionResult> RefuseFromApplicantAdmissionAsync(Guid admissionId, Guid managerId);

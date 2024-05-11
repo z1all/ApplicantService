@@ -1,4 +1,5 @@
-﻿@model AmdinPanelMVC.Models.ProfileViewModel
+﻿@using Common.Models.Enums;
+@model AmdinPanelMVC.Models.ProfileViewModel
 
 @{
     ViewData["Title"] = "Профиль";
@@ -52,6 +53,21 @@
             </div>
         </form>
 
+        @{
+
+            List<string> roles = [Role.Admin, Role.MainManager, Role.Manager];
+            string? role = roles.FirstOrDefault(role => User.IsInRole(role));
+            
+            @if(role is not null)
+            {
+                <div class="form-group mb-3">
+                    <label class="col-form-label">Роль</label>
+                    <input value="@role.ToRu()" type="text" class="form-control" disabled>
+                </div> 
+            }
+
+        }
+ 
         @if (Model.Faculty is not null)
         {
             <div class="form-group mb-3">
@@ -59,6 +75,7 @@
                 <input asp-for="Faculty!.Name" type="text" class="form-control" disabled>
             </div>
         }
+
     </div>
 </div>
 

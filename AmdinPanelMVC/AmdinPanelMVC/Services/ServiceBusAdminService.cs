@@ -43,21 +43,22 @@ namespace AmdinPanelMVC.Services
             return ResponseHandler(response, managers => managers.Managers);
         }
 
-        public Task<ExecutionResult> ChangeManagerAsync(Guid managerId, ManagerDTO manager)
+        public async Task<ExecutionResult> ChangeManagerAsync(Guid managerId, ManagerDTO manager)
         {
-            throw new NotImplementedException();
+            return await RequestHandlerAsync<ExecutionResult, ChangeManagerRequest>(
+                    new() { ManagerId = managerId, Manager = manager }, "ChangeManagerFail");
         }
 
         public async Task<ExecutionResult> AddManagerAsync(ManagerDTO manager, string password)
         {
-            return await _bus.Rpc.RequestAsync<CreateNewManagerRequest, ExecutionResult>(
-                new() { Manager = manager, Password = password });
+            return await RequestHandlerAsync<ExecutionResult, CreateNewManagerRequest>(
+                    new() { Manager = manager, Password = password }, "CreateNewManagerFail");
         }
 
         public async Task<ExecutionResult> DeleteManagerAsync(Guid managerId)
         {
-            return await _bus.Rpc.RequestAsync<DeleteManagerRequest, ExecutionResult>(
-                new() { ManagerId = managerId });
+            return await RequestHandlerAsync<ExecutionResult, DeleteManagerRequest>(
+                    new() { ManagerId = managerId }, "DeleteManagerFail");
         }
     }
 }

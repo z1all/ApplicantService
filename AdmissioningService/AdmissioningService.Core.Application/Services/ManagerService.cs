@@ -1,5 +1,4 @@
-﻿using AdmissioningService.Core.Application.DTOs;
-using AdmissioningService.Core.Application.Interfaces.Repositories;
+﻿using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Application.Interfaces.StateMachines;
 using AdmissioningService.Core.Application.Mappers;
@@ -62,6 +61,29 @@ namespace AdmissioningService.Core.Application.Services
             return new(isSuccess: true);
         }
 
+        public async Task<ExecutionResult> ChangeManagerAsync(Guid managerId, ManagerDTO changeManager)
+        {
+            if (changeManager.FacultyId is not null)
+            {
+                ExecutionResult result = await CheckFacultyAsync((Guid)changeManager.FacultyId);
+                if (!result.IsSuccess) return result;
+            }
+
+            Manager? manager = await _managerRepository.GetByIdWithUserAsync(managerId);
+            if (manager is null)
+            {
+                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+            }
+
+            manager.FacultyId = changeManager.FacultyId;
+            manager.User!.FullName = changeManager.FullName;
+            manager.User.Email = changeManager.Email;
+
+            await _managerRepository.UpdateAsync(manager);
+
+            return new(isSuccess: true);
+        }
+
         public async Task<ExecutionResult> DeleteManagerAsync(Guid managerId)
         {
             UserCache? user = await _userCacheRepository.GetByIdAsync(managerId);
@@ -69,6 +91,9 @@ namespace AdmissioningService.Core.Application.Services
             {
                 return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
             }
+
+            List<ApplicantAdmission> managerAdmissions = await _applicantAdmissionRepository.GetAllByManagerIdAsync(managerId);
+            await _applicantAdmissionStateMachin.DeleteManagerRangeAsync(managerAdmissions);
 
             await _userCacheRepository.DeleteAsync(user);
 

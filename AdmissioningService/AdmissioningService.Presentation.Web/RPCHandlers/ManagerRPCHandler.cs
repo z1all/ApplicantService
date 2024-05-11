@@ -17,6 +17,9 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
             _bus.Rpc.Respond<CreatedManagerRequest, ExecutionResult>(async (request) =>
                 await ExceptionHandlerAsync(async (service) => await CreateManagerAsync(service, request)));
 
+            _bus.Rpc.Respond<ChangedManagerRequest, ExecutionResult>(async (request) =>
+                await ExceptionHandlerAsync(async (service) => await ChangeManagerAsync(service, request)));
+
             _bus.Rpc.Respond<DeletedManagerRequest, ExecutionResult>(async (request) =>
                 await ExceptionHandlerAsync(async (service) => await DeleteManagerAsync(service, request)));
             
@@ -31,12 +34,14 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
         {
             var managerService = service.GetRequiredService<IManagerService>();
 
-            return await managerService.CreateManagerAsync(request.Id, new()
-            {
-                FullName = request.FullName,
-                Email = request.Email,
-                FacultyId = request.FacultyId,
-            });
+            return await managerService.CreateManagerAsync(request.ManagerId, request.Manager);
+        }
+
+        private async Task<ExecutionResult> ChangeManagerAsync(IServiceProvider service, ChangedManagerRequest request)
+        {
+            var managerService = service.GetRequiredService<IManagerService>();
+
+            return await managerService.ChangeManagerAsync(request.ManagerId, request.Manager);
         }
 
         private async Task<ExecutionResult> DeleteManagerAsync(IServiceProvider service, DeletedManagerRequest request)

@@ -14,9 +14,11 @@ namespace AmdinPanelMVC.ViewComponents
             _dictionaryService = dictionaryService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(Guid? selectedFacultyId)
         {
             ExecutionResult<List<FacultyDTO>> faculties = await _dictionaryService.GetFacultiesAsync();
+
+            ViewBag.SelectedFacultyId = selectedFacultyId;
 
             return View("Default", faculties.Result ?? new List<FacultyDTO>());
         }

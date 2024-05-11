@@ -45,10 +45,23 @@
             </div>
         </nav>
     </header>
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 100">
+            <div class="toast opacity-100" id="toastId" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                <div class="toast-header">
+                    <strong class="me-auto text-white" id="toastTitleId">Заголовок</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="toastTextId">
+                    Текст уведомления.
+                </div>
+            </div>
+        </div>
+        
     </div>
 
     <footer class="border-top footer text-muted">

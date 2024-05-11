@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using AmdinPanelMVC.Filters;
 using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Services.Interfaces;
 using AmdinPanelMVC.Models;
 using Common.Models.Models;
-using System.Text;
 
 namespace AmdinPanelMVC.Controllers
 {
@@ -93,9 +93,51 @@ namespace AmdinPanelMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult ChangeManager(CreateManagerViewModel manager)
+        public async Task<IActionResult> ChangeManager(CreateManagerViewModel manager)
         {
-            return Redirect("Managers");
+            if(manager.Id is null)
+            {
+                ModelState.AddModelError("", "Id пользователя не найден");
+                return View("Managers", manager);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("Managers", manager);
+            }
+
+            ExecutionResult result = await _adminService.ChangeManagerAsync((Guid)manager.Id, new()
+            {
+                Email = manager.Email,
+                FullName = manager.FullName,
+                FacultyId = manager.FacultyId
+            });
+
+            if (!result.IsSuccess)
+            {
+                ErrorsToModalState(result);
+
+                return View("Managers", manager);
+            }
+
+            return View("Managers", manager);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteManager([FromBody] DeleteManagerDTO manager)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            ExecutionResult result = await _adminService.DeleteManagerAsync(manager.ManagerId);
+            if(!result.IsSuccess)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
 
         #endregion
@@ -108,20 +150,19 @@ namespace AmdinPanelMVC.Controllers
                 {
                     ErrorsToModalState("Password", error.Value);
                 }
-                else if(error.Key.Contains("Email"))
+                else if(error.Key.Contains("Email") || error.Key.Contains("UserName"))
                 {
                     ErrorsToModalState("Email", error.Value);
                 }
                 else if (error.Key.Contains("Faculty"))
                 {
-                    ErrorsToModalState("FacultyId", error.Value);
+                    ErrorsToModalState("FacultyId", ["Такого факультета не существует"]);
                 }
                 else
                 {
                     ErrorsToModalState("", error.Value);
                 }
             }
-
         }
 
         private void ErrorsToModalState(string key, List<string> errors)

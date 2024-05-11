@@ -2,5 +2,7 @@
 
 @foreach(var faculty in Model)
 {
-    <option value="@faculty.Id">@faculty.Name</option>
+    bool selected = ViewBag.SelectedFacultyId == faculty.Id;
+
+    <option value="@faculty.Id" selected="@selected">@faculty.Name</option>
 }

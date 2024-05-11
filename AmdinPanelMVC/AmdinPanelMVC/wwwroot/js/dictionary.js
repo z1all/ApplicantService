@@ -9,26 +9,37 @@ document.getElementById("updateButtonId").addEventListener("click", function () 
 
 document.getElementById("updateDictionaryButtonId").addEventListener("click", function (e) {
     e.preventDefault();
-    
+
     const form = document.getElementById('fromDictionaryTypeId');
 
-    let params = {
-        method: 'POST',
-        headers: {
-            'accept': 'text/plain',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(Object.fromEntries(new FormData(form)))
+    const updateDictionary = (data) => {
+        if (data.status !== 200) {
+            showErrorToast(
+                "Обновление справочников",
+                "Ошибка при отправке запроса на обновление справочника(-ов)"
+            );
+        }
     }
 
-    fetch('/Admin/UpdateDictionary', params)
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            }
-            else {
-                return response.text();
-            }
-        })
-        .then();
+    request('/Admin/UpdateDictionary', 'POST', updateDictionary, Object.fromEntries(new FormData(form)))
+
+    //let params = {
+    //    method: 'POST',
+    //    headers: {
+    //        'accept': 'text/plain',
+    //        'Content-Type': 'application/json'
+    //    },
+    //    body: JSON.stringify(Object.fromEntries(new FormData(form)))
+    //}
+
+    //fetch('/Admin/UpdateDictionary', params)
+    //    .then(response => {
+    //        if (response.redirected) {
+    //            window.location.href = response.url;
+    //        }
+    //        else {
+    //            return response.text();
+    //        }
+    //    })
+    //    .then();
 });
