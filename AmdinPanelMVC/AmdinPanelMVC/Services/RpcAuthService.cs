@@ -2,6 +2,7 @@
 using AmdinPanelMVC.Mappers;
 using AmdinPanelMVC.Services.Base;
 using AmdinPanelMVC.Services.Interfaces;
+using Common.Models.DTOs;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService.Requests;
@@ -13,13 +14,13 @@ namespace AmdinPanelMVC.Services
     {
         public RpcAuthService(IBus bus) : base(bus) { }
 
-        public async Task<ExecutionResult<ManagerDTO>> GetManagerProfileAsync(Guid managerId)
+        public async Task<ExecutionResult<ManagerProfileDTO>> GetManagerProfileAsync(Guid managerId)
         {
             ExecutionResult<GetManagerProfileResponse> response 
                 = await RequestHandlerAsync<ExecutionResult<GetManagerProfileResponse>, GetManagerProfileRequest>(
                      new() { ManagerId = managerId }, "GetManagerRequestFail");
 
-            return ResponseHandler(response, manager => manager.ToManagerDTO());
+            return ResponseHandler(response, manager => manager.Manager);
         }
 
         public async Task<ExecutionResult> ChangeFullNameAsync(Guid managerId, string newFullName)

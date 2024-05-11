@@ -10,4 +10,20 @@ namespace Common.Models.Enums
         EducationLevel = 3,
         EducationDocumentType = 4,
     }
+
+    public static class DictionaryTypeExtension
+    {
+        public static string ToRu(this DictionaryType type)
+        {
+            return type switch
+            {
+                DictionaryType.Faculty => "Факультеты",
+                DictionaryType.EducationProgram => "Программы образования",
+                DictionaryType.EducationLevel => "Уровни образования",
+                DictionaryType.EducationDocumentType => "Типы документов об образовании",
+                _ => ((int)type).ToString(),
+            };
+        }
+    }
+
 }

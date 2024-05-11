@@ -89,5 +89,18 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
                     (filter.ViewApplicantMode == ViewApplicantMode.OnlyTakenApplicant ? admission.ManagerId == managerId : true) &&
                     (filter.ViewApplicantMode == ViewApplicantMode.OnlyWithoutManager ? admission.ManagerId == null : true));
         }
+
+        public async Task UpdateRangeAsync(List<ApplicantAdmission> entities)
+        {
+            _dbContext.ApplicantAdmissions.UpdateRange(entities);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ApplicantAdmission>> GetAllByManagerIdAsync(Guid managerId)
+        {
+            return await _dbContext.ApplicantAdmissions
+                .Where(admission => admission.ManagerId == managerId)
+                .ToListAsync();
+        }
     }
 }

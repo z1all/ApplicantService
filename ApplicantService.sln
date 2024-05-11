@@ -86,7 +86,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissioningService.Present
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdminPanelMVC", "AdminPanelMVC", "{31EDCD4F-CA97-4B2D-905F-193A3C42E881}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmdinPanelMVC", "AmdinPanelMVC\AmdinPanelMVC\AmdinPanelMVC.csproj", "{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmdinPanelMVC", "AmdinPanelMVC\AmdinPanelMVC\AmdinPanelMVC.csproj", "{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

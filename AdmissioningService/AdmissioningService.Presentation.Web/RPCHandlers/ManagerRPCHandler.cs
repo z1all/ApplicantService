@@ -1,6 +1,5 @@
-﻿using AdmissioningService.Core.Application.DTOs;
-using AdmissioningService.Core.Application.Interfaces.Services;
-using AdmissioningService.Presentation.Web.RPCHandlers.Mappers;
+﻿using AdmissioningService.Core.Application.Interfaces.Services;
+using Common.Models.DTOs;
 using Common.Models.Models;
 using Common.ServiceBus.EasyNetQRPC;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
@@ -15,30 +14,37 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
 
         public override void CreateRequestListeners()
         {
-            _bus.Rpc.Respond<CreateManagerRequest, ExecutionResult>(async (request) =>
+            _bus.Rpc.Respond<CreatedManagerRequest, ExecutionResult>(async (request) =>
                 await ExceptionHandlerAsync(async (service) => await CreateManagerAsync(service, request)));
 
-            _bus.Rpc.Respond<DeleteManagerRequest, ExecutionResult>(async (request) =>
+            _bus.Rpc.Respond<ChangedManagerRequest, ExecutionResult>(async (request) =>
+                await ExceptionHandlerAsync(async (service) => await ChangeManagerAsync(service, request)));
+
+            _bus.Rpc.Respond<DeletedManagerRequest, ExecutionResult>(async (request) =>
                 await ExceptionHandlerAsync(async (service) => await DeleteManagerAsync(service, request)));
             
             _bus.Rpc.Respond<GetManagerProfileRequest, ExecutionResult<GetManagerProfileResponse>>(async (request) =>
                 await ExceptionHandlerAsync(async (service) => await GetManagerProfileAsync(service, request)));
+
+            _bus.Rpc.Respond<GetManagersRequest, ExecutionResult<GetManagersResponse>>(async (_) =>
+                await ExceptionHandlerAsync(async (service) => await GetManagersAsync(service)));
         }
 
-        private async Task<ExecutionResult> CreateManagerAsync(IServiceProvider service, CreateManagerRequest request)
+        private async Task<ExecutionResult> CreateManagerAsync(IServiceProvider service, CreatedManagerRequest request)
         {
             var managerService = service.GetRequiredService<IManagerService>();
 
-            return await managerService.CreateManagerAsync(new()
-            {
-                Id = request.Id,
-                FullName = request.FullName,
-                Email = request.Email,
-                FacultyId = request.FacultyId,
-            });
+            return await managerService.CreateManagerAsync(request.ManagerId, request.Manager);
         }
 
-        private async Task<ExecutionResult> DeleteManagerAsync(IServiceProvider service, DeleteManagerRequest request)
+        private async Task<ExecutionResult> ChangeManagerAsync(IServiceProvider service, ChangedManagerRequest request)
+        {
+            var managerService = service.GetRequiredService<IManagerService>();
+
+            return await managerService.ChangeManagerAsync(request.ManagerId, request.Manager);
+        }
+
+        private async Task<ExecutionResult> DeleteManagerAsync(IServiceProvider service, DeletedManagerRequest request)
         {
             var managerService = service.GetRequiredService<IManagerService>();
 
@@ -49,9 +55,18 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
         {
             var managerService = service.GetRequiredService<IManagerService>();
 
-            ExecutionResult<ManagerDTO> response = await managerService.GetManagerAsync(request.ManagerId);
+            ExecutionResult<ManagerProfileDTO> response = await managerService.GetManagerAsync(request.ManagerId);
 
-            return ResponseHandler(response, manager => manager.ToGetManagerProfileResponse());
+            return ResponseHandler(response, manager => new GetManagerProfileResponse() { Manager = manager });
+        }
+
+        private async Task<ExecutionResult<GetManagersResponse>> GetManagersAsync(IServiceProvider service)
+        {
+            var managerService = service.GetRequiredService<IManagerService>();
+
+            ExecutionResult<List<ManagerProfileDTO>> response = await managerService.GetManagersAsync();
+
+            return ResponseHandler(response, managers => new GetManagersResponse() { Managers = managers });
         }
     }
 }

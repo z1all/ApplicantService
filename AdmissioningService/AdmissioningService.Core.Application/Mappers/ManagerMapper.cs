@@ -1,11 +1,11 @@
-﻿using AdmissioningService.Core.Application.DTOs;
-using AdmissioningService.Core.Domain;
+﻿using AdmissioningService.Core.Domain;
+using Common.Models.DTOs;
 
 namespace AdmissioningService.Core.Application.Mappers
 {
     public static class ManagerMapper
     {
-        public static ManagerDTO ToManagerDTO(this Manager manager)
+        public static ManagerProfileDTO ToManagerDTO(this Manager manager)
         {
             return new()
             {

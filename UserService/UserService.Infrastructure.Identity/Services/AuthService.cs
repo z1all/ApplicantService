@@ -31,7 +31,7 @@ namespace UserService.Infrastructure.Identity.Services
             {
                 FullName = registrationDTO.FullName,
                 Email = registrationDTO.Email,
-                UserName = $"{registrationDTO.FullName}_{Guid.NewGuid()}",
+                UserName = registrationDTO.Email //$"{registrationDTO.Email}_{Guid.NewGuid()}",
             };
 
             IdentityResult creationResult = await _userManager.CreateAsync(user, registrationDTO.Password);

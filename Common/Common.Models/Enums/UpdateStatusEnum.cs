@@ -12,4 +12,21 @@ namespace Common.Models.Enums
         Updated = 5,
         Wait = 6,
     }
+
+    public static class UpdateStatusEnumExtension
+    {
+        public static string ToRu(this UpdateStatusEnum status)
+        {
+            return status switch
+            {
+                UpdateStatusEnum.Loading => "Загрузка с сервера",
+                UpdateStatusEnum.ErrorInLoading => "Ошибка при загрузке",
+                UpdateStatusEnum.Updating => "Обновление",
+                UpdateStatusEnum.ErrorInUpdating => "Ошибка при обновлении",
+                UpdateStatusEnum.Updated => "Обновлен",
+                UpdateStatusEnum.Wait => "Ожидание",
+                _ => ((int)status).ToString(),
+            };
+        }
+    }
 }

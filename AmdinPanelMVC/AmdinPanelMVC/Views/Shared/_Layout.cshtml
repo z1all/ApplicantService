@@ -22,12 +22,15 @@
                         @if (User.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Settings">Настройки</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Profile">Профиль</a>
                             </li>
                             <li class="nav-item">
                                 @* <a class="nav-link text-dark" id="logoutButtonId">Выход</a> *@
                                 <form class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout" method="post">
-                                    <button type="submit" class="border-0 bg-transparent">Выход</button>
+                                    <button type="submit" class="border-0 bg-transparent p-0">Выход</button>
                                 </form>
                             </li>
                         }
@@ -37,16 +40,28 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Вход</a>
                             </li>
                         }
-
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 100">
+            <div class="toast opacity-100" id="toastId" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                <div class="toast-header">
+                    <strong class="me-auto text-white" id="toastTitleId">Заголовок</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="toastTextId">
+                    Текст уведомления.
+                </div>
+            </div>
+        </div>
+        
     </div>
 
     <footer class="border-top footer text-muted">

@@ -1,0 +1,108 @@
+﻿@model AmdinPanelMVC.Models.CreateManagerViewModel
+
+@{
+    ViewData["Title"] = "Работа с менеджерами";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-12 col-lg-8">
+        <h2>Работа с менеджерами</h2>
+        <hr />
+
+        <div class="d-flex justify-content-end">
+            <button id="createManagerButtonId" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#managerModelId">Создать менеджера</button>
+        </div>
+
+        <hr />
+
+        <div id="managersContainerId">
+            @await Component.InvokeAsync("ManagerList")
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="managerModelId" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <form asp-action="" method="post" id="managerFormId">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="Id" id="userId" hidden>
+                    <div class="form-group mb-3">
+                        <label asp-for="FullName" class="col-form-label">ФИО</label>
+                        <input asp-for="FullName" id="fullNameId" type="text" class="form-control" required>
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Email" class="col-form-label">Email</label>
+                        <input asp-for="Email" id="emailId" type="email" class="form-control" required>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div id="passwordContainerId" class="form-group mb-3" >
+                        <label asp-for="Password" class="col-form-label">Пароль</label>
+                        <input asp-for="Password" id="passwordId" type="text" class="form-control" required>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="FacultyId" class="col-form-label">Факультет</label>
+                        <select asp-for="FacultyId" id="facultyId" class="form-control">
+                            <option value="">Нет</option>
+                            @await Component.InvokeAsync("Faculties", Model?.FacultyId);
+                        </select>
+                        <span asp-validation-for="FacultyId" class="text-danger"></span>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button asp-action="CreateManager" 
+                        id="createManagerButtonFormId"
+                        type="submit" 
+                        class="btn btn-primary" 
+                        form="managerFormId">Создать</button>
+                <button asp-action="ChangeManager"
+                        id="changeManagerButtonFormId"
+                        type="submit" 
+                        class="btn btn-primary" 
+                        form="managerFormId">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* 
+
+    +++ Список менеджеров с факультетами
+    +++Создание менеджера
+    +++ Удаление менеджера
+
+    Редактирование менеджера
+
+*@
+
+@section Scripts {
+
+    <script src="~/js/managers.js"></script>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @if (Model.Id is null)
+        {
+            <script>viewCreateForm();</script>
+        }
+        else
+        {
+            <script>viewChangeForm();</script>
+        }
+
+        <script>
+
+            var myModal = new bootstrap.Modal(document.getElementById('managerModelId'));
+            myModal.show();
+
+        </script>
+    }
+
+}

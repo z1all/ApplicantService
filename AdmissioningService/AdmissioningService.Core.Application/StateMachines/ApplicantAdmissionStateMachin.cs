@@ -62,7 +62,7 @@ namespace AdmissioningService.Core.Application.StateMachines
         public async Task DeleteManagerAsync(ApplicantAdmission applicantAdmission)
         {
             AdmissionStatus oldStatus = applicantAdmission.AdmissionStatus;
-            
+
             applicantAdmission.ManagerId = null;
 
             if (applicantAdmission.AdmissionStatus == AdmissionStatus.UnderConsideration)
@@ -73,6 +73,36 @@ namespace AdmissioningService.Core.Application.StateMachines
             await _applicantAdmissionRepository.UpdateAsync(applicantAdmission);
 
             await SendNotificationIfNewAsync(applicantAdmission.ApplicantId, applicantAdmission.AdmissionStatus, oldStatus);
+        }
+
+        [Obsolete]
+        public async Task DeleteManagerRangeAsync(List<ApplicantAdmission> applicantAdmissions)
+        {
+            List<ApplicantAdmission> changedStatuses = new List<ApplicantAdmission>();
+
+            foreach (var admission in applicantAdmissions)
+            {
+                AdmissionStatus oldStatus = admission.AdmissionStatus;
+
+                admission.ManagerId = null;
+
+                if (admission.AdmissionStatus == AdmissionStatus.UnderConsideration)
+                {
+                    admission.AdmissionStatus = AdmissionStatus.Created;
+                }
+
+                if (oldStatus != admission.AdmissionStatus)
+                {
+                    changedStatuses.Add(admission);
+                }
+            }
+
+            await _applicantAdmissionRepository.UpdateRangeAsync(applicantAdmissions);
+
+            foreach(var changedStatus in changedStatuses)
+            {
+                await SendNotificationIfNewAsync(changedStatus.ApplicantId, changedStatus.AdmissionStatus, null);
+            }
         }
 
         [Obsolete]
@@ -93,7 +123,7 @@ namespace AdmissioningService.Core.Application.StateMachines
         }
 
         [Obsolete]
-        public async Task<bool> AddAdmissionProgramAsync(Guid applicantId, AdmissionProgram admissionProgram) 
+        public async Task<bool> AddAdmissionProgramAsync(Guid applicantId, AdmissionProgram admissionProgram)
         {
             ExecutionResult<(AdmissionStatus newStatus, AdmissionStatus oldStatus)> result = await UpdateAdmissionStatusAsync(admissionProgram.ApplicantAdmissionId);
             if (!result.IsSuccess) return false;
@@ -130,7 +160,7 @@ namespace AdmissioningService.Core.Application.StateMachines
 
                 await SendNotificationIfNewAsync(applicantId, result.Result.newStatus, result.Result.oldStatus);
             }
-            
+
             return true;
         }
 
@@ -182,7 +212,7 @@ namespace AdmissioningService.Core.Application.StateMachines
 
         private async Task<ExecutionResult> SendNotificationIfNewAsync(Guid applicantId, AdmissionStatus newStatus, AdmissionStatus? oldStatus)
         {
-            if (oldStatus == newStatus) return new(isSuccess: true); 
+            if (oldStatus == newStatus) return new(isSuccess: true);
 
             ApplicantCache? applicantCache = await _applicantCacheRepository.GetByIdAsync(applicantId);
             if (applicantCache is null)

@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Common.Models.DTOs.ManagerProfileDTO>
+
+@foreach(var manager in Model)
+{
+    <div class="d-sm-flex p-2">
+        <div class="flex-grow-1">
+
+            <div>ФИО: @manager.FullName</div>
+            <div>Email: @manager.Email</div>
+            @if(manager.Faculty is not null)
+            {
+                <div class="text-secondary">Факультет: @manager.Faculty.Name</div>
+            }
+            else
+            {
+                <div class="text-secondary">Главный менеджер</div>
+            }
+        </div>
+        <div class="m-sm-auto mt-2 d-flex flex-column">
+            <div user-id="@manager.Id"
+                 user-name="@manager.FullName"
+                 user-email="@manager.Email"
+                 user-faculty-id="@manager.Faculty?.Id"
+                 class="d-none"></div>
+            <button class="btn btn-danger mb-1 delete-user">Удалить</button>
+            <button class="btn btn-warning edit-user" data-bs-toggle="modal" data-bs-target="#managerModelId">Редактировать</button>
+        </div>
+    </div>
+}

@@ -1,0 +1,8 @@
+﻿@model IEnumerable<Common.Models.DTOs.FacultyDTO>
+
+@foreach(var faculty in Model)
+{
+    bool selected = ViewBag.SelectedFacultyId == faculty.Id;
+
+    <option value="@faculty.Id" selected="@selected">@faculty.Name</option>
+}

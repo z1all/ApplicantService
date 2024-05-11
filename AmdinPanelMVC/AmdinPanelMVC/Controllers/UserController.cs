@@ -9,6 +9,7 @@ using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Mappers;
 using Common.Models.Models;
 using Common.API.Helpers;
+using Common.Models.DTOs;
 
 namespace AmdinPanelMVC.Controllers
 {
@@ -63,7 +64,7 @@ namespace AmdinPanelMVC.Controllers
                 return Redirect("/Error");
             }
 
-            ExecutionResult<ManagerDTO> result = await _userService.GetManagerProfileAsync(managerId);
+            ExecutionResult<ManagerProfileDTO> result = await _userService.GetManagerProfileAsync(managerId);
             if (!result.IsSuccess)
             {
                 return Redirect("/Error");

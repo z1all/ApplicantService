@@ -1,5 +1,4 @@
-﻿using AdmissioningService.Core.Application.DTOs;
-using AdmissioningService.Core.Application.Interfaces.Repositories;
+﻿using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Application.Interfaces.StateMachines;
 using AdmissioningService.Core.Application.Mappers;
@@ -36,7 +35,7 @@ namespace AdmissioningService.Core.Application.Services
             _notificationService = notificationService;
         }
 
-        public async Task<ExecutionResult> CreateManagerAsync(CreateManagerDTO createManager)
+        public async Task<ExecutionResult> CreateManagerAsync(Guid managerId, ManagerDTO createManager)
         {
             if (createManager.FacultyId is not null)
             {
@@ -46,18 +45,41 @@ namespace AdmissioningService.Core.Application.Services
 
             UserCache newUser = new()
             {
-                Id = createManager.Id,
+                Id = managerId,
                 FullName = createManager.FullName,
                 Email = createManager.Email,
             };
 
             Manager newManager = new()
             {
-                Id = createManager.Id,
+                Id = managerId,
                 FacultyId = createManager.FacultyId,
                 User = newUser,
             };
             await _managerRepository.AddAsync(newManager);
+
+            return new(isSuccess: true);
+        }
+
+        public async Task<ExecutionResult> ChangeManagerAsync(Guid managerId, ManagerDTO changeManager)
+        {
+            if (changeManager.FacultyId is not null)
+            {
+                ExecutionResult result = await CheckFacultyAsync((Guid)changeManager.FacultyId);
+                if (!result.IsSuccess) return result;
+            }
+
+            Manager? manager = await _managerRepository.GetByIdWithUserAsync(managerId);
+            if (manager is null)
+            {
+                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+            }
+
+            manager.FacultyId = changeManager.FacultyId;
+            manager.User!.FullName = changeManager.FullName;
+            manager.User.Email = changeManager.Email;
+
+            await _managerRepository.UpdateAsync(manager);
 
             return new(isSuccess: true);
         }
@@ -69,6 +91,9 @@ namespace AdmissioningService.Core.Application.Services
             {
                 return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
             }
+
+            List<ApplicantAdmission> managerAdmissions = await _applicantAdmissionRepository.GetAllByManagerIdAsync(managerId);
+            await _applicantAdmissionStateMachin.DeleteManagerRangeAsync(managerAdmissions);
 
             await _userCacheRepository.DeleteAsync(user);
 
@@ -128,7 +153,7 @@ namespace AdmissioningService.Core.Application.Services
             return new(isSuccess: true);
         }
 
-        public async Task<ExecutionResult<List<ManagerDTO>>> GetManagersAsync()
+        public async Task<ExecutionResult<List<ManagerProfileDTO>>> GetManagersAsync()
         {
             List<Manager> managers = await _managerRepository.GetAllWithFacultyAndUserAsync();
 
@@ -138,7 +163,7 @@ namespace AdmissioningService.Core.Application.Services
             };
         }
 
-        public async Task<ExecutionResult<ManagerDTO>> GetManagerAsync(Guid managerId)
+        public async Task<ExecutionResult<ManagerProfileDTO>> GetManagerAsync(Guid managerId)
         {
             Manager? manager = await _managerRepository.GetByIdWithFacultyAndUserAsync(managerId);
             if (manager is null)
