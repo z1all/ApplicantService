@@ -78,6 +78,11 @@ namespace AmdinPanelMVC.Controllers
         [RequiredAuthorize]
         public async Task<IActionResult> Email(ProfileViewModel profile)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("Profile", profile);
+            }
+
             if (!HttpContext.TryGetUserId(out Guid managerId))
             {
                 return Redirect("/Error");
@@ -90,9 +95,10 @@ namespace AmdinPanelMVC.Controllers
                 {
                     ModelState.AddModelError("Email", error.Value[0]);
                 }
+                return View("Profile", profile);
             }
 
-            return View("Profile", profile);
+            return Redirect("Profile");
         }
 
         [HttpPost]
@@ -100,6 +106,11 @@ namespace AmdinPanelMVC.Controllers
         [RequiredAuthorize]
         public async Task<IActionResult> FullName(ProfileViewModel profile)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("Profile", profile);
+            }
+
             if (!HttpContext.TryGetUserId(out Guid managerId))
             {
                 return Redirect("/Error");
@@ -112,9 +123,46 @@ namespace AmdinPanelMVC.Controllers
                 {
                     ModelState.AddModelError("FullName", error.Value[0]);
                 }
+                return View("Profile", profile);
             }
 
-            return View("Profile", profile);
+            return Redirect("Profile");
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RequiredAuthorize]
+        public async Task<IActionResult> ChangePassword(ProfileViewModel profile)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Profile", profile);
+            }
+
+            if (!HttpContext.TryGetUserId(out Guid managerId))
+            {
+                return Redirect("/Error");
+            }
+
+            ExecutionResult response = await _userService.ChangePasswordAsync(managerId, 
+                new() { CurrentPassword = profile.CurrentPassword, NewPassword = profile.NewPassword});
+            if (!response.IsSuccess)
+            {
+                foreach (var error in response.Errors)
+                {
+                    if (error.Key.Contains("PasswordMismatch")) 
+                    { 
+                        ModelState.AddModelError("CurrentPassword", "Неверный текущий пароль");
+                    }
+                    else if (error.Key.Contains(""))
+                    {
+                        ModelState.AddModelError("NewPassword", error.Value[0]);
+                    }
+                }
+                return View("Profile", profile);
+            }
+
+            return Redirect("Profile");
         }
 
         [HttpPost]

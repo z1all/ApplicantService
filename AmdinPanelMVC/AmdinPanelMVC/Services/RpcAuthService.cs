@@ -7,6 +7,7 @@ using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService.Requests;
 using EasyNetQ;
+using UserService.Core.Application.DTOs;
 
 namespace AmdinPanelMVC.Services
 {
@@ -33,6 +34,12 @@ namespace AmdinPanelMVC.Services
         {
             return await RequestHandlerAsync<ExecutionResult, ChangeEmailRequest>(
                 new() { ManagerId = managerId, NewEmail = newEmail }, "ChangeEmailFail");
+        }
+
+        public async Task<ExecutionResult> ChangePasswordAsync(Guid managerId, ChangePasswordDTO changePassword)
+        {
+            return await RequestHandlerAsync<ExecutionResult, ChangePasswordRequest>(
+                new() { UserId = managerId, ChangePassword = changePassword }, "ChangePasswordFail");
         }
 
         public async Task<ExecutionResult<TokensResponseDTO>> LoginAsync(LoginRequestDTO login)

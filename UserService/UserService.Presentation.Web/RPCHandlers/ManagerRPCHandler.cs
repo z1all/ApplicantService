@@ -29,6 +29,9 @@ namespace UserService.Presentation.Web.RPCHandlers
             _bus.Rpc.Respond<ChangeEmailRequest, ExecutionResult>(async (request) =>
               await ExceptionHandlerAsync(async (service) => await ChangeEmailAsync(service, request)));
 
+            _bus.Rpc.Respond<ChangePasswordRequest, ExecutionResult>(async (request) =>
+              await ExceptionHandlerAsync(async (service) => await ChangePasswordAsync(service, request)));
+
             _bus.Rpc.Respond<CreateNewManagerRequest, ExecutionResult>(async (request) =>
              await ExceptionHandlerAsync(async (service) => await CreateManagerAsync(service, request)));
 
@@ -77,6 +80,13 @@ namespace UserService.Presentation.Web.RPCHandlers
             var _profileService = service.GetRequiredService<IProfileService>();
 
             return await _profileService.ChangeEmailAsync(new() { NewEmail = request.NewEmail }, request.ManagerId);
+        }
+
+        private async Task<ExecutionResult> ChangePasswordAsync(IServiceProvider service, ChangePasswordRequest request)
+        {
+            var _profileService = service.GetRequiredService<IProfileService>();
+
+            return await _profileService.ChangePasswordAsync(request.ChangePassword, request.UserId);
         }
 
         private async Task<ExecutionResult> CreateManagerAsync(IServiceProvider service, CreateNewManagerRequest request)

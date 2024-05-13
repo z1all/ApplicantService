@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Common.Models.Enums;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -21,9 +23,12 @@
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
                         @if (User.Identity?.IsAuthenticated ?? false)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Settings">Настройки</a>
-                            </li>
+                            if(User.IsInRole(Role.Admin))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Settings">Настройки</a>
+                                </li>
+                            }
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Profile">Профиль</a>
                             </li>

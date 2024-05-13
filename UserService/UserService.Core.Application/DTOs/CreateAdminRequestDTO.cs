@@ -5,11 +5,11 @@ namespace UserService.Core.Application.DTOs
     public class CreateAdminRequestDTO
     {
         [Required]
-        public string FullName { get; init; } = null!;
+        public required string FullName { get; init; } 
         [Required]
         [EmailAddress]
-        public string Email { get; init; } = null!;
+        public required string Email { get; init; }
         [Required]
-        public string Password { get; init; } = null!;
+        public required string Password { get; init; }
     }
 }

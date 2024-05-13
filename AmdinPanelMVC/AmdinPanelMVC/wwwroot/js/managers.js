@@ -18,9 +18,14 @@ function execute() {
                     updateManagerList();
                 }
                 else {
+                    let message = "Ошибка при удалении менеджера"
+                    if (data.body.errors.BadRoles) {
+                        message = "Вы не можете удалить менеджера с ролью администратора"
+                    }
+
                     showErrorToast(
                         "Удаление менджера",
-                        "Ошибка при удалении менеджера"
+                        message
                     );
                 }
             }

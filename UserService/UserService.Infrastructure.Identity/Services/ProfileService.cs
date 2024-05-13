@@ -40,7 +40,7 @@ namespace UserService.Infrastructure.Identity.Services
             });
         }
 
-        public async Task<ExecutionResult> ChangePasswordAsync(ChangePasswordRequestDTO changePassword, Guid userId)
+        public async Task<ExecutionResult> ChangePasswordAsync(ChangePasswordDTO changePassword, Guid userId)
         {
             CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
@@ -70,10 +70,16 @@ namespace UserService.Infrastructure.Identity.Services
             IdentityResult addingRoleResult = await _userManager.AddToRolesAsync(user, roles);
             if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError();
 
-            ExecutionResult sendNotification = await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user), createAdmin.Password);
+            ExecutionResult creatingRequestResult = await _serviceBusProvider.Request.CreateManagerAsync(MapCustomUserToManager(user, null));
+            if (!creatingRequestResult.IsSuccess)
+            {
+                return creatingRequestResult;
+            }
+
+            ExecutionResult sendNotification = await _serviceBusProvider.Notification.CreatedApplicantAsync(MapCustomUserToUser(user));
             if (!sendNotification.IsSuccess) return sendNotification;
 
-            sendNotification = await _serviceBusProvider.Notification.CreatedApplicantAsync(MapCustomUserToUser(user));
+            sendNotification = await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user), createAdmin.Password);
             if (!sendNotification.IsSuccess) return sendNotification;
 
             return new(isSuccess: true);

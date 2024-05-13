@@ -29,7 +29,7 @@ namespace UserService.Presentation.Web.Controllers
 
         [HttpPatch("password")]
         [Authorize]
-        public async Task<ActionResult> ChangePasswordAsync(ChangePasswordRequestDTO changePassword)
+        public async Task<ActionResult> ChangePasswordAsync(ChangePasswordDTO changePassword)
         {
             return await ChangeHandlerAsync(async (Guid userId) =>
                  await _profileService.ChangePasswordAsync(changePassword, userId));

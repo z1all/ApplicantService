@@ -12,7 +12,7 @@ namespace AmdinPanelMVC.Filters
         /// Пользователь должен иметь хотя бы одну роль из списка.
         /// Стандартное значение свойства равно [Role.MainManager, Role.Manager, Role.Admin]
         /// </summary>
-        public List<string> Roles { get; set; } = [Role.MainManager, Role.Manager, Role.Admin];
+        public string[] Roles { get; set; } = [Role.MainManager, Role.Manager, Role.Admin];
 
         /// <summary>
         /// Если проверка на Roles не прошла, то перенаправляет пользователя на страницу Redirect

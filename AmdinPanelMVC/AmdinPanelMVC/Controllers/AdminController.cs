@@ -5,10 +5,12 @@ using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Services.Interfaces;
 using AmdinPanelMVC.Models;
 using Common.Models.Models;
+using Common.Models.Enums;
+using Common.API.DTOs;
 
 namespace AmdinPanelMVC.Controllers
 {
-    [RequiredAuthorize]
+    [RequiredAuthorize(Roles = [Role.Admin])]
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
@@ -134,7 +136,12 @@ namespace AmdinPanelMVC.Controllers
             ExecutionResult result = await _adminService.DeleteManagerAsync(manager.ManagerId);
             if(!result.IsSuccess)
             {
-                return BadRequest();
+                return BadRequest(new ErrorResponse()
+                {
+                    Title = "Delete manager fail",
+                    Status = 400,
+                    Errors = result.Errors,
+                });
             }
 
             return Ok();

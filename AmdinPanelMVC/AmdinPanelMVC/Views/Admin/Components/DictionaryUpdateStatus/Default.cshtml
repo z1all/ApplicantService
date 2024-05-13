@@ -30,7 +30,7 @@
                         @status.Status.ToRu()
                     }
                 </td>
-                <td>@status.LastUpdate</td>
+                <td>@(((DateTimeOffset)status.LastUpdate).ToLocalTime().ToString("dd.MM.yyyy HH:mm"))</td>
             </tr>
         }
     </tbody>
