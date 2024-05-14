@@ -1,6 +1,6 @@
 ﻿using Common.Models.Enums;
 
-namespace AdmissioningService.Core.Application.DTOs
+namespace Common.Models.DTOs
 {
     public class ApplicantAdmissionShortInfoDTO
     {

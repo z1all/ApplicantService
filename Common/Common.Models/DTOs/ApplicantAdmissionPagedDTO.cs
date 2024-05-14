@@ -1,6 +1,4 @@
-﻿using Common.Models.DTOs;
-
-namespace AdmissioningService.Core.Application.DTOs
+﻿namespace Common.Models.DTOs
 {
     public class ApplicantAdmissionPagedDTO
     {

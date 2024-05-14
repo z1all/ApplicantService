@@ -1,4 +1,4 @@
-﻿namespace AdmissioningService.Core.Application.DTOs
+﻿namespace Common.Models.DTOs
 {
     public class UserDTO
     {

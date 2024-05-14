@@ -1,0 +1,35 @@
+﻿@model Common.Models.DTOs.ApplicantAdmissionPagedDTO;
+
+@foreach(var admission in Model.ApplicantAdmissions)
+{
+    <div class="card w-100 mb-3 shadow">
+        <div class="card-body row">
+            <div class="col-sm-6">ФИО: @admission.Applicant.FullName</div>
+            <div class="col-sm-6">Email: @admission.Applicant.Email</div>
+            <div class="col-sm-6">Статус: @admission.AdmissionStatus</div>
+            <div class="col-sm-6">Наличие менеджера: @(admission.ExistManager ? "есть" : "нет")</div>
+            <div class="col-sm-6 pt-3 text-secondary">Число выбранных программ: @admission.AdmissionPrograms.Count</div>
+            <div class="col-sm-6 pt-sm-3 text-secondary">Последнее обновление: @(((DateTimeOffset)admission.LastUpdate).ToLocalTime().ToString("dd.MM.yyyy HH:mm"))</div>
+        </div>
+        <div class="list-group list-group-flush">
+            @foreach (var program in admission.AdmissionPrograms.OrderBy(p => p.Priority))
+            {
+                <div class="list-group-item d-flex">
+                    <div class="d-flex align-items-center h3 me-3">@(program.Priority + 1)</div>
+                    <div>
+                        <div><span class="text-secondary">Факультет:</span> @program.EducationProgram.Faculty.Name</div>
+                        <div><span class="text-secondary">Программа:</span> @program.EducationProgram.Name</div>
+                        <div><span class="text-secondary">Код программы:</span> @program.EducationProgram.Code</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<script class="d-none">
+
+    setPageSize(@Model.Pagination.Size);
+    creatPageButtons({ current: @Model.Pagination.Current, count: @Model.Pagination.Count});
+
+</script>

@@ -46,7 +46,11 @@ function request(url, method, callback, data = null, userToken = null) {
                 const contentType = response.headers.get('content-type');
                 if (contentType && (contentType.includes('application/json') || contentType.includes('application/problem+json'))) {
                     return response.json();
-                } else {
+                }
+                else if (contentType && contentType.includes('text/html')) {
+                    return response.text();
+                }
+                else {
                     return null;
                 }
             }

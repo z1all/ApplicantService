@@ -1,7 +1,6 @@
-﻿using AdmissioningService.Core.Application.Enums;
-using Common.Models.Enums;
+﻿using Common.Models.Enums;
 
-namespace AdmissioningService.Core.Application.DTOs
+namespace Common.Models.DTOs
 {
     public class ApplicantAdmissionFilterDTO
     {

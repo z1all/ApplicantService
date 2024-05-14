@@ -1,5 +1,8 @@
-﻿namespace AdmissioningService.Core.Application.Enums
+﻿using System.Text.Json.Serialization;
+
+namespace Common.Models.Enums
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ViewApplicantMode
     {
         All = 0,

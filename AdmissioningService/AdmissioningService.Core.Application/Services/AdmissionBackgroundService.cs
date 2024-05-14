@@ -1,9 +1,9 @@
-﻿using AdmissioningService.Core.Application.DTOs;
-using AdmissioningService.Core.Application.Helpers;
+﻿using AdmissioningService.Core.Application.Helpers;
 using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Application.Interfaces.StateMachines;
 using AdmissioningService.Core.Domain;
+using Common.Models.DTOs;
 using Common.Models.Models;
 
 namespace AdmissioningService.Core.Application.Services

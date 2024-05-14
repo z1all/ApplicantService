@@ -1,5 +1,5 @@
-﻿using AdmissioningService.Core.Application.DTOs;
-using AdmissioningService.Core.Domain;
+﻿using AdmissioningService.Core.Domain;
+using Common.Models.DTOs;
 using Common.Repositories;
 
 namespace AdmissioningService.Core.Application.Interfaces.Repositories

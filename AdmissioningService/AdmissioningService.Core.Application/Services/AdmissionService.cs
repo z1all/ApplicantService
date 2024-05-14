@@ -6,6 +6,7 @@ using AdmissioningService.Core.Application.Mappers;
 using AdmissioningService.Core.Application.Helpers;
 using AdmissioningService.Core.Domain;
 using Common.Models.Models;
+using Common.Models.DTOs;
 
 namespace AdmissioningService.Core.Application.Services
 {

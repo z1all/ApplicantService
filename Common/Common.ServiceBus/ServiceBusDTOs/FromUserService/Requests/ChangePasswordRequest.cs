@@ -1,4 +1,4 @@
-﻿using UserService.Core.Application.DTOs;
+﻿using Common.Models.DTOs;
 
 namespace Common.ServiceBus.ServiceBusDTOs.FromUserService.Requests
 {

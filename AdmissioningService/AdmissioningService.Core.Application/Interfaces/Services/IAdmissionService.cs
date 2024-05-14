@@ -1,4 +1,5 @@
 ﻿using AdmissioningService.Core.Application.DTOs;
+using Common.Models.DTOs;
 using Common.Models.Models;
 
 namespace AdmissioningService.Core.Application.Interfaces.Services

@@ -2,9 +2,9 @@
 using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Domain;
 using AdmissioningService.Infrastructure.Persistence.Contexts;
-using AdmissioningService.Core.Application.DTOs;
-using AdmissioningService.Core.Application.Enums;
 using Common.Repositories;
+using Common.Models.Enums;
+using Common.Models.DTOs;
 
 namespace AdmissioningService.Infrastructure.Persistence.Repositories
 {
@@ -69,7 +69,10 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
                 _ => filtered,
             };
 
-            return await filteredAndSorted.ToListAsync();
+            return await filteredAndSorted               
+                .Skip((filter.Page - 1) * filter.Size)
+                .Take(filter.Size)
+                .ToListAsync();
         }
 
         public async Task<int> CountAllAsync(ApplicantAdmissionFilterDTO filter, Guid managerId)
