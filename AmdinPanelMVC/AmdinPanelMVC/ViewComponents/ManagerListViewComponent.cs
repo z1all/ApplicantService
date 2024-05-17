@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AmdinPanelMVC.Services.Interfaces;
-using Common.Models.DTOs;
 using Common.Models.Models;
+using Common.Models.DTOs.Admission;
 
 namespace AmdinPanelMVC.ViewComponents
 {

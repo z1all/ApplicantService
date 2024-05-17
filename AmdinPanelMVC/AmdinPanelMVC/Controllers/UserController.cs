@@ -9,7 +9,7 @@ using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Mappers;
 using Common.Models.Models;
 using Common.API.Helpers;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Admission;
 
 namespace AmdinPanelMVC.Controllers
 {

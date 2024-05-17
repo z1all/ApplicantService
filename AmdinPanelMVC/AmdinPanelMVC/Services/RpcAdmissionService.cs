@@ -1,6 +1,8 @@
-﻿using AmdinPanelMVC.Services.Base;
+﻿using AmdinPanelMVC.DTOs;
+using AmdinPanelMVC.Services.Base;
 using AmdinPanelMVC.Services.Interfaces;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Admission;
+using Common.Models.Enums;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
 using EasyNetQ;
@@ -11,13 +13,46 @@ namespace AmdinPanelMVC.Services
     {
         public RpcAdmissionService(IBus bus) : base(bus) { }
 
-        public async Task<ExecutionResult<ApplicantAdmissionPagedDTO>> GetApplicantAdmissionAsync(ApplicantAdmissionFilterDTO applicantAdmission, Guid managerId)
+        public async Task<ExecutionResult<ApplicantAdmissionPagedDTO>> GetAdmissionsAsync(ApplicantAdmissionFilterDTO applicantAdmission, Guid managerId)
         {
-            ExecutionResult<GetAdmissionsAsyncResponse> response
-                = await RequestHandlerAsync<ExecutionResult<GetAdmissionsAsyncResponse>, GetAdmissionsAsyncRequest>(
-                     new() { ApplicantAdmissionFilter = applicantAdmission, ManagerId = managerId }, "GetApplicantAdmissionFail");
+            ExecutionResult<GetAdmissionsResponse> response
+                = await RequestHandlerAsync<ExecutionResult<GetAdmissionsResponse>, GetAdmissionsRequest>(
+                     new() { ApplicantAdmissionFilter = applicantAdmission, ManagerId = managerId }, "GetAdmissionsFail");
 
             return ResponseHandler(response, manager => manager.ApplicantAdmissionPaged);
+        }
+
+        public async Task<ExecutionResult<ApplicantAdmissionDTO>> GetApplicantAdmissionAsync(Guid applicantId, Guid admissionId)
+        {
+            ExecutionResult<GetApplicantAdmissionResponse> response
+               = await RequestHandlerAsync<ExecutionResult<GetApplicantAdmissionResponse>, GetApplicantAdmissionRequest>(
+                    new() { ApplicantId = applicantId, AdmissionId = admissionId }, "GetApplicantAdmissionFail");
+
+            return ResponseHandler(response, manager => manager.ApplicantAdmission);
+        }
+
+        public async Task<ExecutionResult> AddManagerToAdmissionAsync(Guid admissionId, Guid? managerId)
+        {
+            return await RequestHandlerAsync<ExecutionResult, AddManagerToAdmissionRequest>(
+                    new() { AdmissionId = admissionId, MangerId = managerId }, "AddManagerToAdmissionFail");
+        }
+
+        public async Task<ExecutionResult> TakeApplicantAdmissionAsync(Guid admissionId, Guid managerId)
+        {
+            return await RequestHandlerAsync<ExecutionResult, TakeApplicantAdmissionRequest>(
+                    new() { AdmissionId = admissionId, MangerId = managerId }, "TakeApplicantAdmissionFail");
+        }
+
+        public async Task<ExecutionResult> RejectApplicantAdmissionAsync(Guid admissionId, Guid managerId)
+        {
+            return await RequestHandlerAsync<ExecutionResult, RejectApplicantAdmissionRequest>(
+                   new() { AdmissionId = admissionId, MangerId = managerId }, "RejectApplicantAdmissionFail");
+        }
+
+        public async Task<ExecutionResult> ChangeAdmissionStatusAsync(Guid admissionId, Guid managerId, ManagerChangeAdmissionStatus changeStatus)
+        {
+            return await RequestHandlerAsync<ExecutionResult, ChangeAdmissionStatusRequest>(
+                new() { AdmissionId = admissionId, NewStatus = changeStatus, ManagerId = managerId }, "ChangeAdmissionStatusFail");
         }
     }
 }

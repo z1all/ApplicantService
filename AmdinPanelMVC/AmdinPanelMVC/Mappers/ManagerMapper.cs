@@ -1,6 +1,6 @@
 ﻿using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Models;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Admission;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService.Requests;
 
 namespace AmdinPanelMVC.Mappers

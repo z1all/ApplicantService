@@ -6,6 +6,7 @@ using ApplicantService.Presentation.Web.DTOs;
 using Common.API.Controllers;
 using Common.API.Helpers;
 using Common.Models.Models;
+using Common.Models.DTOs.Applicant;
 
 namespace ApplicantService.Presentation.Web.Controllers
 {

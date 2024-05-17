@@ -33,7 +33,7 @@ function updateAdmissionList(page = 1) {
     setNull('ApplicantFullName', data);
     setNull('CodeOrNameProgram', data);
 
-    request('/Admission/GetAdmission', 'POST', filterAdmission, data)
+    request('/Admission/GetAdmission', 'POST', filterAdmission, data);
 }
 
 document.getElementById('count_posts_on_page_id').addEventListener('change', () => {

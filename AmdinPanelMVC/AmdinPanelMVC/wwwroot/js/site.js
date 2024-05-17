@@ -1,4 +1,14 @@
 ﻿
+function openModal(modalId) {
+    var myModal = new bootstrap.Modal(document.getElementById(modalId));
+    myModal.show();
+}
+
+function closeModal(modalId) {
+    var myModal = new bootstrap.Modal(document.getElementById(modalId));
+    myModal.hide();
+}
+
 function showSuccessToast(title, text) {
     $('#toastTitleId').parent().addClass("bg-success");
     showToast(title, text);

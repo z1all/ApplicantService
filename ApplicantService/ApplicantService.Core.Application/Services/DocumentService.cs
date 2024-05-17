@@ -5,7 +5,8 @@ using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Application.Mapper;
 using ApplicantService.Core.Application.Mappers;
 using ApplicantService.Core.Domain;
-using ApplicantService.Core.Domain.Enums;
+using Common.Models.DTOs.Applicant;
+using Common.Models.Enums;
 using Common.Models.Models;
 
 namespace ApplicantService.Core.Application.Services

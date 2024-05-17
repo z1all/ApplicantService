@@ -1,4 +1,4 @@
-﻿using Common.Models.DTOs;
+﻿using Common.Models.DTOs.Dictionary;
 using System.ComponentModel.DataAnnotations;
 
 namespace AmdinPanelMVC.Models

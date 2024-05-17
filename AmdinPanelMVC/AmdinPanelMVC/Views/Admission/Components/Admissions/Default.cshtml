@@ -1,16 +1,17 @@
-﻿@model Common.Models.DTOs.ApplicantAdmissionPagedDTO;
+﻿@model Common.Models.DTOs.Admission.ApplicantAdmissionPagedDTO;
 
 @foreach(var admission in Model.ApplicantAdmissions)
 {
+    @* @Url.Action("ApplicantAdmission", "Admission", new { applicantId = admission.Applicant.Id, admissionId = admission.Id }) *@
     <div class="card w-100 mb-3 shadow">
-        <div class="card-body row">
+        <a href="Applicant/@admission.Applicant.Id/Admission/@admission.Id" class="card-body row admissionLink">
             <div class="col-sm-6">ФИО: @admission.Applicant.FullName</div>
             <div class="col-sm-6">Email: @admission.Applicant.Email</div>
             <div class="col-sm-6">Статус: @admission.AdmissionStatus</div>
             <div class="col-sm-6">Наличие менеджера: @(admission.ExistManager ? "есть" : "нет")</div>
             <div class="col-sm-6 pt-3 text-secondary">Число выбранных программ: @admission.AdmissionPrograms.Count</div>
             <div class="col-sm-6 pt-sm-3 text-secondary">Последнее обновление: @(((DateTimeOffset)admission.LastUpdate).ToLocalTime().ToString("dd.MM.yyyy HH:mm"))</div>
-        </div>
+        </a>
         <div class="list-group list-group-flush">
             @foreach (var program in admission.AdmissionPrograms.OrderBy(p => p.Priority))
             {

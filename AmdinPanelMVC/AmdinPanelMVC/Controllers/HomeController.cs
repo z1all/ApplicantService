@@ -13,6 +13,11 @@ namespace AmdinPanelMVC.Controllers
             return View();
         }
 
+        public IActionResult NotFoundError()
+        {
+            return View("NotFound");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

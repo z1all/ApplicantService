@@ -35,3 +35,8 @@ body {
 #managersContainerId > *:not(:first-child) {
     border-top: 1px solid #dee2e6;
 }
+
+.admissionLink {
+    color: unset;
+    text-decoration: unset;
+}

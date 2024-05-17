@@ -1,4 +1,4 @@
-﻿using Common.Models.DTOs;
+﻿using Common.Models.DTOs.Admission;
 
 namespace Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests
 {

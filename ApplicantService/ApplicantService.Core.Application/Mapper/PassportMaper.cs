@@ -1,6 +1,6 @@
 ﻿using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Domain;
-using ApplicantService.Core.Domain.Enums;
+using Common.Models.Enums;
 
 namespace ApplicantService.Core.Application.Mappers
 {

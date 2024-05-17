@@ -4,9 +4,10 @@ using AdmissioningService.Core.Application.Interfaces.StateMachines;
 using AdmissioningService.Core.Application.Mappers;
 using AdmissioningService.Core.Domain;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
-using Common.Models.DTOs;
 using Common.Models.Models;
 using Common.Models.Enums;
+using Common.Models.DTOs.Admission;
+using Common.Models.DTOs.Dictionary;
 
 namespace AdmissioningService.Core.Application.Services
 {
@@ -100,6 +101,34 @@ namespace AdmissioningService.Core.Application.Services
             return new(isSuccess: true);
         }
 
+        public async Task<ExecutionResult> AddManagerToAdmissionAsync(Guid admissionId, Guid? managerId)
+        {
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdWithApplicantAsync(admissionId);
+            if (applicantAdmission is null)
+            {
+                return new(keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {admissionId} not found!");
+            }
+
+            if (managerId is null)
+            {
+                await _applicantAdmissionStateMachin.DeleteManagerAsync(applicantAdmission);
+                return new(isSuccess: true);
+            }
+            else
+            {
+                Manager? manager = await _managerRepository.GetByIdWithUserAsync((Guid)managerId);
+                if (manager is null)
+                {
+                    return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+                }
+
+                await _applicantAdmissionStateMachin.AddManagerAsync(applicantAdmission, manager);
+
+                return await _notificationService
+                    .AddedManagerToApplicantAdmissionAsync(manager.User!.ToUserDTO(), applicantAdmission.Applicant!.ToUserDTO());
+            }
+        }
+
         public async Task<ExecutionResult> TakeApplicantAdmissionAsync(Guid admissionId, Guid managerId)
         {
             Manager? manager = await _managerRepository.GetByIdWithUserAsync(managerId);
@@ -111,7 +140,7 @@ namespace AdmissioningService.Core.Application.Services
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdWithApplicantAsync(admissionId);
             if (applicantAdmission is null)
             {
-                return new(keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {managerId} not found!");
+                return new(keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {admissionId} not found!");
             }
 
             if (applicantAdmission.ManagerId is not null && applicantAdmission.ManagerId != managerId)

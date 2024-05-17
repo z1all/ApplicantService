@@ -6,6 +6,7 @@ using UserService.Infrastructure.Identity.Extensions;
 using Common.Models.Enums;
 using Common.Models.Models;
 using Common.Models.DTOs;
+using Common.Models.DTOs.User;
 
 namespace UserService.Infrastructure.Identity.Services
 {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Application.Interfaces.Services;
 using Common.API.Controllers;
+using Common.Models.DTOs.Applicant;
 
 namespace ApplicantService.Presentation.Web.Controllers
 {

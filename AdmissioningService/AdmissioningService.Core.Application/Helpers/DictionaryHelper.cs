@@ -2,7 +2,7 @@
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Application.Mappers;
 using AdmissioningService.Core.Domain;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Dictionary;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 

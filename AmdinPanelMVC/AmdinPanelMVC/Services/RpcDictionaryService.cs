@@ -1,6 +1,6 @@
 ﻿using AmdinPanelMVC.Services.Base;
 using AmdinPanelMVC.Services.Interfaces;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Dictionary;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 using EasyNetQ;

@@ -1,5 +1,5 @@
 ﻿using ApplicantService.Core.Application.Validation;
-using ApplicantService.Core.Domain.Enums;
+using Common.Models.Enums;
 
 namespace ApplicantService.Core.Application.DTOs
 {

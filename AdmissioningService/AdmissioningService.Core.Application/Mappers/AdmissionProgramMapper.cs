@@ -1,6 +1,5 @@
-﻿using AdmissioningService.Core.Application.DTOs;
-using AdmissioningService.Core.Domain;
-using Common.Models.DTOs;
+﻿using AdmissioningService.Core.Domain;
+using Common.Models.DTOs.Admission;
 
 namespace AdmissioningService.Core.Application.Mappers
 {

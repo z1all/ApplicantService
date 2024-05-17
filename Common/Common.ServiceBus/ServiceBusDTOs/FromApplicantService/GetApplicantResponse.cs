@@ -1,6 +1,4 @@
-﻿using Common.Models.DTOs;
-
-namespace Common.ServiceBus.ServiceBusDTOs.FromApplicantService
+﻿namespace Common.ServiceBus.ServiceBusDTOs.FromApplicantService
 {
     public class GetApplicantResponse
     {

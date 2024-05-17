@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using Common.Models.Enums;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Admission;
 
 namespace AdmissioningService.Presentation.Web.Controllers
 {

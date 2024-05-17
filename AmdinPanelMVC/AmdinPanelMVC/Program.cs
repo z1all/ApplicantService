@@ -32,4 +32,14 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "Admission",
+    pattern: "Applicant/{applicantId}/Admission/{admissionId}",
+    defaults: new { controller = "Admission", action = "ApplicantAdmission" });
+
+app.MapControllerRoute(
+    name: "NotFound",
+    pattern: "NotFound",
+    defaults: new { controller = "Home", action = "NotFoundError" });
+
 app.Run();

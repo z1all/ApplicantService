@@ -5,7 +5,7 @@ using UserService.Core.Application.Interfaces;
 using Common.API.Controllers;
 using Common.API.Helpers;
 using Common.Models.Models;
-using Common.Models.DTOs;
+using Common.Models.DTOs.User;
 
 namespace UserService.Presentation.Web.Controllers
 {

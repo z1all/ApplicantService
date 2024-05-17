@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AmdinPanelMVC.Services.Interfaces;
 using AmdinPanelMVC.Models;
-using Common.Models.DTOs;
 using Common.Models.Models;
 using Common.API.Helpers;
+using Common.Models.DTOs.Admission;
 
 namespace AmdinPanelMVC.ViewComponents
 {
@@ -23,7 +23,7 @@ namespace AmdinPanelMVC.ViewComponents
                 return View("Default");
             }
 
-            ExecutionResult<ApplicantAdmissionPagedDTO> applicantAdmission = await _admissionService.GetApplicantAdmissionAsync(new()
+            ExecutionResult<ApplicantAdmissionPagedDTO> applicantAdmission = await _admissionService.GetAdmissionsAsync(new()
             {
                 ApplicantFullName = filter.ApplicantFullName,
                 CodeOrNameProgram = filter.CodeOrNameProgram,
@@ -34,8 +34,8 @@ namespace AmdinPanelMVC.ViewComponents
                 Page = filter.Page,
                 Size = filter.Size
             }, managerId);
-
-            return View("Default", applicantAdmission.Result);
+            
+            return View("Default", applicantAdmission.Result ?? new() { ApplicantAdmissions = [], Pagination = new() { Count = 1, Current = 1, Size = 1} });
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AdmissioningService.Core.Application.Interfaces.Services;
-using AdmissioningService.Core.Application.DTOs;
 using Common.API.Controllers;
+using Common.Models.DTOs.Admission;
 
 namespace AdmissioningService.Presentation.Web.Controllers
 {

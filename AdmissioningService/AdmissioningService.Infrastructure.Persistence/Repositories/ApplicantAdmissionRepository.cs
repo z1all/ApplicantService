@@ -4,7 +4,7 @@ using AdmissioningService.Core.Domain;
 using AdmissioningService.Infrastructure.Persistence.Contexts;
 using Common.Repositories;
 using Common.Models.Enums;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Admission;
 
 namespace AdmissioningService.Infrastructure.Persistence.Repositories
 {
@@ -37,6 +37,14 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
         public async Task<ApplicantAdmission?> GetCurrentByApplicantIdAsync(Guid applicantId)
         {
             return await _dbContext.ApplicantAdmissions
+                .FirstOrDefaultAsync(applicantAdmission => applicantAdmission.ApplicantId == applicantId &&
+                                                           applicantAdmission.AdmissionCompany!.IsCurrent);
+        }
+
+        public async Task<ApplicantAdmission?> GetCurrentByApplicantIdWithManagerAsync(Guid applicantId)
+        {
+            return await _dbContext.ApplicantAdmissions
+                .Include(applicantAdmissions => applicantAdmissions.Manager)
                 .FirstOrDefaultAsync(applicantAdmission => applicantAdmission.ApplicantId == applicantId &&
                                                            applicantAdmission.AdmissionCompany!.IsCurrent);
         }

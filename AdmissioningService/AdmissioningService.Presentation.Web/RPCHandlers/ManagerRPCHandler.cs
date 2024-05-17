@@ -1,5 +1,5 @@
 ﻿using AdmissioningService.Core.Application.Interfaces.Services;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Admission;
 using Common.Models.Models;
 using Common.ServiceBus.EasyNetQRPC;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
@@ -27,7 +27,16 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
                 await ExceptionHandlerAsync(async (service) => await GetManagerProfileAsync(service, request)));
 
             _bus.Rpc.Respond<GetManagersRequest, ExecutionResult<GetManagersResponse>>(async (_) =>
-                await ExceptionHandlerAsync(async (service) => await GetManagersAsync(service)));
+                await ExceptionHandlerAsync(async (service) => await GetManagersAsync(service))); 
+            
+            _bus.Rpc.Respond<AddManagerToAdmissionRequest, ExecutionResult>(async (request) =>
+                await ExceptionHandlerAsync(async (service) => await AddManagerToAdmissionAsync(service, request)));
+
+            _bus.Rpc.Respond<TakeApplicantAdmissionRequest, ExecutionResult>(async (request) =>
+                await ExceptionHandlerAsync(async (service) => await TakeApplicantAdmissionAsync(service, request)));            
+            
+            _bus.Rpc.Respond<RejectApplicantAdmissionRequest, ExecutionResult>(async (request) =>
+                await ExceptionHandlerAsync(async (service) => await RejectApplicantAdmissionAsync(service, request)));
         }
 
         private async Task<ExecutionResult> CreateManagerAsync(IServiceProvider service, CreatedManagerRequest request)
@@ -67,6 +76,27 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
             ExecutionResult<List<ManagerProfileDTO>> response = await managerService.GetManagersAsync();
 
             return ResponseHandler(response, managers => new GetManagersResponse() { Managers = managers });
+        }
+
+        private async Task<ExecutionResult> AddManagerToAdmissionAsync(IServiceProvider service, AddManagerToAdmissionRequest request)
+        {
+            var managerService = service.GetRequiredService<IManagerService>();
+
+            return await managerService.AddManagerToAdmissionAsync(request.AdmissionId, request.MangerId);
+        }
+
+        private async Task<ExecutionResult> TakeApplicantAdmissionAsync(IServiceProvider service, TakeApplicantAdmissionRequest request)
+        {
+            var managerService = service.GetRequiredService<IManagerService>();
+
+            return await managerService.TakeApplicantAdmissionAsync(request.AdmissionId, request.MangerId);
+        }
+
+        private async Task<ExecutionResult> RejectApplicantAdmissionAsync(IServiceProvider service, RejectApplicantAdmissionRequest request)
+        {
+            var managerService = service.GetRequiredService<IManagerService>();
+
+            return await managerService.RefuseFromApplicantAdmissionAsync(request.AdmissionId, request.MangerId);
         }
     }
 }
