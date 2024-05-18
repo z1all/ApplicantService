@@ -54,7 +54,7 @@
         <div class="row g-3">
             <div class="col align-self-center">Статус поступления: <span id="statusContainerId">@await Html.PartialAsync("_AdmissionStatus", @Model.ApplicantAdmission.AdmissionStatus)</span></div>
 
-            @if(!disabled)
+            @if (!disabled)
             {
                 <div class="col-auto">
                     <button id="changeStatusButtonId" type="button" class="btn btn-primary">Изменить</button>
@@ -68,12 +68,12 @@
         <form id="applicantBasicDataFormId" class="row g-3 mb-3">
             <div class="col-12">
                 <label for="applicantFullNameId" class="form-label">ФИО</label>
-                <input name="fullName" 
-                       id="applicantFullNameId" 
-                       type="text" 
-                       class="form-control" 
-                       value="@Model.ApplicantInfo.ApplicantProfile.FullName" 
-                       disabled ="@disabled"
+                <input name="fullName"
+                       id="applicantFullNameId"
+                       type="text"
+                       class="form-control"
+                       value="@Model.ApplicantInfo.ApplicantProfile.FullName"
+                       disabled="@disabled"
                        required>
                 <span class="text-danger"></span>
             </div>
@@ -91,14 +91,14 @@
         </form>
 
         <h5>Дополнительные данные абитуриента</h5>
-        <form id="applicantAdditionDataFormId" class="row g-3 mb-3">
+        <form id="applicantAdditionDataFormId" class="row g-3">
             <div class="col-12">
                 <label for="applicantBirthdayId" class="form-label">Дата рождения</label>
-                <input name="birthday" 
-                       id="applicantBirthdayId" 
-                       type="date" 
-                       class="form-control" 
-                       value="@(Model.ApplicantInfo.ApplicantProfile.Birthday?.ToString("yyyy-MM-dd"))" 
+                <input name="birthday"
+                       id="applicantBirthdayId"
+                       type="date"
+                       class="form-control"
+                       value="@(Model.ApplicantInfo.ApplicantProfile.Birthday?.ToString("yyyy-MM-dd"))"
                        disabled="@disabled"
                        required>
                 <span class="text-danger"></span>
@@ -113,33 +113,72 @@
             </div>
             <div class="col-12">
                 <label for="applicantCitizenshipId" class="form-label">Гражданство</label>
-                <input name="citizenship" 
-                       id="applicantCitizenshipId" 
-                       type="text" 
-                       class="form-control" 
-                       value="@Model.ApplicantInfo.ApplicantProfile.Citizenship" 
+                <input name="citizenship"
+                       id="applicantCitizenshipId"
+                       type="text"
+                       class="form-control"
+                       value="@Model.ApplicantInfo.ApplicantProfile.Citizenship"
                        disabled="@disabled"
                        required>
                 <span class="text-danger"></span>
             </div>
             <div class="col-12">
                 <label for="applicantPhoneNumberId" class="form-label">Номер телефона</label>
-                <input name="phoneNumber" 
-                       id="applicantPhoneNumberId" 
-                       type="text" 
-                       class="form-control" 
-                       value="@Model.ApplicantInfo.ApplicantProfile.PhoneNumber" 
+                <input name="phoneNumber"
+                       id="applicantPhoneNumberId"
+                       type="text"
+                       class="form-control"
+                       value="@Model.ApplicantInfo.ApplicantProfile.PhoneNumber"
                        disabled="@disabled"
                        required>
                 <span class="text-danger"></span>
             </div>
-            @if(!disabled)
+            @if (!disabled)
             {
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </div>
             }
         </form>
+
+        <hr />
+        <h5>Документы абитуриента</h5>
+
+        <div class="d-flex flex-column">
+            @if (Model.ApplicantInfo.Documents.Count == 0)
+            {
+                <div class="row border-1 p-3 border">
+                    У абитуриента нет документов
+                </div>
+            }
+
+            @foreach(var document in Model.ApplicantInfo.Documents)
+            {
+                <a class="list-group-item d-flex document admissionLink">
+                    <div class="col-sm-6 m-0"><span class="text-secondary">Тип документа: </span> @document.Type.ToRu()</div>
+                    @if (document.Type == DocumentType.EducationDocument)
+                    {
+                        <div class="col-sm-6 m-0"><span class="text-secondary">Комментарии: </span>@document.Comments</div>
+                    }
+                </a>
+            }
+        </div>
+
+        <hr />
+        <h5>Выбранные программы абитуриента</h5>
+        <div class="d-flex flex-column">
+            @foreach (var program in Model.ApplicantAdmission.AdmissionPrograms.OrderBy(p => p.Priority))
+            {
+                <div class="list-group-item d-flex">
+                    <div class="d-flex align-items-center h3 me-3">@(program.Priority + 1)</div>
+                    <div>
+                        <div><span class="text-secondary">Факультет:</span> @program.EducationProgram.Faculty.Name</div>
+                        <div><span class="text-secondary">Программа:</span> @program.EducationProgram.Name</div>
+                        <div><span class="text-secondary">Код программы:</span> @program.EducationProgram.Code</div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
@@ -179,7 +218,7 @@
     <script>
 
         const applicant = @Html.Raw(Json.Serialize(Model))
-        saveApplicant(applicant);
+            saveApplicant(applicant);
 
     </script>
 }

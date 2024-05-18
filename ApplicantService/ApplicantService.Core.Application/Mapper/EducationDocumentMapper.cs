@@ -26,7 +26,7 @@ namespace ApplicantService.Core.Application.Mapper
             };
         }
         
-        public static EducationDocument ToEducationDocument(this EditAddEducationDocumentInfo documentInfo, Guid applicantId)
+        public static EducationDocument ToEducationDocument(this EditAddEducationDocumentInfo documentInfo, Guid applicantId, string comments)
         {
             return new()
             {
@@ -35,6 +35,7 @@ namespace ApplicantService.Core.Application.Mapper
                 DocumentType = DocumentType.EducationDocument,
                 EducationDocumentTypeId = documentInfo.EducationDocumentTypeId,
                 Name = documentInfo.Name,
+                Comments = comments,
             };
         }
     }

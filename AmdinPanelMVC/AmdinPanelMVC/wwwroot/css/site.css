@@ -40,3 +40,7 @@ body {
     color: unset;
     text-decoration: unset;
 }
+
+.document {
+    min-height: 50px;
+}

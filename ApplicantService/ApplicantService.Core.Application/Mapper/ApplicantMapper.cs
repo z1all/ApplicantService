@@ -14,6 +14,7 @@ namespace ApplicantService.Core.Application.Mapper
                 {
                     Id = document.Id,
                     Type = document.DocumentType,
+                    Comments = document.Comments
                 }).ToList(),
             };
         }
