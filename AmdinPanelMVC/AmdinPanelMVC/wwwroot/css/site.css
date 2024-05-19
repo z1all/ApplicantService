@@ -44,3 +44,13 @@ body {
 .document {
     min-height: 50px;
 }
+
+hr {
+    border: 1px solid gray;
+}
+
+.swapButtons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

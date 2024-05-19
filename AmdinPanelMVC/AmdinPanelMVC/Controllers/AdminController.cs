@@ -161,6 +161,10 @@ namespace AmdinPanelMVC.Controllers
                 {
                     ErrorsToModalState("Email", error.Value);
                 }
+                else if(error.Key.Contains("AdministratorWithFaculty"))
+                {
+                    ErrorsToModalState("FacultyId", ["Администратор не может иметь факультет"]);
+                }
                 else if (error.Key.Contains("Faculty"))
                 {
                     ErrorsToModalState("FacultyId", ["Такого факультета не существует"]);

@@ -151,7 +151,124 @@ document.getElementById("applicantAdditionDataFormId").addEventListener('submit'
     request('/Admission/ChangeAdditionInfo', 'POST', changeAdditionInfo, data);
 });
 
+document.getElementById('saveOrderButtonId')?.addEventListener('click', (e) => {
+    e.preventDefault();
 
+    const changePriority = (data) => {
+        if (data.status === 200) {
+            updateProgramsOrder(programsOrderCopy);
+        }
+        else {
+            let mess = "Ошибка при отправке запроса на обновление приоритета программ"
+
+            if (data.body.errors.WrongProgramCount) {
+                mess = "У абитуриента изменилось число программ, обновите страницу"
+            }
+
+            showErrorToast(
+                "Удаление программы",
+                mess,
+            );
+        }
+    }
+
+    const data = {
+        applicantId: getApplicant().applicantInfo.applicantProfile.id,
+        newPriorities: {
+            newProgramPrioritiesOrder: programsOrderCopy
+        }
+    };
+
+    request('/Admission/ChangePriorities', 'POST', changePriority, data);
+})
+
+let programsOrderCopy = null;
 let savedApplicant = null;
-const saveApplicant = (applicant) => savedApplicant = applicant;
+const saveApplicant = (applicant) => {
+    savedApplicant = applicant;
+
+    programsOrderCopy = getProgramsOrder(savedApplicant);
+    setListeners(programsOrderCopy);
+};
 const getApplicant = () => savedApplicant;
+
+function getProgramsOrder(applicant) {
+    let programsOrder = [];
+
+    applicant.applicantAdmission.admissionPrograms.forEach(p => {
+        programsOrder.push(p.educationProgram.id);
+    });
+
+    return programsOrder;
+}
+
+function updateProgramsOrder(programsOrder) {
+    programsOrder.forEach((program, index) => {
+        $(`#${program}`).find('.priority').text(index + 1);
+    });
+}
+
+function setListeners(programs) {
+    programs.forEach((program) => {
+        $(`#${program}`).find('label[for="up"]').on('click', (e) => {
+            let prev = $(`#${program}`).prev();
+            let index = programs.indexOf(program);
+
+            if (index > 0) {
+                $(`#${program}`).insertBefore(prev);
+                swapArrayElements(programs, index, index - 1);
+            }
+        });
+
+        $(`#${program}`).find('label[for="down"]').on('click', (e) => {
+            let next = $(`#${program}`).next();
+            let index = programs.indexOf(program);
+
+            if (index + 1 < programs.length) {
+                $(`#${program}`).insertAfter(next);
+                swapArrayElements(programs, index, index + 1);
+            }
+        });
+
+        $(`#${program}`).find('.delete').on('click', (e) => {
+            e.preventDefault();
+
+            const deleteProgram = (data) => {
+                if (data.status === 200) {
+                    deleteProgramElement(program, programs);
+                }
+                else {
+                    let mess = "Ошибка при отправке запроса на удаление программы"
+
+                    showErrorToast(
+                        "Удаление программы",
+                        mess,
+                    );
+                }
+            }
+
+            const data = {
+                applicantId: getApplicant().applicantInfo.applicantProfile.id,
+                programId: program
+            };
+
+            request('/Admission/DeleteProgram', 'POST', deleteProgram, data);
+        });
+    });
+}
+
+function deleteProgramElement(program, programs) {
+    $(`#${program}`).remove();
+    programs.splice(programs.indexOf(program), 1);
+    updateProgramsOrder(programs);
+}
+
+function getStrIndex(arr, str) {
+    arr.indexOf(str);
+}
+
+function swapArrayElements(arr, index1, index2) {
+    let temp = arr[index1];
+    arr[index1] = arr[index2];
+    arr[index2] = temp;
+}

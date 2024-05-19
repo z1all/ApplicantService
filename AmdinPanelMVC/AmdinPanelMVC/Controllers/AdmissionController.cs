@@ -116,6 +116,23 @@ namespace AmdinPanelMVC.Controllers
                 => _applicantService.ChangeAdditionInfoAsync(changeInfo, managerId));
         }
 
+        [HttpPost]
+        [ValidateModelState]
+        public async Task<IActionResult> ChangePriorities([FromBody] ChangePrioritiesDTO change)
+        {
+            return await RequestHandlerAsync((managerId)
+                => _applicantService.ChangePrioritiesAsync(change.ApplicantId, change.NewPriorities, managerId));
+        }
+
+
+        [HttpPost]
+        [ValidateModelState]
+        public async Task<IActionResult> DeleteProgram([FromBody] DeleteProgramDTO deleteProgram)
+        {
+            return await RequestHandlerAsync((managerId)
+                => _applicantService.DeleteProgramAsync(deleteProgram.ApplicantId, deleteProgram.ProgramId, managerId));
+        }
+
         private async Task<IActionResult> RequestHandlerAsync(Func<Guid, Task<ExecutionResult>> requestAsync, Func<IActionResult>? OkResult = null)
         {
             if (!ModelState.IsValid || !HttpContext.TryGetUserId(out Guid managerId))

@@ -25,6 +25,12 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
 
             _bus.Rpc.Respond<ChangeAdmissionStatusRequest, ExecutionResult>(async (request) =>
                await ExceptionHandlerAsync(async (service) => await ChangeAdmissionStatusAsync(service, request)));
+
+            _bus.Rpc.Respond<ChangeAdmissionProgramPriorityRequest, ExecutionResult>(async (request) =>
+               await ExceptionHandlerAsync(async (service) => await ChangeAdmissionProgramPriorityAsync(service, request)));
+
+            _bus.Rpc.Respond<DeleteProgramFromCurrentAdmissionRequest, ExecutionResult>(async (request) =>
+              await ExceptionHandlerAsync(async (service) => await DeleteAdmissionProgramAsync(service, request)));
         }
 
         public async Task<ExecutionResult> CheckPermissionsAsync(IServiceProvider service, CheckPermissionsRequest request)
@@ -57,6 +63,20 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
             var _managerService = service.GetRequiredService<IManagerService>();
 
             return await _managerService.ChangeApplicantAdmissionStatusAsync(request.AdmissionId, request.NewStatus, request.ManagerId);
+        }
+
+        public async Task<ExecutionResult> ChangeAdmissionProgramPriorityAsync(IServiceProvider service, ChangeAdmissionProgramPriorityRequest request)
+        {
+            var _admissionService = service.GetRequiredService<IAdmissionService>();
+
+            return await _admissionService.ChangeAdmissionProgramPriorityAsync(request.ApplicantId, request.ChangePriorities, request.ManagerId);
+        }
+
+        public async Task<ExecutionResult> DeleteAdmissionProgramAsync(IServiceProvider service, DeleteProgramFromCurrentAdmissionRequest request)
+        {
+            var _admissionService = service.GetRequiredService<IAdmissionService>();
+
+            return await _admissionService.DeleteAdmissionProgramAsync(request.ApplicantId, request.ProgramId, request.ManagerId);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Services.Base;
 using AmdinPanelMVC.Services.Interfaces;
+using Common.Models.DTOs.Admission;
 using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
@@ -35,6 +36,28 @@ namespace AmdinPanelMVC.Services
                     Gender = changeInfo.Gender,
                     PhoneNumber = changeInfo.PhoneNumber
                 }, "ChangeApplicantInfoFail");
+        }
+
+        public async Task<ExecutionResult> ChangePrioritiesAsync(Guid applicantId, ChangePrioritiesApplicantProgramDTO changePriorities, Guid managerId)
+        {
+            return await RequestHandlerAsync<ExecutionResult, ChangeAdmissionProgramPriorityRequest>(
+                new()
+                {
+                    ApplicantId = applicantId,
+                    ManagerId = managerId,
+                    ChangePriorities = changePriorities,
+                }, "ChangePrioritiesFail");
+        }
+
+        public async Task<ExecutionResult> DeleteProgramAsync(Guid applicantId, Guid programId, Guid managerId)
+        {
+            return await RequestHandlerAsync<ExecutionResult, DeleteProgramFromCurrentAdmissionRequest>(
+               new()
+               {
+                   ApplicantId = applicantId,
+                   ProgramId = programId,
+                   ManagerId = managerId,
+               }, "DeleteProgramFail");
         }
     }
 }
