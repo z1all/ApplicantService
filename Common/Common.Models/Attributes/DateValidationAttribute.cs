@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ApplicantService.Core.Application.Validation
+namespace Common.Models.Attributes
 {
     public class DateValidationAttribute : ValidationAttribute
     {
@@ -9,9 +9,9 @@ namespace ApplicantService.Core.Application.Validation
             bool isCorrect = true;
             if (value is DateOnly date)
             {
-                if(date >= DateOnly.FromDateTime(DateTime.UtcNow))
+                if (date >= DateOnly.FromDateTime(DateTime.UtcNow))
                 {
-                    ErrorMessage = $"You cannot specify a date earlier than {DateOnly.FromDateTime(DateTime.UtcNow)}";
+                    //ErrorMessage = $"You cannot specify a date earlier than {DateOnly.FromDateTime(DateTime.UtcNow)}";
                     isCorrect = false;
                 }
             }

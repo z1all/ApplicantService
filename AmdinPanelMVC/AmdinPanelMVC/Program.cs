@@ -38,8 +38,23 @@ app.MapControllerRoute(
     defaults: new { controller = "Admission", action = "ApplicantAdmission" });
 
 app.MapControllerRoute(
+    name: "Passport",
+    pattern: "Applicant/{applicantId}/Passport",
+    defaults: new { controller = "Documents", action = "Passport" });
+
+app.MapControllerRoute(
+    name: "EducationDocument",
+    pattern: "Applicant/{applicantId}/EducationDocument/{documentId}",
+    defaults: new { controller = "Documents", action = "EducationDocument" });
+
+app.MapControllerRoute(
     name: "NotFound",
     pattern: "NotFound",
     defaults: new { controller = "Home", action = "NotFoundError" });
+
+app.MapControllerRoute(
+    name: "InternalServer",
+    pattern: "InternalServer",
+    defaults: new { controller = "Home", action = "InternalServerError" });
 
 app.Run();

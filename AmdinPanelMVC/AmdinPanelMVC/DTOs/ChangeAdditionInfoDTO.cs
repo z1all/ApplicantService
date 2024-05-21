@@ -1,4 +1,5 @@
 ﻿using Common.API.Attributes;
+using Common.Models.Attributes;
 using Common.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +9,7 @@ namespace AmdinPanelMVC.DTOs
     {
         public required Guid ApplicantId { get; set; }
 
-        [DataOnlyLessThenNow(ErrorMessage = "Дата рождения не может быть позже текущей даты")]
+        [DateValidation(ErrorMessage = "Дата рождения не может быть позже текущей даты")]
         public required DateOnly Birthday { get; set; }
         public required Gender Gender { get; set; }
         [MinLength(5, ErrorMessage = "Минимальная длина составляет 5 символов")]

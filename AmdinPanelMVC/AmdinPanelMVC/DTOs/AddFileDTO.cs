@@ -1,8 +1,8 @@
 ﻿using Common.API.Attributes;
 
-namespace ApplicantService.Presentation.Web.DTOs
+namespace AmdinPanelMVC.DTOs
 {
-    public class FileUpload
+    public class AddFileDTO
     {
         [FileMaxSizeValidation(10 * 1024 * 1024)]
         [FileAllowTypesValidation]

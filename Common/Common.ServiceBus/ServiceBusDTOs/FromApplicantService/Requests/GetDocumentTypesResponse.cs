@@ -1,6 +1,6 @@
 ﻿using Common.Models.DTOs.Dictionary;
 
-namespace Common.ServiceBus.ServiceBusDTOs.FromApplicantService
+namespace Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests
 {
     public class GetDocumentTypesResponse
     {

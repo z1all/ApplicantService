@@ -1,10 +1,10 @@
-﻿namespace ApplicantService.Presentation.Web
+﻿namespace Common.API.Attributes
 {
     public static class MimeTypeMap
     {
         public static readonly Dictionary<string, string> _mappingToContentType;
         public static readonly Dictionary<string, string> _mappingToDocumentType;
-   
+
         static MimeTypeMap()
         {
             List<Tuple<string, string>> mappings = new() {
@@ -18,10 +18,10 @@
                 Tuple.Create(".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
                 Tuple.Create(".dot", "application/msword")
             };
-            
+
             Dictionary<string, string> mappingToContentType = new();
             Dictionary<string, string> mappingToDocumentType = new();
-            foreach(var mapping in mappings)
+            foreach (var mapping in mappings)
             {
                 mappingToContentType.Add(mapping.Item1, mapping.Item2);
                 mappingToDocumentType.TryAdd(mapping.Item2, mapping.Item1);

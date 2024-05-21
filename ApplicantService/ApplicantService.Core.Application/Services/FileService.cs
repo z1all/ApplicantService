@@ -1,8 +1,8 @@
-﻿using ApplicantService.Core.Application.DTOs;
-using ApplicantService.Core.Application.Interfaces.Repositories;
+﻿using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Application.Mapper;
 using ApplicantService.Core.Domain;
+using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 
 namespace ApplicantService.Core.Application.Services

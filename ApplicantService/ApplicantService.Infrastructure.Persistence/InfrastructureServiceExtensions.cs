@@ -19,6 +19,7 @@ namespace ApplicantService.Infrastructure.Persistence
             services.AddScoped<IApplicantRepository, ApplicantRepository>();
             services.AddScoped<IEducationDocumentTypeCacheRepository, EducationDocumentTypeCacheRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
+            services.AddScoped<IDocumentFileInfoRepository, DocumentFileInfoRepository>();
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<IEducationDocumentRepository, EducationDocumentRepository>();
             services.AddScoped<IPassportRepository, PassportRepository>();

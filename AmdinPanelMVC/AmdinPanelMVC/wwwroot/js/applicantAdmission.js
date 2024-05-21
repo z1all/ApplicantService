@@ -93,7 +93,7 @@ document.getElementById("changeStatusModalId").addEventListener('submit', (e) =>
     request('/Admission/ChangeStatus', 'POST', changeAdmission, data);
 });
 
-document.getElementById("applicantBasicDataFormId").addEventListener('submit', (e) => {
+document.getElementById("applicantBasicDataFormId")?.addEventListener('submit', (e) => {
     e.preventDefault();
 
     $('#applicantFullNameId').next().text("");
@@ -117,7 +117,7 @@ document.getElementById("applicantBasicDataFormId").addEventListener('submit', (
     request('/Admission/ChangeBasicInfo', 'POST', changeBasicInfo, data);
 });
 
-document.getElementById("applicantAdditionDataFormId").addEventListener('submit', (e) => {
+document.getElementById("applicantAdditionDataFormId")?.addEventListener('submit', (e) => {
     e.preventDefault();
 
     $('#applicantBirthdayId').next().text("");

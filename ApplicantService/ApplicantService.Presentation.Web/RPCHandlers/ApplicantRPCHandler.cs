@@ -4,7 +4,7 @@ using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 using Common.ServiceBus.EasyNetQRPC;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
-using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
+using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests;
 using EasyNetQ;
 
 namespace ApplicantService.Presentation.Web.RPCHandlers

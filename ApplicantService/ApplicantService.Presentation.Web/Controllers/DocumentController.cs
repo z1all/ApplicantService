@@ -7,6 +7,7 @@ using Common.API.Controllers;
 using Common.API.Helpers;
 using Common.Models.Models;
 using Common.Models.DTOs.Applicant;
+using Common.API.Attributes;
 
 namespace ApplicantService.Presentation.Web.Controllers
 {

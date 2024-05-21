@@ -1,4 +1,4 @@
-﻿namespace Common.ServiceBus.ServiceBusDTOs.FromApplicantService
+﻿namespace Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests
 {
     public class GetApplicantInfoRequest
     {

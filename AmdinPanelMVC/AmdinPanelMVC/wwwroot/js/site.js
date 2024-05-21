@@ -27,7 +27,7 @@ function showToast(title, text) {
     toast.show();
 }
 
-function request(url, method, callback, data = null, userToken = null) {
+function request(url, method, callback, data = null, isForm = false) {
     let request = {
         method,
         headers: {
@@ -35,13 +35,14 @@ function request(url, method, callback, data = null, userToken = null) {
         }
     }
 
-    if (userToken !== null) {
-        request.headers['Authorization'] = "Bearer " + userToken;
-    }
-
     if (data !== null) {
-        request.headers['content-Type'] = "application/json";
-        request.body = JSON.stringify(data)
+        if (isForm) {
+            request.body = data 
+        }
+        else {
+            request.headers['content-Type'] = "application/json";
+            request.body = JSON.stringify(data);
+        }
     }
 
     let status;

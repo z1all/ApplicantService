@@ -6,16 +6,14 @@ using AmdinPanelMVC.DTOs;
 using Common.Models.Models;
 using Common.Models.DTOs.Admission;
 using Common.Models.DTOs.Applicant;
-using Common.API.Helpers;
 using Common.Models.Enums;
-using Common.API.DTOs;
-using System.Collections.Immutable;
 using Common.API.Attributes;
+using AmdinPanelMVC.Controllers.Base;
 
 namespace AmdinPanelMVC.Controllers
 {
     [RequiredAuthorize]
-    public class AdmissionController : Controller
+    public class AdmissionController : BaseController
     {
         private readonly IAdmissionService _admissionService;
         private readonly IApplicantService _applicantService;
@@ -46,12 +44,6 @@ namespace AmdinPanelMVC.Controllers
 
         public async Task<IActionResult> ApplicantAdmission(Guid applicantId, Guid admissionId)
         {
-            // GetApplicantAdmissionAsync
-            // GetApplicantProfile
-            // GetList<DocumentInfo>
-            // 
-            // 
-
             ExecutionResult<ApplicantAdmissionDTO> admission = await _admissionService.GetApplicantAdmissionAsync(applicantId, admissionId);
             if (!admission.IsSuccess)
             {
@@ -131,28 +123,6 @@ namespace AmdinPanelMVC.Controllers
         {
             return await RequestHandlerAsync((managerId)
                 => _applicantService.DeleteProgramAsync(deleteProgram.ApplicantId, deleteProgram.ProgramId, managerId));
-        }
-
-        private async Task<IActionResult> RequestHandlerAsync(Func<Guid, Task<ExecutionResult>> requestAsync, Func<IActionResult>? OkResult = null)
-        {
-            if (!ModelState.IsValid || !HttpContext.TryGetUserId(out Guid managerId))
-            {
-                return BadRequest();
-            }
-
-            ExecutionResult result = await requestAsync(managerId);
-            if (!result.IsSuccess)
-            {
-                ErrorResponse error = new()
-                {
-                    Status = 400,
-                    Errors = result.Errors,
-                };
-
-                return BadRequest(error);
-            }
-            
-            return OkResult is null ? Ok() : OkResult();
         }
     }
 }

@@ -4,7 +4,7 @@ using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Domain;
 using Common.Models.Models;
-using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
+using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests;
 
 namespace AdmissioningService.Core.Application.Helpers
 {

@@ -1,5 +1,6 @@
 ﻿using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Domain;
+using Common.Models.DTOs.Applicant;
 using Common.Models.Enums;
 
 namespace ApplicantService.Core.Application.Mapper

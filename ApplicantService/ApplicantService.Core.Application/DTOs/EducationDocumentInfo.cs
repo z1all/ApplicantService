@@ -1,4 +1,6 @@
-﻿namespace ApplicantService.Core.Application.DTOs
+﻿using Common.Models.DTOs.Applicant;
+
+namespace ApplicantService.Core.Application.DTOs
 {
     public class EducationDocumentInfo
     {

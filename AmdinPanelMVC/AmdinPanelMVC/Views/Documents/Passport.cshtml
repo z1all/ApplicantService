@@ -1,0 +1,71 @@
+﻿@model AmdinPanelMVC.Models.PassportViewModel
+
+<div class="row justify-content-center h-100">
+    <div class="col-md-8 col-lg-6 d-flex flex-column h-100 ">
+        <h2>Паспорт абитуриента</h2>
+        <hr />
+
+        <form id="passportFormId" class="row g-3">
+            <div class="col-12">
+                <label for="seriesNumberId" class="form-label">Серия и номер</label>
+                <input name="seriesNumber" id="seriesNumberId" type="text" class="form-control" value="@Model.Passport.SeriesNumber">
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label for="birthPlaceId" class="form-label">Место рождения</label>
+                <input name="birthPlace" id="birthPlaceId" type="text" class="form-control" value="@Model.Passport.BirthPlace">
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label for="issueYearId" class="form-label">Дата выдачи</label>
+                <input name="issueYear" id="issueYearId" type="date" class="form-control" value="@(Model.Passport.IssueYear.ToString("yyyy-MM-dd"))">
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label for="issuedByWhomId" class="form-label">Кем выдан</label>
+                <input name="issuedByWhom" id="issuedByWhomId" type="text" class="form-control" value="@Model.Passport.IssuedByWhom">
+                <span class="text-danger"></span>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+
+        <hr />
+
+        <div id="scansContainerId">
+            @{
+                await Html.RenderPartialAsync("_Scans", Model.Passport.Scans);
+            }
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/documents.js"></script>
+
+    <script>
+        const applicant = @Html.Raw(Json.Serialize(Model.ApplicantId));
+        setApplicantId(applicant);
+
+        const passport = @Html.Raw(Json.Serialize(Model.Passport.Id));
+        setDocumentId(passport);
+    </script>
+}
+
+@* 
+      
+        public required string SeriesNumber { get; set; }
+        public required string BirthPlace { get; set; }
+        public required DateOnly IssueYear { get; set; }
+        public required string IssuedByWhom { get; set; }
+        
+        public required Guid Id { get; set; }
+        public required string SeriesNumber { get; set; }
+        public required string BirthPlace { get; set; }
+        public required DateOnly IssueYear { get; set; }
+        public required string IssuedByWhom { get; set; }
+        public required List<ScanInfo> Scans { get; set; }
+      
+*@

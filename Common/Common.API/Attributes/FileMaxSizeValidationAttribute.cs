@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
-namespace ApplicantService.Presentation.Web.Validations
+namespace Common.API.Attributes
 {
     public class FileMaxSizeValidationAttribute : ValidationAttribute
     {

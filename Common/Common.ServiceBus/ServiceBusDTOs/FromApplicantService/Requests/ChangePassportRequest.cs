@@ -1,12 +1,11 @@
-﻿using Common.Models.Attributes;
-
-namespace ApplicantService.Core.Application.DTOs
+﻿namespace Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests
 {
-    public class EditAddPassportInfo
+    public class ChangePassportRequest
     {
+        public required Guid ApplicantId { get; set; }
+        public required Guid MangerId { get; set; }
         public required string SeriesNumber { get; set; }
         public required string BirthPlace { get; set; }
-        [DateValidation]
         public required DateOnly IssueYear { get; set; }
         public required string IssuedByWhom { get; set; }
     }

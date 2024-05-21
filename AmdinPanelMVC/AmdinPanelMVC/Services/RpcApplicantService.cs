@@ -5,7 +5,7 @@ using Common.Models.DTOs.Admission;
 using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
-using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
+using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests;
 using EasyNetQ;
 
 namespace AmdinPanelMVC.Services

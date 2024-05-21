@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
-namespace ApplicantService.Presentation.Web.Validations
+namespace Common.API.Attributes
 {
     public class FileAllowTypesValidationAttribute : ValidationAttribute
     {
-    
+
         public FileAllowTypesValidationAttribute()
         {
             ErrorMessage = $"File type is not allowed. These extensions are allowed only: {MimeTypeMap.GetExistTypeString()}.";

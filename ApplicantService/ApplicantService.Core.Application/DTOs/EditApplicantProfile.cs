@@ -1,4 +1,4 @@
-﻿using ApplicantService.Core.Application.Validation;
+﻿using Common.Models.Attributes;
 using Common.Models.Enums;
 
 namespace ApplicantService.Core.Application.DTOs

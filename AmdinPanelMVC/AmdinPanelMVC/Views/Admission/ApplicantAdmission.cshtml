@@ -154,7 +154,11 @@
 
             @foreach (var document in Model.ApplicantInfo.Documents)
             {
-                <a class="list-group-item d-flex document admissionLink">
+                <a class="list-group-item d-flex document admissionLink"
+                   href="@(document.Type == DocumentType.Passport ? 
+                           $"/Applicant/{Model.ApplicantInfo.ApplicantProfile.Id}/Passport" 
+                           :
+                           $"/Applicant/{Model.ApplicantInfo.ApplicantProfile.Id}/EducationDocument/{document.Id}")">
                     <div class="col-sm-6 pe-2 m-0"><span class="text-secondary">Тип документа: </span> @document.Type.ToRu()</div>
                     @if (document.Type == DocumentType.EducationDocument)
                     {
