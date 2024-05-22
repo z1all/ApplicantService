@@ -7,6 +7,7 @@ namespace UserService.Core.Application.Interfaces
     {
         Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId);
         Task<ExecutionResult> CreateManagerAsync(Manager manager);
+        Task<ExecutionResult> ChangeManagerAsync(Manager manager);
         Task<ExecutionResult> DeleteManagerAsync(Guid managerId);
     }
 }

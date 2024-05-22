@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AdmissioningService.Core.Application.Interfaces.Services;
-using AdmissioningService.Core.Application.DTOs;
 using Common.API.Controllers;
+using Common.Models.DTOs.Admission;
+using Common.Models.Enums;
 
 namespace AdmissioningService.Presentation.Web.Controllers
 {
     [Route("api/admissioning")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
     public class AdmissionController : BaseController
     {
         private readonly IAdmissionService _admissionService;
@@ -33,7 +34,8 @@ namespace AdmissioningService.Presentation.Web.Controllers
         [HttpGet("{admissionId}")]
         public async Task<ActionResult<ApplicantAdmissionDTO>> GetAdmission([FromRoute] Guid admissionId)
         {
-            return await ExecutionResultHandlerAsync((applicantId) => _admissionService.GetApplicantAdmissionAsync(applicantId, admissionId));
+            return await ExecutionResultHandlerAsync((applicantId) =>
+                _admissionService.GetApplicantAdmissionAsync(applicantId, admissionId));
         }
 
         [HttpPost("program")]

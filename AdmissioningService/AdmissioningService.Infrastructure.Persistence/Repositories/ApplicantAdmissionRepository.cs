@@ -2,9 +2,9 @@
 using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Domain;
 using AdmissioningService.Infrastructure.Persistence.Contexts;
-using AdmissioningService.Core.Application.DTOs;
-using AdmissioningService.Core.Application.Enums;
 using Common.Repositories;
+using Common.Models.Enums;
+using Common.Models.DTOs.Admission;
 
 namespace AdmissioningService.Infrastructure.Persistence.Repositories
 {
@@ -41,6 +41,14 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
                                                            applicantAdmission.AdmissionCompany!.IsCurrent);
         }
 
+        public async Task<ApplicantAdmission?> GetCurrentByApplicantIdWithManagerAsync(Guid applicantId)
+        {
+            return await _dbContext.ApplicantAdmissions
+                .Include(applicantAdmissions => applicantAdmissions.Manager)
+                .FirstOrDefaultAsync(applicantAdmission => applicantAdmission.ApplicantId == applicantId &&
+                                                           applicantAdmission.AdmissionCompany!.IsCurrent);
+        }
+
         public async Task<List<ApplicantAdmission>> GetAllByFiltersWithCompanyAndProgramsAsync(ApplicantAdmissionFilterDTO filter, Guid managerId)
         {
             string? fullName = filter.ApplicantFullName?.ToLower() ?? null;
@@ -69,7 +77,10 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
                 _ => filtered,
             };
 
-            return await filteredAndSorted.ToListAsync();
+            return await filteredAndSorted               
+                .Skip((filter.Page - 1) * filter.Size)
+                .Take(filter.Size)
+                .ToListAsync();
         }
 
         public async Task<int> CountAllAsync(ApplicantAdmissionFilterDTO filter, Guid managerId)
@@ -88,6 +99,19 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
                     (filter.AdmissionStatus != null ? admission.AdmissionStatus == filter.AdmissionStatus : true) &&
                     (filter.ViewApplicantMode == ViewApplicantMode.OnlyTakenApplicant ? admission.ManagerId == managerId : true) &&
                     (filter.ViewApplicantMode == ViewApplicantMode.OnlyWithoutManager ? admission.ManagerId == null : true));
+        }
+
+        public async Task UpdateRangeAsync(List<ApplicantAdmission> entities)
+        {
+            _dbContext.ApplicantAdmissions.UpdateRange(entities);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ApplicantAdmission>> GetAllByManagerIdAsync(Guid managerId)
+        {
+            return await _dbContext.ApplicantAdmissions
+                .Where(admission => admission.ManagerId == managerId)
+                .ToListAsync();
         }
     }
 }

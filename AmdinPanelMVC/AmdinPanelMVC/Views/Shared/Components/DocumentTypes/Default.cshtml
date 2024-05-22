@@ -1,0 +1,8 @@
+﻿@model IEnumerable<Common.Models.DTOs.Dictionary.EducationDocumentTypeDTO>
+
+@foreach (var documentType in Model)
+{
+    bool selected = ViewBag.SelectedDocumentTypeId == documentType.Id;
+
+    <option value="@documentType.Id" selected="@selected">@documentType.Name</option>
+}

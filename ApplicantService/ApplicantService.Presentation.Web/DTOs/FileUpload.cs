@@ -1,4 +1,4 @@
-﻿using ApplicantService.Presentation.Web.Validations;
+﻿using Common.API.Attributes;
 
 namespace ApplicantService.Presentation.Web.DTOs
 {

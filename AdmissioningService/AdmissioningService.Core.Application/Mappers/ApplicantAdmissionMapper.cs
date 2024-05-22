@@ -1,5 +1,5 @@
-﻿using AdmissioningService.Core.Application.DTOs;
-using AdmissioningService.Core.Domain;
+﻿using AdmissioningService.Core.Domain;
+using Common.Models.DTOs.Admission;
 
 namespace AdmissioningService.Core.Application.Mappers
 {
@@ -9,8 +9,9 @@ namespace AdmissioningService.Core.Application.Mappers
         {
             return new()
             {
+                Id = applicantAdmission.Id,
                 LastUpdate = applicantAdmission.LastUpdate,
-                ExistManager = applicantAdmission.ManagerId is not null,
+                ManagerId = applicantAdmission.ManagerId,
                 AdmissionStatus = applicantAdmission.AdmissionStatus,
                 AdmissionCompany = applicantAdmission.AdmissionCompany!.ToAdmissionCompanyDTO(),
                 AdmissionPrograms = applicantAdmission.AdmissionPrograms.Select(admissionProgram => admissionProgram.ToAdmissionProgramDTO()).ToList(),
@@ -21,8 +22,9 @@ namespace AdmissioningService.Core.Application.Mappers
         {
             return new()
             {
+                Id = applicantAdmission.Id,
                 LastUpdate = applicantAdmission.LastUpdate,
-                ExistManager = applicantAdmission.ManagerId is not null,
+                ManagerId = applicantAdmission.ManagerId,
                 AdmissionStatus = applicantAdmission.AdmissionStatus,
                 AdmissionCompany = applicantAdmission.AdmissionCompany!.ToAdmissionCompanyDTO(),
                 AdmissionPrograms = programs.Select(program => program.ToAdmissionProgramDTO()).ToList()

@@ -5,6 +5,8 @@ using UserService.Core.Application.Interfaces;
 using Common.API.Controllers;
 using Common.API.Helpers;
 using Common.Models.Models;
+using Common.Models.DTOs.User;
+using Common.Models.Enums;
 
 namespace UserService.Presentation.Web.Controllers
 {
@@ -20,24 +22,24 @@ namespace UserService.Presentation.Web.Controllers
         }
 
         [HttpPatch("email")]
-        [Authorize]
-        public async Task<ActionResult> ChangeEmailAsync(ChangeEmailRequest changeEmail)
+        [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
+        public async Task<ActionResult> ChangeEmailAsync(ChangeEmailRequestDTO changeEmail)
         {
             return await ChangeHandlerAsync(async (Guid userId) =>
                  await _profileService.ChangeEmailAsync(changeEmail, userId));
         }
 
         [HttpPatch("password")]
-        [Authorize]
-        public async Task<ActionResult> ChangePasswordAsync(ChangePasswordRequest changePassword)
+        [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
+        public async Task<ActionResult> ChangePasswordAsync(ChangePasswordDTO changePassword)
         {
             return await ChangeHandlerAsync(async (Guid userId) =>
                  await _profileService.ChangePasswordAsync(changePassword, userId));
         }
 
         [HttpPatch("profile")]
-        [Authorize]
-        public async Task<ActionResult> ChangeProfileAsync(ChangeProfileRequest changeProfile)
+        [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
+        public async Task<ActionResult> ChangeProfileAsync(ChangeProfileRequestDTO changeProfile)
         {
             return await ChangeHandlerAsync(async (Guid userId) =>
                  await _profileService.ChangeProfileAsync(changeProfile, userId));
@@ -61,20 +63,20 @@ namespace UserService.Presentation.Web.Controllers
 
         private delegate Task<ExecutionResult> ChangeOperationAsync(Guid userId);
 
-        [HttpPost("manager")]
-        public async Task<ActionResult> CreateManagerAsync(CreateManagerRequest manager)
-        {
-            var res = await _profileService.CreateManagerAsync(manager);
+        //[HttpPost("manager")]
+        //public async Task<ActionResult> CreateManagerAsync(CreateManagerRequestDTO manager)
+        //{
+        //    var res = await _profileService.CreateManagerAsync(manager);
 
-            return Ok(res);
-        }
+        //    return Ok(res);
+        //}
 
-        [HttpDelete("manager")]
-        public async Task<ActionResult> DeleteManagerAsync([FromQuery] Guid managerId)
-        {
-            var res = await _profileService.DeleteManagerAsync(managerId);
+        //[HttpDelete("manager")]
+        //public async Task<ActionResult> DeleteManagerAsync([FromQuery] Guid managerId)
+        //{
+        //    var res = await _profileService.DeleteManagerAsync(managerId);
 
-            return Ok(res);
-        }
+        //    return Ok(res);
+        //}
     }
 }

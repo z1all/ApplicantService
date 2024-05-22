@@ -1,0 +1,108 @@
+﻿@using Common.Models.Enums;
+@* @model AmdinPanelMVC.Models.AdmissionsFilterViewModel; *@
+
+@{
+    ViewData["Title"] = "Заявки абитуриентов";
+}
+
+<div class="row justify-content-center h-100">
+    <div class="col-md-12 col-lg-8 d-flex flex-column h-100">
+        <h2>Заявки абитуриентов</h2>
+        <hr />
+
+        <form id="admissionFormId" class="row g-3">
+            <div class="col-md-6">
+                <label for="applicantFullNameId" class="form-label">ФИО абитуриента</label>
+                <input name="ApplicantFullName" id="applicantFullNameId" type="text" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label for="codeOrNameProgramId" class="form-label">Название или код программы</label>
+                <input name="CodeOrNameProgram" id="codeOrNameProgramId" type="text" class="form-control">
+            </div>
+            <div class="col-12">
+                <label for="facultiesId" class="form-label">Факультеты</label>
+                <select name="FacultiesId" id="facultiesId" class="form-control" multiple size="4">
+                    @await Component.InvokeAsync("Faculties", Model?.FacultyId);
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="admissionStatusId" class="form-label">Статус поступления</label>
+                <select name="AdmissionStatus" id="admissionStatusId" class="form-control">
+                    <option value="@null">Все</option>
+                    <option value="@AdmissionStatus.Created">Создана</option>
+                    <option value="@AdmissionStatus.UnderConsideration">На рассмотрении</option>
+                    <option value="@AdmissionStatus.Confirmed">Подтверждено</option>
+                    <option value="@AdmissionStatus.Rejected">Отклонено</option>
+                    <option value="@AdmissionStatus.Closed">Закрыто</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="viewApplicantModeId" class="form-label">Режим отображения</label>
+                <select name="ViewApplicantMode" id="viewApplicantModeId" class="form-control">
+                    <option value="@ViewApplicantMode.All">Все абитуриенты</option>
+                    <option value="@ViewApplicantMode.OnlyTakenApplicant">Отслеживаемые абитуриенты</option>
+                    <option value="@ViewApplicantMode.OnlyWithoutManager">Не имеющие менеджера абитуриенты</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label for="sortTypeId" class="form-label">Сортировка</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <select name="SortType" id="sortTypeId" class="form-control">
+                            <option value="@SortType.None">Без сортировки</option>
+                            <option value="@SortType.LastUpdateAsc">Последнее обновление (возрастание)</option>
+                            <option value="@SortType.LastUpdateDesc">Последнее обновление (убывание)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 justify-content-end d-flex mt-3 mt-md-0">
+                        <button type="submit" class="btn btn-primary">Применить</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <hr />
+
+        <div class="flex-fill" id="admissionsContainerId"></div>
+
+        <div class="paginationFooter" id="pagination_footer_id">
+            <div class="container-lg">
+                <div class="row">
+                    <div class="col-12 col-sm-6 pt-4 d-flex justify-content-center justify-content-sm-start">
+                        <nav>
+                            <ul class="pagination" id="page_container_id">
+                                <li class="page-item" id="page_placeholder_id"><a class="page-link">1</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-12 col-sm-6 pb-3 d-flex justify-content-center justify-content-sm-end">
+                        <div class="sizePageSelector">
+                            <label for="count_posts_on_page_id">Число постов на странице</label>
+                            <select class="form-select" id="count_posts_on_page_id">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5" selected>5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@* @await Component.InvokeAsync("Admissions") *@
+
+@section Scripts {
+    <script src="~/js/admission.js"></script>
+}

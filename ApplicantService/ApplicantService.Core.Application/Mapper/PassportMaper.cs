@@ -1,6 +1,7 @@
 ﻿using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Domain;
-using ApplicantService.Core.Domain.Enums;
+using Common.Models.DTOs.Applicant;
+using Common.Models.Enums;
 
 namespace ApplicantService.Core.Application.Mappers
 {
@@ -35,6 +36,7 @@ namespace ApplicantService.Core.Application.Mappers
                 IssuedByWhom = passportInfo.IssuedByWhom,
                 IssueYear = passportInfo.IssueYear,
                 SeriesNumber = passportInfo.SeriesNumber,
+                Comments = null,
             };
         }
     }

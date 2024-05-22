@@ -1,5 +1,5 @@
-﻿using ApplicantService.Core.Application.DTOs;
-using ApplicantService.Core.Domain;
+﻿using ApplicantService.Core.Domain;
+using Common.Models.DTOs.Applicant;
 
 namespace ApplicantService.Core.Application.Mapper
 {
@@ -30,6 +30,16 @@ namespace ApplicantService.Core.Application.Mapper
             };
 
             return (fileEntity, documentFileInfo);
+        }
+
+        public static ScanInfo ToScanInfo(this DocumentFileInfo fileInfo)
+        {
+            return new()
+            {
+                Id = fileInfo.Id,
+                Name = fileInfo.Name,
+                Type = fileInfo.Type,
+            };
         }
     }
 }

@@ -1,0 +1,104 @@
+﻿@using Common.Models.Enums;
+@model AmdinPanelMVC.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <h2>Профиль</h2>
+
+        <hr />
+
+         <form method="post">
+            @if (Model.Faculty is not null)
+            {
+                <input asp-for="Faculty!.Id" type="text" class="form-control" hidden>
+                <input asp-for="Faculty!.Name" type="text" class="form-control" hidden>
+            }
+            @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+            <div class="form-group mb-3">
+                <label asp-for="FullName" class="col-form-label">ФИО</label>
+                <div class="row">
+                    <div class="col">
+                        <input required asp-for="FullName" type="text" class="form-control">
+                    </div>
+                    <div class="col-auto">
+                        <button asp-action="FullName" type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="col-form-label">Email</label>
+                <div class="row">
+                    <div class="col">
+                        <input required asp-for="Email" type="email" class="form-control">
+                    </div>
+                    <div class="col-auto">
+                        <button asp-action="Email" type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </form>
+
+        @{
+            List<string> roles = [Role.Admin, Role.MainManager, Role.Manager];
+            string? role = roles.FirstOrDefault(role => User.IsInRole(role));
+            
+            @if(role is not null)
+            {
+                <div class="form-group mb-3">
+                    <label class="col-form-label">Роль</label>
+                    <input value="@role.ToRu()" type="text" class="form-control" disabled>
+                </div> 
+            }
+        }
+ 
+        @if (Model.Faculty is not null)
+        {
+            <div class="form-group mb-3">
+                <label asp-for="Faculty!.Name" class="col-form-label">Факультет</label>
+                <input asp-for="Faculty!.Name" type="text" class="form-control" disabled>
+            </div>
+        }
+
+        <hr />
+
+        <h5>Смена пароля</h5>
+
+        <form asp-action="ChangePassword" method="post">
+            <input required asp-for="FullName" type="text" class="form-control" hidden>
+            <input required asp-for="Email" type="email" class="form-control" hidden>
+            @if (Model.Faculty is not null)
+            {
+                <input asp-for="Faculty!.Id" type="text" class="form-control" hidden>
+                <input asp-for="Faculty!.Name" type="text" class="form-control" hidden>
+            }
+            @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+            <div class="form-group mb-3">
+                <label asp-for="CurrentPassword" class="col-form-label">Текущий пароль</label>
+                <input required asp-for="CurrentPassword" type="password" class="form-control">
+                <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="NewPassword" class="col-form-label">Новый пароль</label>
+                <input required asp-for="NewPassword" type="password" class="form-control">
+                <span asp-validation-for="NewPassword" class="text-danger"></span>
+            </div>
+             <div class="d-flex justify-content-end">
+                <div>
+                    <button type="submit" class="btn btn-primary">Изменить</buttons>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

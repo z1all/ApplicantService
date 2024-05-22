@@ -26,6 +26,8 @@ namespace AdmissioningService.Core.Application.Interfaces.StateMachines
         /// </summary>
         Task DeleteManagerAsync(ApplicantAdmission applicantAdmission);
 
+        Task DeleteManagerRangeAsync(List<ApplicantAdmission> applicantAdmissions);
+
         /// <summary>
         /// После обновления данных абитуриент, если статус поступления был Confirmed или Rejected, то становится UnderConsideration, 
         /// если поступлению прикреплен менеджер, иначе - Created.

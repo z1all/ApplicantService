@@ -1,6 +1,6 @@
 ﻿using Common.Models.Models;
-using Common.Models.DTOs;
 using Common.Models.Enums;
+using Common.Models.DTOs.Dictionary;
 
 namespace DictionaryService.Core.Application.Interfaces.Services
 {

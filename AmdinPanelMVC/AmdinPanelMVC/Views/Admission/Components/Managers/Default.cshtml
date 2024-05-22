@@ -1,0 +1,8 @@
+﻿@model IEnumerable<Common.Models.DTOs.Admission.ManagerProfileDTO>
+
+@foreach (var manager in Model)
+{
+    bool selected = ViewBag.SelectedManagerId == manager.Id;
+
+    <option value="@manager.Id" selected="@selected">@manager.FullName - @manager.Email</option>
+}

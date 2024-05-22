@@ -1,7 +1,10 @@
 ﻿using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Application.Interfaces.Services;
+using ApplicantService.Core.Application.Mapper;
 using ApplicantService.Core.Domain;
+using Common.Models.DTOs.Applicant;
+using Common.Models.Enums;
 using Common.Models.Models;
 
 namespace ApplicantService.Core.Application.Services
@@ -14,7 +17,7 @@ namespace ApplicantService.Core.Application.Services
         private readonly INotificationService _notificationService;
 
         public ApplicantProfileService(
-            IApplicantRepository profileRepository, IEducationDocumentRepository educationDocumentRepository, 
+            IApplicantRepository profileRepository, IEducationDocumentRepository educationDocumentRepository,
             IRequestService requestService, INotificationService notificationService)
         {
             _applicantRepository = profileRepository;
@@ -26,23 +29,12 @@ namespace ApplicantService.Core.Application.Services
         public async Task<ExecutionResult<ApplicantProfile>> GetApplicantProfileAsync(Guid applicantId)
         {
             Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
-            if(applicant == null)
+            if (applicant == null)
             {
                 return new(keyError: "GetProfileFail", error: "Applicant not found! Try again later.");
             }
 
-            return new()
-            {
-                Result = new ApplicantProfile()
-                {
-                    Email = applicant.Email,
-                    FullName = applicant.FullName,
-                    Birthday = applicant.Birthday,
-                    Citizenship = applicant.Citizenship,
-                    Gender = applicant.Gender,
-                    PhoneNumber = applicant.PhoneNumber,
-                },
-            }; 
+            return new() { Result = applicant.ToApplicantProfile() };
         }
 
         public async Task<ExecutionResult> EditApplicantProfileAsync(EditApplicantProfile applicantProfile, Guid applicantId, Guid? managerId)
@@ -112,6 +104,17 @@ namespace ApplicantService.Core.Application.Services
             applicant.Email = newUser.Email;
 
             await _applicantRepository.UpdateAsync(applicant);
+        }
+
+        public async Task<ExecutionResult<ApplicantInfo>> GetApplicantInfoAsync(Guid applicantId)
+        {
+            Applicant? applicant = await _applicantRepository.GetByIdWithDocumentsAsync(applicantId);
+            if (applicant is null)
+            {
+                return new(keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
+            }
+
+            return new() { Result = applicant.ToApplicantInfo() };
         }
     }
 }

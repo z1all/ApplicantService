@@ -6,8 +6,8 @@ using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base;
 using Common.Models.Models;
-using Common.Models.DTOs;
 using Common.Models.Enums;
+using Common.Models.DTOs.Dictionary;
 
 namespace DictionaryService.Core.Application.Services
 {
