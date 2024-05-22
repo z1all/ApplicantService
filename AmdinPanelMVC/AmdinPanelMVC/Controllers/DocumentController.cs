@@ -7,6 +7,8 @@ using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Controllers.Base;
 using AmdinPanelMVC.Models;
 using Common.API.Attributes;
+using ApplicantService.Core.Application.DTOs;
+using Microsoft.CodeAnalysis;
 
 namespace AmdinPanelMVC.Controllers
 {
@@ -72,9 +74,32 @@ namespace AmdinPanelMVC.Controllers
                 => _documentService.DeleteDocumentScansAsync(applicantId, documentId, scanId, managerId));
         }
 
-        public IActionResult EducationDocument(Guid applicantId, Guid documentId)
+        public async Task<IActionResult> EducationDocument(Guid applicantId, Guid documentId)
         {
-            return View();
+            ExecutionResult<EducationDocumentInfo> document = await _documentService.GetEducationDocumentAsync(applicantId, documentId);
+
+            if (!document.IsSuccess)
+            {
+                if (document.Errors.ContainsKey("GetEducationDocumentFail"))
+                {
+                    return Redirect("/InternalServer");
+                }
+
+                return Redirect("/NotFound");
+            }
+
+            return View(new EducationDocumentViewModel()
+            {
+                ApplicantId = applicantId,
+                EducationDocument = document.Result!
+            });
+        }
+
+        [ValidateModelState]
+        public async Task<IActionResult> ChangeEducationDocument([FromBody] ChangeEducationDocumentDTO changeEducationDocument)
+        {
+            return await RequestHandlerAsync((managerId)
+                => _documentService.ChangeEducationDocumentAsync(changeEducationDocument, managerId));
         }
 
         public async Task<IActionResult> Scans(Guid applicantId, Guid documentId)
@@ -114,6 +139,7 @@ namespace AmdinPanelMVC.Controllers
             }
             return File(fileDTO.File, contentType!, fileDTO.Name);
         }
+
         private async Task<byte[]> GetFileAsync(IFormFile formFile)
         {
             byte[] file = [];

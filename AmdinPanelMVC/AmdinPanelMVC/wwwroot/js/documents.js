@@ -37,6 +37,36 @@
     request('/Documents/ChangePassport', 'POST', changePassport, data);
 });
 
+document.getElementById("educationDocumentFormId")?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    $('#nameId').next().text("");
+    $('#documentTypeId').next().text("");
+
+    const changeEducationDocument = (data) => {
+        if (data.status !== 200) {
+            showErrorToast(
+                "Обновление документа об образовании",
+                "Ошибка при отправке запроса на обновление документа об образовании"
+            );
+
+            if (data.body.errors.Name) {
+                $('#nameId').next().text(data.body.errors.Name[0]);
+            }
+
+            if (data.body.errors.EducationDocumentTypeId) {
+                $('#documentTypeId').next().text(data.body.errors.EducationDocumentTypeId[0]);
+            }
+        }
+    }
+
+    const data = Object.fromEntries(new FormData(e.target));
+    data['applicantId'] = getApplicantId();
+    data['documentId'] = getDocumentId();
+
+    request('/Documents/ChangeEducationDocument', 'POST', changeEducationDocument, data);
+});
+
 addListeners();
 function addListeners() {
     const loadScanButtons = document.querySelectorAll('.loadScan');

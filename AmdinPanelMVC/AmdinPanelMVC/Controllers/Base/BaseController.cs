@@ -7,7 +7,9 @@ namespace AmdinPanelMVC.Controllers.Base
 {
     public abstract class BaseController : Controller
     {
-        protected async Task<IActionResult> RequestHandlerAsync(Func<Guid, Task<ExecutionResult>> requestAsync, Func<IActionResult>? OkResult = null)
+        protected async Task<IActionResult> RequestHandlerAsync(
+            Func<Guid, Task<ExecutionResult>> requestAsync, 
+            Func<IActionResult>? OkResult = null)
         {
             if (!ModelState.IsValid || !HttpContext.TryGetUserId(out Guid managerId))
             {

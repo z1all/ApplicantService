@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using DictionaryService.Core.Application.Interfaces.Services;
 using Common.API.Controllers;
 using Common.Models.DTOs.Dictionary;
+using Common.Models.Enums;
 
 namespace DictionaryService.Presentation.Web.Controllers
 {
     [Route("api/dictionary")]
-    [Authorize]
+    [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
     public class DictionaryInfoController : BaseController
     {
         private readonly IDictionaryInfoService _dictionaryInfoService;

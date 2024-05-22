@@ -1,6 +1,7 @@
 ﻿using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Services.Base;
 using AmdinPanelMVC.Services.Interfaces;
+using ApplicantService.Core.Application.DTOs;
 using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests;
@@ -71,10 +72,32 @@ namespace AmdinPanelMVC.Services
         public async Task<ExecutionResult<FileDTO>> GetScanAsync(Guid applicantId, Guid documentId, Guid scanId)
         {
             ExecutionResult<GetScanResponse> response
-             = await RequestHandlerAsync<ExecutionResult<GetScanResponse>, GetScanRequest > (
+             = await RequestHandlerAsync<ExecutionResult<GetScanResponse>, GetScanRequest>(
                   new() { ApplicantId = applicantId, DocumentId = documentId, ScanId = scanId }, "GetScanFail");
 
             return ResponseHandler(response, scan => scan.File);
+        }
+
+        public async Task<ExecutionResult<EducationDocumentInfo>> GetEducationDocumentAsync(Guid applicantId, Guid documentId)
+        {
+            ExecutionResult<GetEducationDocumentResponse> response
+             = await RequestHandlerAsync<ExecutionResult<GetEducationDocumentResponse>, GetEducationDocumentRequest>(
+                  new() { ApplicantId = applicantId, DocumentId = documentId }, "GetEducationDocumentFail");
+
+            return ResponseHandler(response, document => document.EducationDocument);
+        }
+
+        public async Task<ExecutionResult> ChangeEducationDocumentAsync(ChangeEducationDocumentDTO changeEducationDocument, Guid managerId)
+        {
+            return await RequestHandlerAsync<ExecutionResult, ChangeEducationDocumentRequest>(
+                  new()
+                  {
+                      ApplicantId = changeEducationDocument.ApplicantId,
+                      DocumentId = changeEducationDocument.DocumentId,
+                      EducationDocumentTypeId = changeEducationDocument.EducationDocumentTypeId,
+                      Name = changeEducationDocument.Name,
+                      ManagerId = managerId
+                  }, "ChangeEducationDocumentFail");
         }
     }
 }

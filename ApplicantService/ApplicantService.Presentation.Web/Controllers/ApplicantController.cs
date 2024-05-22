@@ -4,12 +4,13 @@ using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Application.Interfaces.Services;
 using Common.API.Controllers;
 using Common.Models.DTOs.Applicant;
+using Common.Models.Enums;
 
 namespace ApplicantService.Presentation.Web.Controllers
 {
     [Route("api/applicant")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
     public class ApplicantController : BaseController
     {
         public readonly IApplicantProfileService _applicantProfileService;

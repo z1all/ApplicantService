@@ -11,6 +11,15 @@ namespace AmdinPanelMVC.Services
     {
         public RpcDictionaryService(IBus bus) : base(bus) { }
 
+        public async Task<ExecutionResult<List<EducationDocumentTypeDTO>>> GetEducationDocumentTypesAsync()
+        {
+            ExecutionResult<GetDocumentTypesResponse> response
+                = await RequestHandlerAsync<ExecutionResult<GetDocumentTypesResponse>, GetDocumentTypesRequest>(
+                     new(), "GetEducationDocumentTypeFail");
+
+            return ResponseHandler(response, educationDocumentType => educationDocumentType.DocumentTypes);
+        }
+
         public async Task<ExecutionResult<List<FacultyDTO>>> GetFacultiesAsync()
         {
             ExecutionResult<GetFacultiesResponse> response

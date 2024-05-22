@@ -1,4 +1,5 @@
-﻿using ApplicantService.Core.Application.Interfaces.Services;
+﻿using ApplicantService.Core.Application.DTOs;
+using ApplicantService.Core.Application.Interfaces.Services;
 using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 using Common.ServiceBus.EasyNetQRPC;
@@ -30,6 +31,12 @@ namespace ApplicantService.Presentation.Web.RPCHandlers
 
             _bus.Rpc.Respond<GetScanRequest, ExecutionResult<GetScanResponse>>(async (request) =>
                await ExceptionHandlerAsync(async (service) => await GetScanAsync(service, request)));
+
+            _bus.Rpc.Respond<GetEducationDocumentRequest, ExecutionResult<GetEducationDocumentResponse>>(async (request) =>
+               await ExceptionHandlerAsync(async (service) => await GetEducationDocumentAsync(service, request)));
+
+            _bus.Rpc.Respond<ChangeEducationDocumentRequest, ExecutionResult>(async (request) =>
+               await ExceptionHandlerAsync(async (service) => await ChangeEducationDocumentAsync(service, request)));
         }
 
         private async Task<ExecutionResult<GetPassportResponse>> GetPassportAsync(IServiceProvider service, GetPassportRequest request)
@@ -85,6 +92,27 @@ namespace ApplicantService.Presentation.Web.RPCHandlers
                 = await _fileService.GetApplicantScanAsync(request.DocumentId, request.ScanId, request.ApplicantId);
 
             return ResponseHandler(result, scan => new GetScanResponse() { File = scan });
+        }
+
+        private async Task<ExecutionResult<GetEducationDocumentResponse>> GetEducationDocumentAsync(IServiceProvider service, GetEducationDocumentRequest request)
+        {
+            var _documentService = service.GetRequiredService<IDocumentService>();
+
+            ExecutionResult<EducationDocumentInfo> result
+                = await _documentService.GetApplicantEducationDocumentAsync(request.DocumentId, request.ApplicantId);
+
+            return ResponseHandler(result, document => new GetEducationDocumentResponse() { EducationDocument = document });
+        }
+
+        private async Task<ExecutionResult> ChangeEducationDocumentAsync(IServiceProvider service, ChangeEducationDocumentRequest request)
+        {
+            var _documentService = service.GetRequiredService<IDocumentService>();
+
+            return await _documentService.UpdateApplicantEducationDocumentAsync(
+                request.DocumentId, 
+                request.ApplicantId,
+                new() { Name = request.Name, EducationDocumentTypeId = request.EducationDocumentTypeId},
+                request.ManagerId);
         }
     }
 }

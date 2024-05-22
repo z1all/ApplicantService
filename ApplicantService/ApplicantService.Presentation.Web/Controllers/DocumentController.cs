@@ -8,12 +8,13 @@ using Common.API.Helpers;
 using Common.Models.Models;
 using Common.Models.DTOs.Applicant;
 using Common.API.Attributes;
+using Common.Models.Enums;
 
 namespace ApplicantService.Presentation.Web.Controllers
 {
     [Route("api/document")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
     public class DocumentController : BaseController
     {
         private readonly IDocumentService _documentService;

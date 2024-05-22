@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using Common.API.Controllers;
 using Common.Models.DTOs.Admission;
+using Common.Models.Enums;
 
 namespace AdmissioningService.Presentation.Web.Controllers
 {
     [Route("api/admissioning")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
     public class AdmissionController : BaseController
     {
         private readonly IAdmissionService _admissionService;
