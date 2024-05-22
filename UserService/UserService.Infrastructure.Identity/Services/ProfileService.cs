@@ -5,6 +5,8 @@ using UserService.Core.Domain.Entities;
 using UserService.Infrastructure.Identity.Extensions;
 using Common.Models.Enums;
 using Common.Models.Models;
+using Common.Models.DTOs;
+using Common.Models.DTOs.User;
 
 namespace UserService.Infrastructure.Identity.Services
 {
@@ -19,19 +21,20 @@ namespace UserService.Infrastructure.Identity.Services
             _serviceBusProvider = serviceBusProvider;
         }
 
-        public async Task<ExecutionResult> ChangeEmailAsync(ChangeEmailRequest changeEmail, Guid userId)
+        public async Task<ExecutionResult> ChangeEmailAsync(ChangeEmailRequestDTO changeEmail, Guid userId, Guid? managerId)
         {
-            return await ChangeHandlerAsync(userId, (user) =>
+            return await ChangeHandlerAsync(userId, managerId, (user) =>
             {
                 if (user.Email == changeEmail.NewEmail) return false;
                 user.Email = changeEmail.NewEmail;
+                user.UserName = changeEmail.NewEmail;
                 return true;
             });
         }
 
-        public async Task<ExecutionResult> ChangeProfileAsync(ChangeProfileRequest changeProfile, Guid userId)
+        public async Task<ExecutionResult> ChangeProfileAsync(ChangeProfileRequestDTO changeProfile, Guid userId, Guid? managerId)
         {
-            return await ChangeHandlerAsync(userId, (user) =>
+            return await ChangeHandlerAsync(userId, managerId, (user) =>
             {
                 if (user.FullName == changeProfile.NewFullName) return false;
                 user.FullName = changeProfile.NewFullName;
@@ -39,7 +42,7 @@ namespace UserService.Infrastructure.Identity.Services
             });
         }
 
-        public async Task<ExecutionResult> ChangePasswordAsync(ChangePasswordRequest changePassword, Guid userId)
+        public async Task<ExecutionResult> ChangePasswordAsync(ChangePasswordDTO changePassword, Guid userId)
         {
             CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
@@ -53,13 +56,13 @@ namespace UserService.Infrastructure.Identity.Services
             return new(isSuccess: true);
         }
 
-        public async Task<ExecutionResult> CreateAdminAsync(CreateAdminRequest createAdmin)
+        public async Task<ExecutionResult> CreateAdminAsync(CreateAdminRequestDTO createAdmin)
         {
             CustomUser user = new()
             {
                 FullName = createAdmin.FullName,
                 Email = createAdmin.Email,
-                UserName = $"{createAdmin.FullName}_{Guid.NewGuid()}",
+                UserName = createAdmin.Email //$"{createAdmin.FullName}_{Guid.NewGuid()}",
             };
 
             IdentityResult creatingResult = await _userManager.CreateAsync(user, createAdmin.Password);
@@ -69,22 +72,28 @@ namespace UserService.Infrastructure.Identity.Services
             IdentityResult addingRoleResult = await _userManager.AddToRolesAsync(user, roles);
             if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError();
 
-            ExecutionResult sendNotification = await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user));
-            if(!sendNotification.IsSuccess) return sendNotification;
+            ExecutionResult creatingRequestResult = await _serviceBusProvider.Request.CreateManagerAsync(MapCustomUserToManager(user, null));
+            if (!creatingRequestResult.IsSuccess)
+            {
+                return creatingRequestResult;
+            }
 
-            sendNotification = await _serviceBusProvider.Notification.CreatedApplicantAsync(MapCustomUserToUser(user));
+            ExecutionResult sendNotification = await _serviceBusProvider.Notification.CreatedApplicantAsync(MapCustomUserToUser(user));
+            if (!sendNotification.IsSuccess) return sendNotification;
+
+            sendNotification = await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user), createAdmin.Password);
             if (!sendNotification.IsSuccess) return sendNotification;
 
             return new(isSuccess: true);
         }
 
-        public async Task<ExecutionResult> CreateManagerAsync(CreateManagerRequest createManager)
+        public async Task<ExecutionResult> CreateManagerAsync(CreateManagerRequestDTO createManager)
         {
             CustomUser user = new()
             {
                 FullName = createManager.FullName,
                 Email = createManager.Email,
-                UserName = $"{createManager.FullName}_{Guid.NewGuid()}",
+                UserName = createManager.Email //$"{createManager.FullName}_{Guid.NewGuid()}",
             };
 
             IdentityResult creatingResult = await _userManager.CreateAsync(user, createManager.Password);
@@ -97,7 +106,7 @@ namespace UserService.Infrastructure.Identity.Services
             ExecutionResult creatingRequestResult = await _serviceBusProvider.Request.CreateManagerAsync(MapCustomUserToManager(user, createManager.FacultyId));
             if (creatingRequestResult.IsSuccess)
             {
-                return await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user));
+                return await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user), createManager.Password);
             }
 
             IdentityResult deletingResult = await _userManager.DeleteAsync(user);
@@ -114,6 +123,47 @@ namespace UserService.Infrastructure.Identity.Services
             return creatingRequestResult;
         }
 
+        public async Task<ExecutionResult> ChangeManagerAsync(Manager manager)
+        {
+            CustomUser? user = await _userManager.FindByIdAsync(manager.Id.ToString());
+            if (user is null)
+            {
+                return new(keyError: "ManagerNotFound", error: $"Manager with id {manager.Id} not found!");
+            }
+
+            if (manager.FacultyId is not null && await _userManager.IsInRoleAsync(user, Role.Admin))
+            {
+                return new(keyError: "AdministratorWithFaculty", error: $"An administrator cannot have a faculty!");
+            }
+
+            user.Email = manager.Email;
+            user.UserName = manager.Email;
+            user.FullName = manager.FullName;
+
+            IdentityResult updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded) return new() { Errors = updateResult.Errors.ToErrorDictionary() };
+
+            string newRole = manager.FacultyId == null ? Role.MainManager : Role.Manager;
+            if (await _userManager.IsInRoleAsync(user, Role.MainManager) && newRole == Role.Manager)
+            {
+                ExecutionResult result = await ChangeRoleAsync(user, Role.Manager, Role.MainManager);
+                if (!result.IsSuccess) return result;
+            }
+            else if (await _userManager.IsInRoleAsync(user, Role.Manager) && newRole == Role.MainManager)
+            {
+                ExecutionResult result = await ChangeRoleAsync(user, Role.MainManager, Role.Manager);
+                if (!result.IsSuccess) return result;
+            }
+
+            ExecutionResult creatingRequestResult = await _serviceBusProvider.Request.ChangeManagerAsync(manager);
+            if (!creatingRequestResult.IsSuccess)
+            {
+                return creatingRequestResult;
+            }
+
+            return new(isSuccess: true);
+        }
+
         public async Task<ExecutionResult> DeleteManagerAsync(Guid managerId)
         {
             CustomUser? user = await _userManager.FindByIdAsync(managerId.ToString());
@@ -123,7 +173,7 @@ namespace UserService.Infrastructure.Identity.Services
             }
 
             ExecutionResult checkResult = await CheckRolesForDeleteManagerAsync(user);
-            if(!checkResult.IsSuccess) return checkResult;
+            if (!checkResult.IsSuccess) return checkResult;
 
             ExecutionResult deletingRequestResult = await _serviceBusProvider.Request.DeleteManagerAsync(managerId);
             if (!deletingRequestResult.IsSuccess) return deletingRequestResult;
@@ -134,16 +184,25 @@ namespace UserService.Infrastructure.Identity.Services
             return new(isSuccess: true);
         }
 
+        private async Task<ExecutionResult> ChangeRoleAsync(CustomUser user, string addRole, string removeRole)
+        {
+            IdentityResult removeRoleResult = await _userManager.RemoveFromRoleAsync(user, removeRole);
+            if (!removeRoleResult.Succeeded) return removeRoleResult.ToExecutionResultError();
+            IdentityResult addingRoleResult = await _userManager.AddToRoleAsync(user, addRole);
+            if (!addingRoleResult.Succeeded) return addingRoleResult.ToExecutionResultError();
+            return new(isSuccess: true);
+        }
+
         private async Task<ExecutionResult> CheckRolesForDeleteManagerAsync(CustomUser user)
         {
             IList<string> userRoles = await _userManager.GetRolesAsync(user);
             List<string> errors = new();
 
-            bool isManager = false;
-            if (!userRoles.Contains(Role.Manager) || !userRoles.Contains(Role.MainManager))
+            bool isManager = true;
+            if (!userRoles.Contains(Role.Manager) && !userRoles.Contains(Role.MainManager))
             {
                 errors.Add("This user is not manager or main manager!");
-                isManager = true;
+                isManager = false;
             }
 
             if (isManager && userRoles.Contains(Role.Admin))
@@ -155,12 +214,22 @@ namespace UserService.Infrastructure.Identity.Services
             return new(isSuccess: true);
         }
 
-        private async Task<ExecutionResult> ChangeHandlerAsync(Guid userId, ChangeOperation changeOperation)
+        private async Task<ExecutionResult> ChangeHandlerAsync(Guid userId, Guid? managerId, ChangeOperation changeOperation)
         {
             CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
                 return new(keyError: "ChangeFail", error: "User not found!");
+            }
+
+            IList<string> roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains(Role.Applicant) && roles.Count == 1)
+            {
+                ExecutionResult canEdit = await _serviceBusProvider.Request.CheckPermissionsAsync(userId, managerId);
+                if (!canEdit.IsSuccess)
+                {
+                    return new() { Errors = canEdit.Errors };
+                }
             }
 
             bool wasUpdated = changeOperation(user);
@@ -185,9 +254,9 @@ namespace UserService.Infrastructure.Identity.Services
             };
         }
 
-        private User MapCustomUserToUser(CustomUser user)
+        private UserDTO MapCustomUserToUser(CustomUser user)
         {
-            return new User()
+            return new UserDTO()
             {
                 Id = Guid.Parse(user.Id),
                 Email = user.Email!,

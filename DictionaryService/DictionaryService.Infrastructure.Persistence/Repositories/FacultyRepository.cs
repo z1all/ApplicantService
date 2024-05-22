@@ -6,7 +6,7 @@ using Common.Repositories;
 
 namespace DictionaryService.Infrastructure.Persistence.Repositories
 {
-    public class FacultyRepository : BaseRepository<Faculty, AppDbContext>, IFacultyRepository
+    public class FacultyRepository : BaseWithBaseEntityRepository<Faculty, AppDbContext>, IFacultyRepository
     {
         public FacultyRepository(AppDbContext appDbContext) : base(appDbContext) { }
 

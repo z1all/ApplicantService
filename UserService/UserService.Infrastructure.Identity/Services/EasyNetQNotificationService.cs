@@ -1,10 +1,9 @@
-﻿using UserService.Core.Application.DTOs;
-using UserService.Core.Application.Interfaces;
-using Common.ServiceBusDTOs.FromUserService;
-using Common.ServiceBus.ServiceBusDTOs.FromUserService;
+﻿using UserService.Core.Application.Interfaces;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService.Base;
-using EasyNetQ;
+using Common.Models.DTOs;
 using Common.Models.Models;
+using Common.ServiceBus.ServiceBusDTOs.FromUserService.Notifications;
+using EasyNetQ;
 
 namespace UserService.Infrastructure.Identity.Services
 {
@@ -17,7 +16,7 @@ namespace UserService.Infrastructure.Identity.Services
             _bus = bus;
         }
 
-        public async Task<ExecutionResult> CreatedApplicantAsync(User user)
+        public async Task<ExecutionResult> CreatedApplicantAsync(UserDTO user)
         {
             bool result = await _bus.PubSub
                 .PublishAsync(UserMapTo<ApplicantCreatedNotification>(user))
@@ -26,16 +25,21 @@ namespace UserService.Infrastructure.Identity.Services
             return GiveResult(result, "An error occurred when sending a notification about the creation of an applicant.");
         }
 
-        public async Task<ExecutionResult> CreatedManagerAsync(User user)
+        public async Task<ExecutionResult> CreatedManagerAsync(UserDTO user, string password)
         {
             bool result = await _bus.PubSub
-                .PublishAsync(UserMapTo<ManagerCreatedNotification>(user))
-                .ContinueWith(task => task.IsCompletedSuccessfully);
+                .PublishAsync(new ManagerCreatedNotification()
+                {
+                    Id = user.Id,
+                    FullName = user.FullName,
+                    Email = user.Email,
+                    Password = password,
+                }).ContinueWith(task => task.IsCompletedSuccessfully);
 
             return GiveResult(result, "An error occurred when sending a notification about the creation of a manager.");
         }
 
-        public async Task<ExecutionResult> UpdatedUserAsync(User user)
+        public async Task<ExecutionResult> UpdatedUserAsync(UserDTO user)
         {
             bool result = await _bus.PubSub
                 .PublishAsync(UserMapTo<UserUpdatedNotification>(user))
@@ -53,7 +57,7 @@ namespace UserService.Infrastructure.Identity.Services
             return new(isSuccess: true);
         }
 
-        private T UserMapTo<T>(User user) where T : BaseUser, new()
+        private T UserMapTo<T>(UserDTO user) where T : BaseUser, new()
         {
             return new T()
             {

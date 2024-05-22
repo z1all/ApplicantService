@@ -3,7 +3,7 @@ using Common.Repositories;
 
 namespace ApplicantService.Core.Application.Interfaces.Repositories
 {
-    public interface IDocumentRepository : IBaseRepository<Document> 
+    public interface IDocumentRepository : IBaseWithBaseEntityRepository<Document> 
     {
         Task<Document?> GetByDocumentIdAndApplicantIdAsync(Guid documentId, Guid applicantId);
         Task<bool> AnyByDocumentIdAndApplicantIdAsync(Guid documentId, Guid applicantId);

@@ -4,7 +4,7 @@ using Common.Models.Enums;
 
 namespace DictionaryService.Core.Application.Interfaces.Repositories
 {
-    public interface IUpdateStatusRepository : IBaseRepository<UpdateStatus> 
+    public interface IUpdateStatusRepository : IBaseWithBaseEntityRepository<UpdateStatus> 
     {
         Task<List<UpdateStatus>> GetAllAsync();
         Task<bool> TryBeganUpdatingForDictionaryAsync(DictionaryType dictionaryType);

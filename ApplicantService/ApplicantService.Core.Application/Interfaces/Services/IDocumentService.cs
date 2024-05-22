@@ -1,4 +1,5 @@
 ﻿using ApplicantService.Core.Application.DTOs;
+using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 
 namespace ApplicantService.Core.Application.Interfaces.Services
@@ -15,5 +16,8 @@ namespace ApplicantService.Core.Application.Interfaces.Services
         Task<ExecutionResult<EducationDocumentInfo>> GetApplicantEducationDocumentAsync(Guid documentId, Guid applicantId);
         Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId = null);
         Task<ExecutionResult> AddApplicantEducationDocumentAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId = null);
+
+        Task<ExecutionResult<List<ScanInfo>>> GetScansInfoAsync(Guid applicantId, Guid documentId);
+        Task UpdateEducationDocumentType(UpdateEducationDocumentTypeDTO newDocumentType);
     }
 }

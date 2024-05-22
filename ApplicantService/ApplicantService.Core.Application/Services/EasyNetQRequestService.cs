@@ -1,41 +1,29 @@
 ﻿using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Domain;
-using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService;
-using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService;
-using EasyNetQ;
 using Common.Models.Models;
+using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
+using Common.ServiceBus.EasyNetQRPC;
+using EasyNetQ;
+using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
 
 namespace ApplicantService.Core.Application.Services
 {
-    public class EasyNetQRequestService : IRequestService
+    public class EasyNetQRequestService : BaseEasyNetQRPCustomer, IRequestService
     {
-        private readonly IBus _bus;
+        public EasyNetQRequestService(IBus bus) : base(bus) { }
 
-        public EasyNetQRequestService(IBus bus)
+        public async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
         {
-            _bus = bus;
-        }
-
-        public async Task<ExecutionResult> CheckAdmissionStatusIsCloseAsync(Guid applicantId)
-        {
-            return await RequestHandler<ExecutionResult, CheckAdmissionStatusIsCloseRequest>(new()
-            {
-                ApplicantId = applicantId
-            }, "CheckAdmissionStatusIsCloseFail");
-        }
-
-        public async Task<ExecutionResult> CheckManagerEditPermissionAsync(Guid applicantId, Guid managerId)
-        {
-            return await RequestHandler<ExecutionResult, CheckManagerEditPermissionRequest>(new()
+            return await RequestHandlerAsync<ExecutionResult, CheckPermissionsRequest>(new()
             {
                 ApplicantId = applicantId,
                 ManagerId = managerId
-            }, " CheckManagerEditPermissionFail");
+            }, "CheckPermissionsFail");
         }
 
         public async Task<ExecutionResult<EducationDocumentTypeCache>> GetEducationDocumentTypeAsync(Guid documentId)
         {
-            var response = await RequestHandler<ExecutionResult<GetEducationDocumentTypeResponse>, GetEducationDocumentTypeRequest>(new()
+            var response = await RequestHandlerAsync<ExecutionResult<GetEducationDocumentTypeResponse>, GetEducationDocumentTypeRequest>(new()
             {
                 DocumentId = documentId,
             }, "GetEducationDocumentTypeFail");
@@ -49,26 +37,11 @@ namespace ApplicantService.Core.Application.Services
             {
                 Result = new()
                 {
-                    Id = response.Result!.Id,
-                    Name = response.Result!.Name,
+                    Id = response.Result!.EducationDocumentType.Id,
+                    Name = response.Result!.EducationDocumentType.Name,
                     Deprecated = response.Result!.Deprecated,
                 }
             };
-        }
-
-        private async Task<TResponse> RequestHandler<TResponse, TRequest>(TRequest request, string keyError) where TResponse : ExecutionResult, new()
-        {
-            return await _bus.Rpc
-                .RequestAsync<TRequest, TResponse>(request)
-                .ContinueWith(task => 
-                {
-                    if (task.Status == TaskStatus.Canceled)
-                    {
-                        return (TResponse)Activator.CreateInstance(typeof(TResponse), keyError, "Unknown error!")!;
-                    }
-
-                    return task.Result;
-                });
         }
     }
 }

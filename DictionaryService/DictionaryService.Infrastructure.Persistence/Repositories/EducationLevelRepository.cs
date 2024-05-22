@@ -6,7 +6,7 @@ using Common.Repositories;
 
 namespace DictionaryService.Infrastructure.Persistence.Repositories
 {
-    internal class EducationLevelRepository : BaseRepository<EducationLevel, AppDbContext>, IEducationLevelRepository
+    internal class EducationLevelRepository : BaseWithBaseEntityRepository<EducationLevel, AppDbContext>, IEducationLevelRepository
     {
         public EducationLevelRepository(AppDbContext appDbContext) : base(appDbContext) { }
 

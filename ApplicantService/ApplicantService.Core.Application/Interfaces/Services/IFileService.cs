@@ -1,4 +1,4 @@
-﻿using ApplicantService.Core.Application.DTOs;
+﻿using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 
 namespace ApplicantService.Core.Application.Interfaces.Services

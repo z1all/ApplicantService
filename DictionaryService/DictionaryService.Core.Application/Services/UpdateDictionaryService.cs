@@ -6,8 +6,8 @@ using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base;
 using Common.Models.Models;
-using Common.Models.DTOs;
 using Common.Models.Enums;
+using Common.Models.DTOs.Dictionary;
 
 namespace DictionaryService.Core.Application.Services
 {
@@ -50,16 +50,16 @@ namespace DictionaryService.Core.Application.Services
 
             return await UpdateDictionaryHandlerAsync(async () =>
             {
-                ExecutionResult<List<Faculty>> updateFacultyResult = await UpdateFacultyAsync(true);
+                ExecutionResult<Tuple<List<Faculty>, List<Faculty>>> updateFacultyResult = await UpdateFacultyAsync(true);
                 if (!updateFacultyResult.IsSuccess) return updateFacultyResult; 
 
-                ExecutionResult<List<EducationLevel>> updateEducationLevelResult = await UpdateEducationLevelAsync(true);
+                ExecutionResult<Tuple<List<EducationLevel>, List<EducationLevel>>> updateEducationLevelResult = await UpdateEducationLevelAsync(true);
                 if (!updateEducationLevelResult.IsSuccess) return updateEducationLevelResult;
 
-                ExecutionResult<List<EducationProgram>> updateEducationProgramResult = await UpdateEducationProgramAsync(true);
+                ExecutionResult<Tuple<List<EducationProgram>, List<EducationProgram>>> updateEducationProgramResult = await UpdateEducationProgramAsync(true);
                 if (!updateEducationProgramResult.IsSuccess) return updateEducationProgramResult;
 
-                ExecutionResult<List<EducationDocumentType>> updateEducationDocumentTypeResult = await UpdateEducationDocumentTypeAsync(true);
+                ExecutionResult<Tuple<List<EducationDocumentType>, List<EducationDocumentType>>> updateEducationDocumentTypeResult = await UpdateEducationDocumentTypeAsync(true);
                 if (!updateEducationDocumentTypeResult.IsSuccess) return updateEducationDocumentTypeResult;
 
                 return await SendNotificationHandlerAsync(updateFacultyResult, updateEducationLevelResult, updateEducationProgramResult, updateEducationDocumentTypeResult);
@@ -97,9 +97,9 @@ namespace DictionaryService.Core.Application.Services
                     DictionaryType.EducationProgram => await SendNotificationHandlerAsync(
                         await UpdateEducationProgramAsync(), _notificationService.ChangedEducationProgramAsync),
                     DictionaryType.EducationLevel => await SendNotificationHandlerAsync(
-                        await UpdateEducationLevelAsync(), _notificationService.ChangedEducationLevelAsync),
+                        await UpdateEducationLevelAsync(), _notificationService.ChangedEducationLevelAsync, SendLAddedEducationLevelsNotificationAsync),
                     DictionaryType.EducationDocumentType => await SendNotificationHandlerAsync(
-                        await UpdateEducationDocumentTypeAsync(), _notificationService.ChangedEducationDocumentTypeAsync),
+                        await UpdateEducationDocumentTypeAsync(), _notificationService.ChangedEducationDocumentTypeAsync, SendLAddedEducationDocumentTypeNotificationAsync),
                     _ => new(keyError: "WrongDictionaryType", error: "Wrong dictionary type"),
                 };
 
@@ -131,8 +131,10 @@ namespace DictionaryService.Core.Application.Services
         }
 
         private async Task<ExecutionResult> SendNotificationHandlerAsync(
-            ExecutionResult<List<Faculty>> updateFaculty, ExecutionResult<List<EducationLevel>> updateEducationLevel,
-            ExecutionResult<List<EducationProgram>> updateEducationProgram, ExecutionResult<List<EducationDocumentType>> updateEducationDocumentType)
+            ExecutionResult<Tuple<List<Faculty>, List<Faculty>>> updateFaculty, 
+            ExecutionResult<Tuple<List<EducationLevel>, List<EducationLevel>>> updateEducationLevel,
+            ExecutionResult<Tuple<List<EducationProgram>, List<EducationProgram>>> updateEducationProgram, 
+            ExecutionResult<Tuple<List<EducationDocumentType>, List<EducationDocumentType>>> updateEducationDocumentType)
         {
             ExecutionResult result = await SendNotificationHandlerAsync(updateFaculty, _notificationService.ChangedFacultiesAsync);
             if (!result.IsSuccess) return result;
@@ -146,19 +148,52 @@ namespace DictionaryService.Core.Application.Services
             result = await SendNotificationHandlerAsync(updateEducationDocumentType, _notificationService.ChangedEducationDocumentTypeAsync);
             if (!result.IsSuccess) return result;
 
+            result = await _notificationService.AddedEducationDocumentTypeAndEducationLevelAsync(
+                updateEducationDocumentType.Result!.Item2, updateEducationLevel.Result!.Item2);
+            if (!result.IsSuccess) return result;
+
             return new(isSuccess: true);
         }
 
-        private async Task<ExecutionResult> SendNotificationHandlerAsync<TEntity>(ExecutionResult<List<TEntity>> changedEntities, Func<TEntity, Task<ExecutionResult>> notificationOperationAsync)
+        private async Task<ExecutionResult> SendNotificationHandlerAsync<TEntity>(
+            ExecutionResult<Tuple<List<TEntity>, List<TEntity>>> changedEntities, 
+            Func<TEntity, Task<ExecutionResult>> changedNotificationAsync)
         {
             if (!changedEntities.IsSuccess) return changedEntities;
 
-            foreach (var entity in changedEntities.Result!)
+            foreach (var entity in changedEntities.Result!.Item1)
             {
-                await notificationOperationAsync(entity);
+                await changedNotificationAsync(entity);
             }
 
             return new(isSuccess: true);
+        }
+
+        private async Task<ExecutionResult> SendNotificationHandlerAsync<TEntity>(
+            ExecutionResult<Tuple<List<TEntity>, List<TEntity>>> changedEntities,
+            Func<TEntity, Task<ExecutionResult>> changedNotificationAsync,
+            Func<List<TEntity>, Task<ExecutionResult>> addedNotificationAsync)
+        {
+            if (!changedEntities.IsSuccess) return changedEntities;
+
+            foreach (var entity in changedEntities.Result!.Item1)
+            {
+                await changedNotificationAsync(entity);
+            }
+
+            await addedNotificationAsync(changedEntities.Result!.Item2);
+
+            return new(isSuccess: true);
+        }
+
+        private async Task<ExecutionResult> SendLAddedEducationLevelsNotificationAsync(List<EducationLevel> levels)
+        {
+            return await _notificationService.AddedEducationDocumentTypeAndEducationLevelAsync(new(), levels);
+        }
+
+        private async Task<ExecutionResult> SendLAddedEducationDocumentTypeNotificationAsync(List<EducationDocumentType> documentTypes)
+        {
+            return await _notificationService.AddedEducationDocumentTypeAndEducationLevelAsync(documentTypes, new());
         }
 
         private async Task<ExecutionResult> UpdateDictionaryHandlerAsync(Func<Task<ExecutionResult>> updateOperationAsync, Func<bool, string, Task> onErrorAsync)
@@ -193,7 +228,7 @@ namespace DictionaryService.Core.Application.Services
             }
         }
 
-        private async Task<ExecutionResult<List<Faculty>>> UpdateFacultyAsync(bool deleteRelatedEntities = false)
+        private async Task<ExecutionResult<Tuple<List<Faculty>, List<Faculty>>>> UpdateFacultyAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<Faculty, FacultyExternalDTO> updateFacultyActions 
                 = _updateFacultyActionsCreator.CreateActions();
@@ -202,7 +237,7 @@ namespace DictionaryService.Core.Application.Services
                 .UpdateAsync(deleteRelatedEntities, updateFacultyActions);
         }
 
-        private async Task<ExecutionResult<List<EducationLevel>>> UpdateEducationLevelAsync(bool deleteRelatedEntities = false)
+        private async Task<ExecutionResult<Tuple<List<EducationLevel>, List<EducationLevel>>>> UpdateEducationLevelAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<EducationLevel, EducationLevelExternalDTO> updateEducationLevelActions
                 = _updateEducationLevelActionsCreator.CreateActions();
@@ -211,7 +246,7 @@ namespace DictionaryService.Core.Application.Services
                 .UpdateAsync(deleteRelatedEntities, updateEducationLevelActions);
         }
 
-        private async Task<ExecutionResult<List<EducationProgram>>> UpdateEducationProgramAsync(bool deleteRelatedEntities = false)
+        private async Task<ExecutionResult<Tuple<List<EducationProgram>, List<EducationProgram>>>> UpdateEducationProgramAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<EducationProgram, EducationProgramExternalDTO> updateEducationProgramActions
                 = _updateEducationProgramActionsCreator.CreateActions();
@@ -220,7 +255,7 @@ namespace DictionaryService.Core.Application.Services
                .UpdateAsync(deleteRelatedEntities, updateEducationProgramActions);
         }
 
-        private async Task<ExecutionResult<List<EducationDocumentType>>> UpdateEducationDocumentTypeAsync(bool deleteRelatedEntities = false)
+        private async Task<ExecutionResult<Tuple<List<EducationDocumentType>, List<EducationDocumentType>>>> UpdateEducationDocumentTypeAsync(bool deleteRelatedEntities = false)
         {
             UpdateDictionaryActions<EducationDocumentType, EducationDocumentTypeExternalDTO> updateEducationDocumentTypeActions
                 = _updateEducationDocumentTypeActionsCreator.CreateActions();
