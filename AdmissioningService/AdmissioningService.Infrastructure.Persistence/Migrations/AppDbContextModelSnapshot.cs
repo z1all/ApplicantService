@@ -274,7 +274,7 @@ namespace AdmissioningService.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("AdmissioningService.Core.Domain.AdmissionProgram", b =>
                 {
                     b.HasOne("AdmissioningService.Core.Domain.ApplicantAdmission", "ApplicantAdmission")
-                        .WithMany()
+                        .WithMany("AdmissionPrograms")
                         .HasForeignKey("ApplicantAdmissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -293,7 +293,7 @@ namespace AdmissioningService.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("AdmissioningService.Core.Domain.ApplicantAdmission", b =>
                 {
                     b.HasOne("AdmissioningService.Core.Domain.AdmissionCompany", "AdmissionCompany")
-                        .WithMany()
+                        .WithMany("ApplicantAdmissions")
                         .HasForeignKey("AdmissionCompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -390,6 +390,16 @@ namespace AdmissioningService.Infrastructure.Persistence.Migrations
                         .HasForeignKey("NextEducationLevelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AdmissioningService.Core.Domain.AdmissionCompany", b =>
+                {
+                    b.Navigation("ApplicantAdmissions");
+                });
+
+            modelBuilder.Entity("AdmissioningService.Core.Domain.ApplicantAdmission", b =>
+                {
+                    b.Navigation("AdmissionPrograms");
                 });
 
             modelBuilder.Entity("AdmissioningService.Core.Domain.ApplicantCache", b =>

@@ -3,7 +3,7 @@ using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Application.Mappers;
 using AdmissioningService.Core.Domain;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Dictionary;
 
 namespace AdmissioningService.Core.Application.Services
 {

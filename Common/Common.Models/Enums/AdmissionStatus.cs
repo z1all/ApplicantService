@@ -11,4 +11,20 @@ namespace Common.Models.Enums
         Rejected = 3,
         Closed = 4,
     }
+
+    public static class AdmissionStatusExtension
+    {
+        public static string ToRu(this AdmissionStatus status)
+        {
+            return status switch
+            {
+                AdmissionStatus.Created => "Создано",
+                AdmissionStatus.UnderConsideration => "На рассмотрении",
+                AdmissionStatus.Confirmed => "Подтверждено",
+                AdmissionStatus.Rejected => "Отклонено",
+                AdmissionStatus.Closed => "Закрыто",
+                _ => throw new InvalidDataException(),
+            };
+        }
+    }
 }

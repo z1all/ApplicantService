@@ -17,6 +17,14 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(manager => manager.Id == managerId);
         }
 
+        public async Task<Manager?> GetByIdWithFacultyAndUserAsync(Guid managerId)
+        {
+            return await _dbContext.Managers
+                .Include(manager => manager.Faculty)
+                .Include(manager => manager.User)
+                .FirstOrDefaultAsync(manager => manager.Id == managerId);
+        }
+
         public async Task<List<Manager>> GetAllWithFacultyAndUserAsync()
         {
             return await _dbContext.Managers

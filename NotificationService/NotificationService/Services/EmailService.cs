@@ -1,6 +1,6 @@
 ﻿using Common.Models.Models;
-using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService;
-using Common.ServiceBus.ServiceBusDTOs.FromUserService;
+using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Notifications;
+using Common.ServiceBus.ServiceBusDTOs.FromUserService.Notifications;
 using NotificationService.Services.Interfaces;
 
 namespace NotificationService.Services

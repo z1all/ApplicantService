@@ -78,8 +78,16 @@ namespace UserService.Infrastructure.Identity
 
         public static void AddDatabaseSeed(this IServiceProvider services)
         {
-            using var roleManager = services.CreateScope().ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            AppDbSeed.AddRoles(roleManager);
+            using (var roleManager = services.CreateScope().ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>())
+            {
+                AppDbSeed.AddRoles(roleManager);
+            }
+
+            using (var userManager = services.CreateScope().ServiceProvider.GetRequiredService<UserManager<CustomUser>>())
+            {
+                var profileService = services.CreateScope().ServiceProvider.GetRequiredService<IProfileService>();
+                AppDbSeed.AddAdmins(profileService, userManager);
+            }   
         }
 
         public static void AddEasyNetQSeed(this IServiceProvider services)

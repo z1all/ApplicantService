@@ -1,4 +1,4 @@
-﻿using ApplicantService.Core.Application.Validation;
+﻿using Common.Models.Attributes;
 
 namespace ApplicantService.Core.Application.DTOs
 {

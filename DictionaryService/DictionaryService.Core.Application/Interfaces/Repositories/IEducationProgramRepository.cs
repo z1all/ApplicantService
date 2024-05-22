@@ -1,6 +1,6 @@
 ﻿using DictionaryService.Core.Domain;
 using Common.Repositories;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Dictionary;
 
 namespace DictionaryService.Core.Application.Interfaces.Repositories
 {

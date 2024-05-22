@@ -1,0 +1,46 @@
+﻿@model AmdinPanelMVC.Models.EducationDocumentViewModel
+
+<div class="row justify-content-center h-100">
+    <div class="col-md-8 col-lg-6 d-flex flex-column h-100 ">
+        <h2>Документ об образовании</h2>
+        <hr />
+
+        <form id="educationDocumentFormId" class="row g-3">
+            <div class="col-12">
+                <label for="nameId" class="form-label">Название</label>
+                <input name="name" id="nameId" type="text" class="form-control" value="@Model.EducationDocument.Name">
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label for="documentTypeId" class="form-label">Тип документа</label>
+                <select id="documentTypeId" name="educationDocumentTypeId" class="form-control">
+                    @await Component.InvokeAsync("DocumentTypes", Model.EducationDocument.EducationDocumentType.Id)
+                </select>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+
+        <hr />
+
+        <div id="scansContainerId">
+            @{
+                await Html.RenderPartialAsync("_Scans", Model.EducationDocument.Scans);
+            }
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/documents.js"></script>
+
+    <script>
+        const applicant = @Html.Raw(Json.Serialize(Model.ApplicantId));
+        setApplicantId(applicant);
+
+        const educationDocument = @Html.Raw(Json.Serialize(Model.EducationDocument.Id));
+        setDocumentId(educationDocument);
+    </script>
+}

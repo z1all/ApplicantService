@@ -1,0 +1,274 @@
+﻿@using Common.Models.Enums;
+@using Common.API.Helpers;
+@model AmdinPanelMVC.Models.ApplicantAdmissionViewModel;
+
+@{
+    bool isAdmin = User.IsInRole(Role.MainManager);
+    bool applicantTaken = (Context.TryGetUserId(out Guid userId) && Model.ApplicantAdmission.ManagerId == userId);
+
+    bool disabled = !isAdmin && !applicantTaken;
+}
+
+<div class="row justify-content-center h-100">
+    <div class="col-md-12 col-lg-8 d-flex flex-column h-100 ">
+        <h2>Данные абитуриента</h2>
+        <hr />
+
+        <div class="row g-3">
+            @if (isAdmin)
+            {
+                <div class="col-12">
+                    <label for="managerId" class="form-label">Менеджер</label>
+                    <select id="managerId" class="form-control">
+                        <option value="@null">Не выбран</option>
+                        @await Component.InvokeAsync("Managers", @Model.ApplicantAdmission.ManagerId)
+                    </select>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button id="addManagerButtonId" type="submit" class="btn btn-primary">Назначить менеджера</button>
+                </div>
+            }
+
+            @if (applicantTaken)
+            {
+                <div class="d-flex justify-content-end">
+                    <button id="rejectApplicantButtonId" type="submit" class="btn btn-danger">Отказаться от поступления</button>
+                </div>
+            }
+            else if (Model.ApplicantAdmission.ManagerId is null)
+            {
+                <div class="d-flex justify-content-end">
+                    <button id="takeApplicantButtonId" type="submit" class="btn btn-success">Взять поступление</button>
+                </div>
+            }
+            else if (!isAdmin)
+            {
+                <div class="d-flex justify-content-end">
+                    За поступлением следит уже другой менеджер
+                </div>
+            }
+        </div>
+
+        <hr />
+
+        <div class="row g-3">
+            <div class="col align-self-center">Статус поступления: <span id="statusContainerId">@await Html.PartialAsync("_AdmissionStatus", @Model.ApplicantAdmission.AdmissionStatus)</span></div>
+
+            @if (!disabled)
+            {
+                <div class="col-auto">
+                    <button id="changeStatusButtonId" type="button" class="btn btn-primary">Изменить</button>
+                </div>
+            }
+        </div>
+
+        <hr />
+
+        <h5>Основные данные абитуриента</h5>
+        <form id="applicantBasicDataFormId" class="row g-3 mb-3">
+            <div class="col-12">
+                <label for="applicantFullNameId" class="form-label">ФИО</label>
+                <input name="fullName"
+                       id="applicantFullNameId"
+                       type="text"
+                       class="form-control"
+                       value="@Model.ApplicantInfo.ApplicantProfile.FullName"
+                       disabled="@disabled"
+                       required>
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label for="applicantEmailId" class="form-label">Email</label>
+                <input id="applicantEmailId" type="email" class="form-control" value="@Model.ApplicantInfo.ApplicantProfile.Email" disabled>
+            </div>
+
+            @if (!disabled)
+            {
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            }
+        </form>
+
+        <h5>Дополнительные данные абитуриента</h5>
+        <form id="applicantAdditionDataFormId" class="row g-3">
+            <div class="col-12">
+                <label for="applicantBirthdayId" class="form-label">Дата рождения</label>
+                <input name="birthday"
+                       id="applicantBirthdayId"
+                       type="date"
+                       class="form-control"
+                       value="@(Model.ApplicantInfo.ApplicantProfile.Birthday?.ToString("yyyy-MM-dd"))"
+                       disabled="@disabled"
+                       required>
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label for="applicantGenderId" class="form-label">Пол</label>
+                <select name="gender" id="applicantGenderId" class="form-control" disabled="@disabled">
+                    <option value="@null" selected="@(Model.ApplicantInfo.ApplicantProfile.Gender == null)">Не выбран</option>
+                    <option value="@Gender.male" selected="@(Model.ApplicantInfo.ApplicantProfile.Gender == Gender.male)">Мужской</option>
+                    <option value="@Gender.female" selected="@(Model.ApplicantInfo.ApplicantProfile.Gender == Gender.female)">Женский</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label for="applicantCitizenshipId" class="form-label">Гражданство</label>
+                <input name="citizenship"
+                       id="applicantCitizenshipId"
+                       type="text"
+                       class="form-control"
+                       value="@Model.ApplicantInfo.ApplicantProfile.Citizenship"
+                       disabled="@disabled"
+                       required>
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label for="applicantPhoneNumberId" class="form-label">Номер телефона</label>
+                <input name="phoneNumber"
+                       id="applicantPhoneNumberId"
+                       type="text"
+                       class="form-control"
+                       value="@Model.ApplicantInfo.ApplicantProfile.PhoneNumber"
+                       disabled="@disabled"
+                       required>
+                <span class="text-danger"></span>
+            </div>
+            @if (!disabled)
+            {
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            }
+        </form>
+
+        <hr />
+        <h5>Документы абитуриента</h5>
+
+        <div class="d-flex flex-column">
+            @if (Model.ApplicantInfo.Documents.Count == 0)
+            {
+                <div class="list-group-item p-3">
+                    У абитуриента нет документов
+                </div>
+            }
+
+            @foreach (var document in Model.ApplicantInfo.Documents)
+            {
+                <a class="list-group-item d-flex document admissionLink"
+                   href="@(document.Type == DocumentType.Passport ? 
+                           $"/Applicant/{Model.ApplicantInfo.ApplicantProfile.Id}/Passport" 
+                           :
+                           $"/Applicant/{Model.ApplicantInfo.ApplicantProfile.Id}/EducationDocument/{document.Id}")">
+                    <div class="col-sm-6 pe-2 m-0"><span class="text-secondary">Тип документа: </span> @document.Type.ToRu()</div>
+                    @if (document.Type == DocumentType.EducationDocument)
+                    {
+                        <div class="col-sm-6 m-0"><span class="text-secondary">Комментарии: </span>@document.Comments</div>
+                    }
+                </a>
+            }
+        </div>
+
+        <hr />
+        <h5>Выбранные программы абитуриента</h5>
+        <div class="d-flex flex-column pb-3">
+            @if (Model.ApplicantAdmission.AdmissionPrograms.Count == 0)
+            {
+                <div class="list-group-item p-3">
+                    У абитуриента нет выбранных программ
+                </div>
+            }
+
+            @foreach (var program in Model.ApplicantAdmission.AdmissionPrograms.OrderBy(p => p.Priority))
+            {
+                <div class="list-group-item d-flex" id="@program.EducationProgram.Id">
+                    <div class="d-flex align-items-center h3 me-3 priority">@(program.Priority + 1)</div>
+                    <div class="" style="flex: 1">
+                        <div><span class="text-secondary">Факультет:</span> @program.EducationProgram.Faculty.Name</div>
+                        <div class="mb-1"><span class="text-secondary">Уровень образования:</span> @program.EducationProgram.EducationLevel.Name</div>
+                        <div><span class="text-secondary">Программа:</span> @program.EducationProgram.Name</div>
+                        <div><span class="text-secondary">Код программы:</span> @program.EducationProgram.Code</div>
+                        <div><span class="text-secondary">Язык программы:</span> @program.EducationProgram.Language</div>
+                        <div><span class="text-secondary">Форма программы:</span> @program.EducationProgram.EducationForm</div>
+                    </div>
+                    @if (!disabled)
+                    {
+                          <div class="swapButtons ms-3">
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-danger delete">✖</button>
+                            </div>
+                            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                <input type="radio" class="btn-check" name="up">
+                                <label class="btn btn-outline-primary" for="up">⇑</label>
+                                <input type="radio" class="btn-check" name="down">
+                                <label class="btn btn-outline-primary" for="down">⇓</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            @if (!disabled && Model.ApplicantAdmission.AdmissionPrograms.Count != 0)
+            {
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="button" class="btn btn-primary" id="saveOrderButtonId">Изменить</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@*
+
+    1. В блоке добавляем атрибут с Id программы
+    2. Добавить кнопку вверх и вниз
+    3. После загрузки страницы выполнить скрипт с добавлением слушателей на эти кнопку, которые будут искаться по Id блока
+    4. Добавить массив с копией, в которой при нажатии на кнопки будут меняться местами программы
+    5. При изменении приоритета передвигать блоки и менять цифру с приоритетом
+    6. При отправке запроса на кнопке Изменить, отправлять массив с Id блоками из копии
+
+    7. При удалении программы удалять блок, удалить программу из настоящего массива и перезаписать копию
+    8. Изменить приоритет программы
+
+
+*@
+
+<div class="modal fade" id="changeStatusModalId" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="changeStatusFormId" class="row p-3">
+                    <div class="form-check col-sm-4">
+                        <input class="form-check-input" type="radio" name="newStatus" id="statusConfirmedId" value="@ManagerChangeAdmissionStatus.Confirmed" checked>
+                        <label class="form-check-label" for="statusConfirmedId">@ManagerChangeAdmissionStatus.Confirmed.ToRu()</label>
+                    </div>
+                    <div class="form-check col-sm-4">
+                        <input class="form-check-input" type="radio" name="newStatus" id="statusRejectedId" value="@ManagerChangeAdmissionStatus.Rejected" checked>
+                        <label class="form-check-label" for="statusRejectedId">@ManagerChangeAdmissionStatus.Rejected.ToRu()</label>
+                    </div>
+                    <div class="form-check col-sm-4">
+                        <input class="form-check-input" type="radio" name="newStatus" id="statusClosedId" value="@ManagerChangeAdmissionStatus.Closed" checked>
+                        <label class="form-check-label" for="statusClosedId">@ManagerChangeAdmissionStatus.Closed.ToRu()</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit"
+                        class="btn btn-primary"
+                        form="changeStatusFormId">
+                    Изменить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/applicantAdmission.js"></script>
+    <script>
+
+        const applicant = @Html.Raw(Json.Serialize(Model))
+            saveApplicant(applicant);
+
+    </script>
+}

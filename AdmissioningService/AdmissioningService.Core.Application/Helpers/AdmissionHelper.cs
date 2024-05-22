@@ -4,12 +4,13 @@ using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Domain;
 using Common.Models.Models;
-using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
+using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests;
 
 namespace AdmissioningService.Core.Application.Helpers
 {
     public class AdmissionHelper
     {
+        private readonly IManagerRepository _managerRepository;
         private readonly IApplicantCacheRepository _applicantCacheRepository;
         private readonly IAdmissionProgramRepository _admissionProgramRepository;
         private readonly IEducationProgramCacheRepository _educationProgramCacheRepository;
@@ -21,11 +22,13 @@ namespace AdmissioningService.Core.Application.Helpers
         private readonly DictionaryHelper _dictionaryHelper;
 
         public AdmissionHelper(
+            IManagerRepository managerRepository,
             IAdmissionProgramRepository admissionProgramRepository, IOptions<AdmissionOptions> admissionOptions,
             IEducationProgramCacheRepository educationProgramCacheRepository, DictionaryHelper dictionaryHelper,
             IApplicantCacheRepository applicantCacheRepository, IApplicantAdmissionRepository applicantAdmissionRepository,
             IEducationDocumentTypeCacheRepository educationDocumentTypeCacheRepository, IRequestService requestService)
         {
+            _managerRepository = managerRepository;
             _applicantCacheRepository = applicantCacheRepository;
             _admissionProgramRepository = admissionProgramRepository;
             _educationProgramCacheRepository = educationProgramCacheRepository;
@@ -59,7 +62,10 @@ namespace AdmissioningService.Core.Application.Helpers
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
             if (applicantAdmission is null) return true;
 
-            if (applicantAdmission.ManagerId == managerId) return true;
+            Manager? manager = await _managerRepository.GetByIdAsync(managerId);
+
+            if (manager is not null && manager.FacultyId is null || 
+                applicantAdmission.ManagerId == managerId) return true;
             return false;
         }
 

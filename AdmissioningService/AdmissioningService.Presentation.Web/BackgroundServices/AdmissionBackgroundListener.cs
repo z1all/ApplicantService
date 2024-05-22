@@ -1,6 +1,6 @@
 ﻿using AdmissioningService.Core.Application.Interfaces.Services;
-using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
-using Common.ServiceBusDTOs.FromUserService;
+using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Notifications;
+using Common.ServiceBus.ServiceBusDTOs.FromUserService.Notifications;
 using EasyNetQ.AutoSubscribe;
 
 namespace AdmissioningService.Presentation.Web.BackgroundServices

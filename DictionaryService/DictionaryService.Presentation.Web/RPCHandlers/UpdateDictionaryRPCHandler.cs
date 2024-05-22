@@ -1,9 +1,9 @@
 ﻿using DictionaryService.Core.Application.Interfaces.Services;
-using Common.ServiceBus.EasyNetQAutoSubscriber;
 using Common.Models.Models;
-using Common.Models.DTOs;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
+using Common.ServiceBus.EasyNetQRPC;
 using EasyNetQ;
+using Common.Models.DTOs.Dictionary;
 
 namespace DictionaryService.Presentation.Web.RPCHandlers
 {
@@ -22,18 +22,8 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
             var updateDictionaryService = service.GetRequiredService<IUpdateDictionaryService>();
 
             ExecutionResult<List<UpdateStatusDTO>> updateStatuses = await updateDictionaryService.GetUpdateStatusesAsync();
-            if (!updateStatuses.IsSuccess)
-            {
-                return new() { Errors = updateStatuses.Errors };
-            }
 
-            return new()
-            {
-                Result = new()
-                {
-                    UpdateStatuses = updateStatuses.Result!
-                }
-            };
+            return ResponseHandler(updateStatuses, statuses => new GetUpdateStatusesResponse() { UpdateStatuses = statuses });
         }
     }
 }

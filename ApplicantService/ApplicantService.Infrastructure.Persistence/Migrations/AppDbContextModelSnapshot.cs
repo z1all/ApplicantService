@@ -17,7 +17,7 @@ namespace ApplicantService.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -61,6 +61,9 @@ namespace ApplicantService.Infrastructure.Persistence.Migrations
 
                     b.Property<Guid>("ApplicantId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("text");
 
                     b.Property<int>("DocumentType")
                         .HasColumnType("integer");

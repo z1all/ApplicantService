@@ -76,13 +76,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{534F0D0A-C20F-4008-8356-F3AFC438EB28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdmissioningService.Core.Application", "AdmissioningService\AdmissioningService.Core.Application\AdmissioningService.Core.Application.csproj", "{4996C073-861D-4369-BB49-F89ADE6AD6FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissioningService.Core.Application", "AdmissioningService\AdmissioningService.Core.Application\AdmissioningService.Core.Application.csproj", "{4996C073-861D-4369-BB49-F89ADE6AD6FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdmissioningService.Core.Domain", "AdmissioningService\AdmissioningService.Core.Domain\AdmissioningService.Core.Domain.csproj", "{F5A6939A-AF86-4D96-BC64-6B3358698694}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissioningService.Core.Domain", "AdmissioningService\AdmissioningService.Core.Domain\AdmissioningService.Core.Domain.csproj", "{F5A6939A-AF86-4D96-BC64-6B3358698694}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdmissioningService.Infrastructure.Persistence", "AdmissioningService\AdmissioningService.Infrastructure.Persistence\AdmissioningService.Infrastructure.Persistence.csproj", "{5010F0BE-68EB-490D-9F3B-C576B34AEB2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissioningService.Infrastructure.Persistence", "AdmissioningService\AdmissioningService.Infrastructure.Persistence\AdmissioningService.Infrastructure.Persistence.csproj", "{5010F0BE-68EB-490D-9F3B-C576B34AEB2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdmissioningService.Presentation.Web", "AdmissioningService\AdmissioningService.Presentation.Web\AdmissioningService.Presentation.Web.csproj", "{055E3D0B-222C-4B25-8490-E82630EA92E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissioningService.Presentation.Web", "AdmissioningService\AdmissioningService.Presentation.Web\AdmissioningService.Presentation.Web.csproj", "{055E3D0B-222C-4B25-8490-E82630EA92E4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdminPanelMVC", "AdminPanelMVC", "{31EDCD4F-CA97-4B2D-905F-193A3C42E881}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmdinPanelMVC", "AmdinPanelMVC\AmdinPanelMVC\AmdinPanelMVC.csproj", "{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -268,6 +272,14 @@ Global
 		{055E3D0B-222C-4B25-8490-E82630EA92E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{055E3D0B-222C-4B25-8490-E82630EA92E4}.Release|x64.ActiveCfg = Release|Any CPU
 		{055E3D0B-222C-4B25-8490-E82630EA92E4}.Release|x64.Build.0 = Release|Any CPU
+		{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}.Debug|x64.Build.0 = Debug|Any CPU
+		{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}.Release|x64.ActiveCfg = Release|Any CPU
+		{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -303,6 +315,7 @@ Global
 		{F5A6939A-AF86-4D96-BC64-6B3358698694} = {435B2F05-10B2-4E5C-9889-2C95D6922A1F}
 		{5010F0BE-68EB-490D-9F3B-C576B34AEB2D} = {CD997400-6CDD-4A34-A7DE-4C2020F0047F}
 		{055E3D0B-222C-4B25-8490-E82630EA92E4} = {534F0D0A-C20F-4008-8356-F3AFC438EB28}
+		{D27E4BD1-8529-4573-9E6C-D6B98BB19DC1} = {31EDCD4F-CA97-4B2D-905F-193A3C42E881}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9C33DDE0-5A90-4DDB-A50A-D316863C604D}

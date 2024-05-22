@@ -9,4 +9,18 @@ namespace Common.Models.Enums
         Rejected = 3,
         Closed = 4,
     }
+
+    public static class ManagerChangeAdmissionStatusExtension
+    {
+        public static string ToRu(this ManagerChangeAdmissionStatus status)
+        {
+            return status switch
+            {
+                ManagerChangeAdmissionStatus.Confirmed => "Подтверждено",
+                ManagerChangeAdmissionStatus.Rejected => "Отклонено",
+                ManagerChangeAdmissionStatus.Closed => "Закрыто",
+                _ => throw new InvalidDataException(),
+            };
+        }
+    }
 }

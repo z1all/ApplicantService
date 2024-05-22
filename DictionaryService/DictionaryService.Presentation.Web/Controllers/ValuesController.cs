@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using EasyNetQ;
-using Common.Models.DTOs;
 using Common.Models.Models;
 using Common.Models.Enums;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Notifications;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
+using Common.Models.DTOs.Dictionary;
 
 namespace DictionaryService.Presentation.Web.Controllers
 {
