@@ -27,6 +27,9 @@ namespace ApplicantService.Presentation.Web.RPCHandlers
 
             _bus.Rpc.Respond<DeleteDocumentScanRequest, ExecutionResult>(async (request) =>
                await ExceptionHandlerAsync(async (service) => await DeleteDocumentScanAsync(service, request)));
+
+            _bus.Rpc.Respond<GetScanRequest, ExecutionResult<GetScanResponse>>(async (request) =>
+               await ExceptionHandlerAsync(async (service) => await GetScanAsync(service, request)));
         }
 
         private async Task<ExecutionResult<GetPassportResponse>> GetPassportAsync(IServiceProvider service, GetPassportRequest request)
@@ -72,6 +75,16 @@ namespace ApplicantService.Presentation.Web.RPCHandlers
             var _fileService = service.GetRequiredService<IFileService>();
 
             return await _fileService.DeleteApplicantScanAsync(request.DocumentId, request.ScanId, request.ApplicantId, request.ManagerId);
+        }
+
+        private async Task<ExecutionResult<GetScanResponse>> GetScanAsync(IServiceProvider service, GetScanRequest request)
+        {
+            var _fileService = service.GetRequiredService<IFileService>();
+
+            ExecutionResult<FileDTO> result
+                = await _fileService.GetApplicantScanAsync(request.DocumentId, request.ScanId, request.ApplicantId);
+
+            return ResponseHandler(result, scan => new GetScanResponse() { File = scan });
         }
     }
 }

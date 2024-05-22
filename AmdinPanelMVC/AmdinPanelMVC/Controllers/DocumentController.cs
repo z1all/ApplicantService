@@ -94,6 +94,26 @@ namespace AmdinPanelMVC.Controllers
             return PartialView("_Scans", scans.Result);
         }
 
+        public async Task<IActionResult> LoadScans(Guid applicantId, Guid documentId, Guid scanId)
+        {
+            ExecutionResult<FileDTO> response = await _documentService.GetScanAsync(applicantId, documentId, scanId);
+
+            if (!response.IsSuccess)
+            {
+                if (response.Errors.ContainsKey("GetScanFail"))
+                {
+                    return Redirect("/InternalServer");
+                }
+                return BadRequest("/NotFound");
+            }
+
+            FileDTO fileDTO = response.Result!;
+            if (!fileDTO.Type.TryMapToContentType(out var contentType))
+            {
+                return Redirect("/InternalServer");
+            }
+            return File(fileDTO.File, contentType!, fileDTO.Name);
+        }
         private async Task<byte[]> GetFileAsync(IFormFile formFile)
         {
             byte[] file = [];

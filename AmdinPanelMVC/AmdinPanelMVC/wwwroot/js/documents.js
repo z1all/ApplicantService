@@ -39,6 +39,36 @@
 
 addListeners();
 function addListeners() {
+    const loadScanButtons = document.querySelectorAll('.loadScan');
+    loadScanButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            const scanId = $(event.target).attr('scanId');
+
+            const loadScan = (data) => {
+                if (data.status !== 200) {
+                    showErrorToast(
+                        "Удаление скана",
+                        "Ошибка при отправке запроса на удаление скана"
+                    );
+                }
+                else {
+                    var file = URL.createObjectURL(data.body);
+
+                    const a = document.createElement('a');
+                    a.href = file;
+                    a.download = getFileName(data.responseHeaders);
+                    document.body.appendChild(a);
+                    a.click();
+
+                    document.body.removeChild(a);
+
+                    URL.revokeObjectURL(file);
+                }
+            }
+
+            request(`/Documents/LoadScans?documentId=${getDocumentId()}&&applicantId=${getApplicantId()}&&scanId=${scanId}`, 'POST', loadScan);
+        });
+    });
 
     const deleteButtons = document.querySelectorAll('.deleteScan');
     deleteButtons.forEach(button => {
@@ -90,6 +120,30 @@ function addListeners() {
 
         request(`/Documents/AddFile?documentId=${getDocumentId()}&&applicantId=${getApplicantId()}`, 'POST', addFile, formdata, true);
     });
+}
+
+function getFileName(reponseHeader) {
+    const disposition = reponseHeader.get('Content-Disposition');
+    let filename = 'downloaded_file';
+
+    if (disposition && disposition.includes('attachment')) {
+        const utf8FilenameRegex = /filename\*=(?:(['"])(.*?)\1|(.+?)(?:;|$))/;
+        const asciiFilenameRegex = /filename=(?:(['"])(.*?)\1|([^;\n]*))/;
+
+        let matches = utf8FilenameRegex.exec(disposition);
+        if (matches) {
+            filename = decodeURIComponent(matches[2] || matches[3]);
+        } else {
+            matches = asciiFilenameRegex.exec(disposition);
+            if (matches) {
+                filename = matches[2] || matches[3];
+            }
+        }
+
+        filename = filename.replace("UTF-8''", '')
+    }
+
+    return filename;
 }
 
 function updateScans() {

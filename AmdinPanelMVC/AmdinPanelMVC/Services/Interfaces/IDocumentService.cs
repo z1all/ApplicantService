@@ -10,6 +10,7 @@ namespace AmdinPanelMVC.Services.Interfaces
         Task<ExecutionResult> ChangePassportAsync(ChangePassportDTO changePassport, Guid managerId);
 
         Task<ExecutionResult<List<ScanInfo>>> GetDocumentScansAsync(Guid applicantId, Guid documentId);
+        Task<ExecutionResult<FileDTO>> GetScanAsync(Guid applicantId, Guid documentId, Guid scanId);
         Task<ExecutionResult> AddDocumentScansAsync(Guid applicantId, Guid documentId, FileDTO file, Guid managerId);
         Task<ExecutionResult> DeleteDocumentScansAsync(Guid applicantId, Guid documentId, Guid scanId, Guid managerId);
     }

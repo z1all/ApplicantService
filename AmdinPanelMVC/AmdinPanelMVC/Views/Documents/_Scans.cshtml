@@ -4,11 +4,11 @@
     @foreach (var scan in Model)
     {
         <div class="list-group-item d-flex">
-            <a class="h-100 align-self-center admissionLink">
+            <a class="h-100 align-self-center admissionLink loadScan flex-fill" scanId="@scan.Id">
                 <span class="text-secondary">Название: </span>
                 @scan.Name@scan.Type
              </a>
-            <div class="ms-auto h-100 align-self-center ps-4">
+            <div class=" h-100 align-self-center ms-4">
                 <button type="button" class="btn btn-danger deleteScan" scanId="@scan.Id">Удалить</button>
             </div>
         </div>

@@ -46,9 +46,11 @@ function request(url, method, callback, data = null, isForm = false) {
     }
 
     let status;
+    let responseHeaders;
     fetch(url, request)
         .then(response => {
             status = response.status;
+            responseHeaders = response.headers;
 
             if (response.redirected) {
                 window.location.href = response.url;
@@ -62,12 +64,12 @@ function request(url, method, callback, data = null, isForm = false) {
                     return response.text();
                 }
                 else {
-                    return null;
+                    return response.blob();
                 }
             }
         })
         .then(data => {
-            callback({ body: data, status });
+            callback({ body: data, status, responseHeaders });
         })
         .catch(error => {
             console.error('Произошла ошибка:', error);

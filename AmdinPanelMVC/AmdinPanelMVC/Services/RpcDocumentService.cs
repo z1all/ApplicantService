@@ -67,5 +67,14 @@ namespace AmdinPanelMVC.Services
                        ManagerId = managerId,
                    }, "DeleteDocumentScansFail");
         }
+
+        public async Task<ExecutionResult<FileDTO>> GetScanAsync(Guid applicantId, Guid documentId, Guid scanId)
+        {
+            ExecutionResult<GetScanResponse> response
+             = await RequestHandlerAsync<ExecutionResult<GetScanResponse>, GetScanRequest > (
+                  new() { ApplicantId = applicantId, DocumentId = documentId, ScanId = scanId }, "GetScanFail");
+
+            return ResponseHandler(response, scan => scan.File);
+        }
     }
 }
