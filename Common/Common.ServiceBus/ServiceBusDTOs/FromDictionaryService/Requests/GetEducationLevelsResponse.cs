@@ -1,4 +1,4 @@
-﻿using Common.Models.DTOs;
+﻿using Common.Models.DTOs.Dictionary;
 
 namespace Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests
 {

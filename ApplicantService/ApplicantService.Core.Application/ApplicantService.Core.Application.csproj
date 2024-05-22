@@ -12,4 +12,8 @@
     <ProjectReference Include="..\ApplicantService.Core.Domain\ApplicantService.Core.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Validation\" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
-﻿using Common.Models.DTOs;
+﻿using Common.Models.DTOs.Admission;
+using Common.Models.DTOs.Dictionary;
 using Common.Models.Enums;
 using Common.Models.Models;
 

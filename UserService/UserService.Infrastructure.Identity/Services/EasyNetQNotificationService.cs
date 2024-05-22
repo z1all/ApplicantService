@@ -1,10 +1,9 @@
-﻿using UserService.Core.Application.DTOs;
-using UserService.Core.Application.Interfaces;
-using Common.ServiceBus.ServiceBusDTOs.FromUserService;
+﻿using UserService.Core.Application.Interfaces;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService.Base;
-using EasyNetQ;
+using Common.Models.DTOs;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService.Notifications;
+using EasyNetQ;
 
 namespace UserService.Infrastructure.Identity.Services
 {

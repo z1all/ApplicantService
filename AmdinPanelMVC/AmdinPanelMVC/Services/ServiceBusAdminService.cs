@@ -1,6 +1,7 @@
 ﻿using AmdinPanelMVC.Services.Base;
 using AmdinPanelMVC.Services.Interfaces;
-using Common.Models.DTOs;
+using Common.Models.DTOs.Admission;
+using Common.Models.DTOs.Dictionary;
 using Common.Models.Enums;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;

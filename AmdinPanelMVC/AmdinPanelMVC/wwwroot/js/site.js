@@ -1,4 +1,14 @@
 ﻿
+function openModal(modalId) {
+    var myModal = new bootstrap.Modal(document.getElementById(modalId));
+    myModal.show();
+}
+
+function closeModal(modalId) {
+    var myModal = new bootstrap.Modal(document.getElementById(modalId));
+    myModal.hide();
+}
+
 function showSuccessToast(title, text) {
     $('#toastTitleId').parent().addClass("bg-success");
     showToast(title, text);
@@ -17,7 +27,7 @@ function showToast(title, text) {
     toast.show();
 }
 
-function request(url, method, callback, data = null, userToken = null) {
+function request(url, method, callback, data = null, isForm = false) {
     let request = {
         method,
         headers: {
@@ -25,19 +35,22 @@ function request(url, method, callback, data = null, userToken = null) {
         }
     }
 
-    if (userToken !== null) {
-        request.headers['Authorization'] = "Bearer " + userToken;
-    }
-
     if (data !== null) {
-        request.headers['content-Type'] = "application/json";
-        request.body = JSON.stringify(data)
+        if (isForm) {
+            request.body = data 
+        }
+        else {
+            request.headers['content-Type'] = "application/json";
+            request.body = JSON.stringify(data);
+        }
     }
 
     let status;
+    let responseHeaders;
     fetch(url, request)
         .then(response => {
             status = response.status;
+            responseHeaders = response.headers;
 
             if (response.redirected) {
                 window.location.href = response.url;
@@ -46,13 +59,17 @@ function request(url, method, callback, data = null, userToken = null) {
                 const contentType = response.headers.get('content-type');
                 if (contentType && (contentType.includes('application/json') || contentType.includes('application/problem+json'))) {
                     return response.json();
-                } else {
-                    return null;
+                }
+                else if (contentType && contentType.includes('text/html')) {
+                    return response.text();
+                }
+                else {
+                    return response.blob();
                 }
             }
         })
         .then(data => {
-            callback({ body: data, status });
+            callback({ body: data, status, responseHeaders });
         })
         .catch(error => {
             console.error('Произошла ошибка:', error);

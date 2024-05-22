@@ -1,7 +1,7 @@
 ﻿using AdmissioningService.Core.Application.Interfaces.Services;
 using Common.Models.Models;
 using Common.ServiceBus.EasyNetQRPC;
-using Common.ServiceBus.ServiceBusDTOs.FromApplicantService;
+using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 using EasyNetQ;
 

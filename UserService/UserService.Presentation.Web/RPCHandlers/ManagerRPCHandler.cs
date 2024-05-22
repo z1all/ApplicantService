@@ -23,15 +23,6 @@ namespace UserService.Presentation.Web.RPCHandlers
             _bus.Rpc.Respond<LogoutRequest, ExecutionResult>(async (request) =>
               await ExceptionHandlerAsync(async (service) => await LogoutAsync(service, request)));
 
-            _bus.Rpc.Respond<ChangeFullNameRequest, ExecutionResult>(async (request) =>
-              await ExceptionHandlerAsync(async (service) => await ChangeProfileAsync(service, request)));
-
-            _bus.Rpc.Respond<ChangeEmailRequest, ExecutionResult>(async (request) =>
-              await ExceptionHandlerAsync(async (service) => await ChangeEmailAsync(service, request)));
-
-            _bus.Rpc.Respond<ChangePasswordRequest, ExecutionResult>(async (request) =>
-              await ExceptionHandlerAsync(async (service) => await ChangePasswordAsync(service, request)));
-
             _bus.Rpc.Respond<CreateNewManagerRequest, ExecutionResult>(async (request) =>
              await ExceptionHandlerAsync(async (service) => await CreateManagerAsync(service, request)));
 
@@ -66,27 +57,6 @@ namespace UserService.Presentation.Web.RPCHandlers
             var _authService = service.GetRequiredService<IAuthService>();
 
             return await _authService.LogoutAsync(request.AccessTokenJTI);
-        }
-
-        private async Task<ExecutionResult> ChangeProfileAsync(IServiceProvider service, ChangeFullNameRequest request)
-        {
-            var _profileService = service.GetRequiredService<IProfileService>();
-
-            return await _profileService.ChangeProfileAsync(new() { NewFullName = request.NewFullName }, request.ManagerId);
-        }
-
-        private async Task<ExecutionResult> ChangeEmailAsync(IServiceProvider service, ChangeEmailRequest request)
-        {
-            var _profileService = service.GetRequiredService<IProfileService>();
-
-            return await _profileService.ChangeEmailAsync(new() { NewEmail = request.NewEmail }, request.ManagerId);
-        }
-
-        private async Task<ExecutionResult> ChangePasswordAsync(IServiceProvider service, ChangePasswordRequest request)
-        {
-            var _profileService = service.GetRequiredService<IProfileService>();
-
-            return await _profileService.ChangePasswordAsync(request.ChangePassword, request.UserId);
         }
 
         private async Task<ExecutionResult> CreateManagerAsync(IServiceProvider service, CreateNewManagerRequest request)

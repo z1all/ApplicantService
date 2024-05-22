@@ -1,4 +1,4 @@
-﻿using UserService.Core.Application.DTOs;
+﻿using Common.Models.DTOs;
 using Common.Models.Models;
 
 namespace UserService.Core.Application.Interfaces

@@ -9,8 +9,18 @@ namespace AmdinPanelMVC.Controllers
     public class HomeController : Controller
     {
         public IActionResult Index()
-        { 
+        {
             return View();
+        }
+
+        public IActionResult NotFoundError()
+        {
+            return View("NotFound");
+        }
+
+        public IActionResult InternalServerError()
+        {
+            return View("InternalServerError");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -5,6 +5,8 @@ using UserService.Core.Domain.Entities;
 using UserService.Infrastructure.Identity.Extensions;
 using Common.Models.Enums;
 using Common.Models.Models;
+using Common.Models.DTOs;
+using Common.Models.DTOs.User;
 
 namespace UserService.Infrastructure.Identity.Services
 {
@@ -127,6 +129,11 @@ namespace UserService.Infrastructure.Identity.Services
             if (user is null)
             {
                 return new(keyError: "ManagerNotFound", error: $"Manager with id {manager.Id} not found!");
+            }
+
+            if (manager.FacultyId is not null && await _userManager.IsInRoleAsync(user, Role.Admin))
+            {
+                return new(keyError: "AdministratorWithFaculty", error: $"An administrator cannot have a faculty!");
             }
 
             user.Email = manager.Email;

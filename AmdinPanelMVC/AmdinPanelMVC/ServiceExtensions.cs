@@ -11,6 +11,9 @@ namespace AmdinPanelMVC
         {
             services.AddScoped<IAuthService, RpcAuthService>();
             services.AddScoped<IAdminService, ServiceBusAdminService>();
+            services.AddScoped<IAdmissionService, RpcAdmissionService>();
+            services.AddScoped<IApplicantService, RpcApplicantService>();
+            services.AddScoped<IDocumentService, RpcDocumentService>();
             services.AddScoped<IDictionaryService, RpcDictionaryService>();
             services.AddEasyNetQ();
 

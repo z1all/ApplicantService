@@ -6,6 +6,7 @@ using UserService.Infrastructure.Identity.Configurations.Authorization;
 using Common.API.Controllers;
 using Common.API.Helpers;
 using Common.Models.Models;
+using Common.Models.Enums;
 
 namespace UserService.Presentation.Web.Controllers
 {
@@ -39,7 +40,7 @@ namespace UserService.Presentation.Web.Controllers
         }
 
         [HttpPost("logout")]
-        [Authorize]
+        [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
         public async Task<ActionResult> LogoutAsync()
         {
             if (!HttpContext.TryGetAccessTokenJTI(out Guid accessTokenJTI))
@@ -54,7 +55,7 @@ namespace UserService.Presentation.Web.Controllers
         }
 
         [HttpPost("access")]
-        [Authorize(AuthenticationSchemes = CustomJwtBearerDefaults.CheckOnlySignature)]
+        [Authorize(AuthenticationSchemes = CustomJwtBearerDefaults.CheckOnlySignature, Roles = $"{Role.Applicant}, {Role.Admin}")]
         public async Task<ActionResult<TokensResponseDTO>> UpdateAccessTokenAsync(UpdateAccessRequestDTO request)
         {
             if (!HttpContext.TryGetAccessTokenJTI(out Guid accessTokenJTI) || !HttpContext.TryGetUserId(out Guid userId))
