@@ -24,7 +24,7 @@ namespace Common.API.Controllers
         {
             if (!HttpContext.TryGetUserId(out Guid userId))
             {
-                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+                return BadRequest(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
             }
 
             ExecutionResult<TResult> response = await operation(userId);
@@ -45,7 +45,7 @@ namespace Common.API.Controllers
         {
             if (!HttpContext.TryGetUserId(out Guid userId))
             {
-                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+                return BadRequest(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
             }
 
             ExecutionResult response = await operation(userId);

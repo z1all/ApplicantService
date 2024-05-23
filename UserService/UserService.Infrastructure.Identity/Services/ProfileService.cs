@@ -47,7 +47,7 @@ namespace UserService.Infrastructure.Identity.Services
             CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
-                return new(keyError: "ChangeFail", error: "User not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ChangeFail", error: "User not found!");
             }
 
             IdentityResult changingResult = await _userManager.ChangePasswordAsync(user, changePassword.CurrentPassword, changePassword.NewPassword);
@@ -62,7 +62,7 @@ namespace UserService.Infrastructure.Identity.Services
             {
                 FullName = createAdmin.FullName,
                 Email = createAdmin.Email,
-                UserName = createAdmin.Email //$"{createAdmin.FullName}_{Guid.NewGuid()}",
+                UserName = createAdmin.Email
             };
 
             IdentityResult creatingResult = await _userManager.CreateAsync(user, createAdmin.Password);
@@ -93,7 +93,7 @@ namespace UserService.Infrastructure.Identity.Services
             {
                 FullName = createManager.FullName,
                 Email = createManager.Email,
-                UserName = createManager.Email //$"{createManager.FullName}_{Guid.NewGuid()}",
+                UserName = createManager.Email
             };
 
             IdentityResult creatingResult = await _userManager.CreateAsync(user, createManager.Password);
@@ -112,12 +112,9 @@ namespace UserService.Infrastructure.Identity.Services
             IdentityResult deletingResult = await _userManager.DeleteAsync(user);
             if (!deletingResult.Succeeded)
             {
-                return new()
-                {
-                    Errors = deletingResult.Errors
+                return new(StatusCodeExecutionResult.BadRequest, errors: deletingResult.Errors
                         .ToErrorDictionary()
-                        .AddRange(creatingRequestResult.Errors)
-                };
+                        .AddRange(creatingRequestResult.Errors));
             }
 
             return creatingRequestResult;
@@ -128,12 +125,12 @@ namespace UserService.Infrastructure.Identity.Services
             CustomUser? user = await _userManager.FindByIdAsync(manager.Id.ToString());
             if (user is null)
             {
-                return new(keyError: "ManagerNotFound", error: $"Manager with id {manager.Id} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ManagerNotFound", error: $"Manager with id {manager.Id} not found!");
             }
 
             if (manager.FacultyId is not null && await _userManager.IsInRoleAsync(user, Role.Admin))
             {
-                return new(keyError: "AdministratorWithFaculty", error: $"An administrator cannot have a faculty!");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "AdministratorWithFaculty", error: $"An administrator cannot have a faculty!");
             }
 
             user.Email = manager.Email;
@@ -141,7 +138,7 @@ namespace UserService.Infrastructure.Identity.Services
             user.FullName = manager.FullName;
 
             IdentityResult updateResult = await _userManager.UpdateAsync(user);
-            if (!updateResult.Succeeded) return new() { Errors = updateResult.Errors.ToErrorDictionary() };
+            if (!updateResult.Succeeded) return new(StatusCodeExecutionResult.BadRequest, errors: updateResult.Errors.ToErrorDictionary());
 
             string newRole = manager.FacultyId == null ? Role.MainManager : Role.Manager;
             if (await _userManager.IsInRoleAsync(user, Role.MainManager) && newRole == Role.Manager)
@@ -169,7 +166,7 @@ namespace UserService.Infrastructure.Identity.Services
             CustomUser? user = await _userManager.FindByIdAsync(managerId.ToString());
             if (user == null)
             {
-                return new(keyError: "DeleteFail", error: "Manager not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "DeleteFail", error: "Manager not found!");
             }
 
             ExecutionResult checkResult = await CheckRolesForDeleteManagerAsync(user);
@@ -210,7 +207,7 @@ namespace UserService.Infrastructure.Identity.Services
                 errors.Add("You cannot delete a manager with the admin role!");
             }
 
-            if (errors.Count > 0) return new(keyError: "BadRoles", errors.ToArray());
+            if (errors.Count > 0) return new(StatusCodeExecutionResult.BadRequest, keyError: "BadRoles", errors.ToArray());
             return new(isSuccess: true);
         }
 
@@ -219,7 +216,7 @@ namespace UserService.Infrastructure.Identity.Services
             CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
-                return new(keyError: "ChangeFail", error: "User not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ChangeFail", error: "User not found!");
             }
 
             IList<string> roles = await _userManager.GetRolesAsync(user);
@@ -228,7 +225,7 @@ namespace UserService.Infrastructure.Identity.Services
                 ExecutionResult canEdit = await _serviceBusProvider.Request.CheckPermissionsAsync(userId, managerId);
                 if (!canEdit.IsSuccess)
                 {
-                    return new() { Errors = canEdit.Errors };
+                    return new(canEdit.StatusCode, errors: canEdit.Errors);
                 }
             }
 

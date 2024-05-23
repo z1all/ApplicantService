@@ -8,13 +8,25 @@ namespace Common.Models.Models
         public ImmutableDictionary<string, List<string>> Errors
         {
             get { return _errors; }
-            init
+            set
             {
                 _errors = value;
                 IsSuccess = false;
             }
         }
-        public bool IsSuccess { get; init; }
+
+        private bool _isSuccess = false;
+        public bool IsSuccess 
+        {
+            get { return _isSuccess; } 
+            set 
+            {
+                _isSuccess = value;
+                if (IsSuccess) StatusCode = StatusCodeExecutionResult.Ok;
+            }
+        }
+
+        public StatusCodeExecutionResult StatusCode { get; protected set; }
 
         public ExecutionResult() { }
 
@@ -23,21 +35,28 @@ namespace Common.Models.Models
             IsSuccess = isSuccess;
         }
 
-        public ExecutionResult(string keyError, params string[] error)
+        public ExecutionResult(StatusCodeExecutionResult statusCode, string keyError, params string[] error)
         {
             IsSuccess = false;
             _errors = _errors.Add(keyError, error.ToList());
+            StatusCode = statusCode;
+        }
+
+        public ExecutionResult(StatusCodeExecutionResult statusCode, ImmutableDictionary<string, List<string>> errors)
+        {
+            IsSuccess = false;
+            _errors = errors;
+            StatusCode = statusCode;
         }
     }
 
     public class ExecutionResult<TSuccessResult> : ExecutionResult /*where TSuccessResult : class*/
     {
         public TSuccessResult? _result;
-
         public TSuccessResult? Result
         {
             get { return _result; }
-            init
+            set
             {
                 _result = value;
                 IsSuccess = true;
@@ -47,6 +66,8 @@ namespace Common.Models.Models
         public ExecutionResult() { }
         public ExecutionResult(TSuccessResult result) { Result = result; }
 
-        public ExecutionResult(string keyError, params string[] error) : base(keyError, error) { }
+        public ExecutionResult(StatusCodeExecutionResult statusCode, string keyError, params string[] error) : base(statusCode, keyError, error) { }
+
+        public ExecutionResult(StatusCodeExecutionResult statusCode, ImmutableDictionary<string, List<string>> errors) : base(statusCode, errors) { }
     }
 }

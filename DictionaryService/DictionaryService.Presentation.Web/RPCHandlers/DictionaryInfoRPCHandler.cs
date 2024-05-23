@@ -96,7 +96,7 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
             ExecutionResult<TDictionaryResponse> result = await getOperationAsync(_dictionaryInfoService);
             if (!result.IsSuccess)
             {
-                return new() { Errors = result.Errors };
+                return new(result.StatusCode, errors: result.Errors);
             }
 
             return new() { Result = returnOperation(result.Result!) };

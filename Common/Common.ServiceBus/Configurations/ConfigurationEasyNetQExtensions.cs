@@ -15,6 +15,7 @@ namespace Common.ServiceBus.Configurations
                 var easynetqOptions = provider.GetRequiredService<IOptions<EasynetqOptions>>().Value;
 
                 return RabbitHutch.CreateBus(easynetqOptions.ConnectionString, r => r.EnableSystemTextJson());
+                //return RabbitHutch.CreateBus(easynetqOptions.ConnectionString, r => r.Register<ISerializer, JsonSerializer>());
             });
 
             return services;

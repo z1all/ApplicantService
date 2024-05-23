@@ -3,8 +3,8 @@ using ApplicantService.Core.Domain;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 using Common.ServiceBus.EasyNetQRPC;
-using EasyNetQ;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Requests;
+using EasyNetQ;
 
 namespace ApplicantService.Core.Application.Services
 {
@@ -30,7 +30,7 @@ namespace ApplicantService.Core.Application.Services
 
             if (!response.IsSuccess)
             {
-                return new() { Errors = response.Errors };
+                return new(response.StatusCode, errors: response.Errors);
             }
 
             return new()

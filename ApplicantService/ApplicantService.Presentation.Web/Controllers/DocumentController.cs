@@ -85,7 +85,7 @@ namespace ApplicantService.Presentation.Web.Controllers
         {
             if (!HttpContext.TryGetUserId(out Guid applicantId))
             {
-                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+                return BadRequest(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
             }
 
             ExecutionResult<FileDTO> response = await _fileService.GetApplicantScanAsync(documentId, scanId, applicantId);
@@ -95,7 +95,7 @@ namespace ApplicantService.Presentation.Web.Controllers
             FileDTO fileDTO = response.Result!;
             if(!fileDTO.Type.TryMapToContentType(out var contentType))
             {
-                return BadRequest(new ExecutionResult("DocumentTypeError", $"Unknown document type {fileDTO.Type}"));
+                return BadRequest(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "DocumentTypeError", $"Unknown document type {fileDTO.Type}"));
             }
             return File(fileDTO.File, contentType!, fileDTO.Name);
         }

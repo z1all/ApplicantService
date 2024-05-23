@@ -45,14 +45,14 @@ namespace UserService.Presentation.Web.Controllers
                  await _profileService.ChangeProfileAsync(changeProfile, userId));
         }
 
-        private async Task<ActionResult> ChangeHandlerAsync(ChangeOperationAsync changeOperation)
+        private async Task<ActionResult> ChangeHandlerAsync(Func<Guid, Task<ExecutionResult>> changeOperationAsync)
         {
             if (!HttpContext.TryGetUserId(out Guid userId))
             {
-                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+                return BadRequest(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
             }
 
-            ExecutionResult changingResult = await changeOperation(userId);
+            ExecutionResult changingResult = await changeOperationAsync(userId);
             if (!changingResult.IsSuccess)
             {
                 return BadRequest(changingResult);
@@ -60,23 +60,5 @@ namespace UserService.Presentation.Web.Controllers
 
             return NoContent();
         }
-
-        private delegate Task<ExecutionResult> ChangeOperationAsync(Guid userId);
-
-        //[HttpPost("manager")]
-        //public async Task<ActionResult> CreateManagerAsync(CreateManagerRequestDTO manager)
-        //{
-        //    var res = await _profileService.CreateManagerAsync(manager);
-
-        //    return Ok(res);
-        //}
-
-        //[HttpDelete("manager")]
-        //public async Task<ActionResult> DeleteManagerAsync([FromQuery] Guid managerId)
-        //{
-        //    var res = await _profileService.DeleteManagerAsync(managerId);
-
-        //    return Ok(res);
-        //}
     }
 }

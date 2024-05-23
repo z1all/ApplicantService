@@ -45,7 +45,7 @@ namespace UserService.Presentation.Web.Controllers
         {
             if (!HttpContext.TryGetAccessTokenJTI(out Guid accessTokenJTI))
             {
-                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+                return BadRequest(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
             }
 
             ExecutionResult response = await _authService.LogoutAsync(accessTokenJTI);
@@ -60,7 +60,7 @@ namespace UserService.Presentation.Web.Controllers
         {
             if (!HttpContext.TryGetAccessTokenJTI(out Guid accessTokenJTI) || !HttpContext.TryGetUserId(out Guid userId))
             {
-                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+                return BadRequest(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
             }
 
             ExecutionResult<TokensResponseDTO> response = await _authService.UpdateAccessTokenAsync(request.Refresh, accessTokenJTI, userId);
