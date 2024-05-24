@@ -69,12 +69,17 @@ document.getElementById("educationDocumentFormId")?.addEventListener('submit', (
             if (data.body.errors.EducationDocumentTypeId) {
                 $('#documentTypeId').next().text(data.body.errors.EducationDocumentTypeId[0]);
             }
+
+            if (data.body.errors.EducationDocumentAlreadyExist) {
+                $('#documentTypeId').next().text(data.body.errors.EducationDocumentAlreadyExist[0]);
+            }
         }
     }
 
     const data = Object.fromEntries(new FormData(e.target));
     data['applicantId'] = getApplicantId();
     data['documentId'] = getDocumentId();
+    data['educationDocumentTypeId'] = $("#documentTypeId").val();
 
     request('/Documents/ChangeEducationDocument', 'POST', changeEducationDocument, data);
 });

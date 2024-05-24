@@ -26,7 +26,7 @@ namespace AdmissioningService.Presentation.Web.Controllers
         [ProducesResponseType(typeof(List<AdmissionCompanyDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<AdmissionCompanyDTO>>> GetAdmissionCompanies()
         {
-            return await ExecutionResultHandlerAsync(_admissionService.GetAdmissionCompaniesAsync);
+            return await ExecutionResultHandlerAsync(_admissionService.GetAdmissionCompaniesWithApplicantAdmissionsAsync);
         }
 
         [HttpPost]

@@ -35,7 +35,19 @@ namespace AdmissioningService.Core.Application.Services
             _admissionHelper = admissionHelper;
         }
 
-        public async Task<ExecutionResult<List<AdmissionCompanyDTO>>> GetAdmissionCompaniesAsync(Guid applicantId)
+        public async Task<ExecutionResult<List<AdmissionCompanyDTO>>> GetAdmissionCompaniesAsync()
+        {
+            List<AdmissionCompany> admissionCompanies = await _companyRepository.GetAllAsync();
+
+            return new()
+            {
+                Result = admissionCompanies
+                            .Select(admissionCompany => admissionCompany.ToAdmissionCompanyDTO())
+                            .ToList()
+            };
+        }
+
+        public async Task<ExecutionResult<List<AdmissionCompanyDTO>>> GetAdmissionCompaniesWithApplicantAdmissionsAsync(Guid applicantId)
         {
             List<AdmissionCompany> admissionCompanies = await _companyRepository.GetAllWithApplicantAdmissionAsync(applicantId);
 
@@ -45,6 +57,25 @@ namespace AdmissioningService.Core.Application.Services
                             .Select(admissionCompany => admissionCompany.ToAdmissionCompanyDTO())
                             .ToList()
             };
+        }
+
+        public async Task<ExecutionResult> CreateAdmissionCompanyAsync(int year)
+        {
+            AdmissionCompany? currentCompany = await _companyRepository.GetCurrentAsync();
+            if (currentCompany is not null)
+            {
+                currentCompany.IsCurrent = false;
+                await _companyRepository.UpdateAsync(currentCompany);
+            }
+
+            AdmissionCompany newCompany = new()
+            {
+                IsCurrent = true,
+                EventYear = year,
+            };
+            await _companyRepository.AddAsync(newCompany);
+
+            return new(isSuccess: true);
         }
 
         public async Task<ExecutionResult> CreateAdmissionAsync(Guid applicantId)

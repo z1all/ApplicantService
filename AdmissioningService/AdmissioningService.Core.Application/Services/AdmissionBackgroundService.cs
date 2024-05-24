@@ -68,6 +68,11 @@ namespace AdmissioningService.Core.Application.Services
             ApplicantCache? applicant = await _applicantCacheRepository.GetByIdWithDocumentTypeAsync(applicantId);
             if (applicant is not null)
             {
+                if(applicant.AddedDocumentTypes.Any(addedDocumentType => addedDocumentType.Id == documentTypeId))
+                {
+                    return;
+                }
+
                 EducationDocumentTypeCache? documentType = await _educationDocumentTypeCacheRepository.GetByIdAsync(documentTypeId);
                 if (documentType is null)
                 {

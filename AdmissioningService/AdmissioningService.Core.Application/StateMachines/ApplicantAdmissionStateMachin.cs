@@ -7,7 +7,6 @@ using Common.Models.Models;
 
 namespace AdmissioningService.Core.Application.StateMachines
 {
-
     public class ApplicantAdmissionStateMachin : IApplicantAdmissionStateMachin
     {
         private readonly IApplicantAdmissionRepository _applicantAdmissionRepository;

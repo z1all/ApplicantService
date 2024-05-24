@@ -14,10 +14,12 @@ namespace AmdinPanelMVC.Controllers
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
+        private readonly IAdmissionService _admissionService;
 
-        public AdminController(IAdminService adminService)
+        public AdminController(IAdminService adminService, IAdmissionService admissionService)
         {
             _adminService = adminService;
+            _admissionService = admissionService;
         }
 
         [HttpGet]
@@ -145,6 +147,37 @@ namespace AmdinPanelMVC.Controllers
             }
 
             return Ok();
+        }
+
+        #endregion
+
+
+        #region AdmissionCompanies
+
+        [HttpGet]
+        public IActionResult AdmissionsCompanies()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAdmissionsCompanies(CreateAdmissionCompany createAdmissionCompany)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("AdmissionsCompanies", createAdmissionCompany);
+            }
+
+            ExecutionResult result = await _admissionService.CreateAdmissionCompanyAsync(createAdmissionCompany.Year);
+            if (!result.IsSuccess)
+            {
+                ErrorsToModalState(result);
+
+                return View("Managers", createAdmissionCompany);
+            }
+
+            return Redirect("AdmissionsCompanies");
         }
 
         #endregion
