@@ -26,7 +26,7 @@ namespace Common.Models.Models
             }
         }
 
-        public StatusCodeExecutionResult StatusCode { get; protected set; }
+        public StatusCodeExecutionResult StatusCode { get; set; }
 
         public ExecutionResult() { }
 

@@ -115,7 +115,7 @@ namespace UserService.Infrastructure.Identity.Services
             bool tokenExist = await _tokenDbService.TokensExist(refresh, accessTokenJTI);
             if (!tokenExist)
             {
-                return new(StatusCodeExecutionResult.BadRequest, keyError: "UpdateAccessTokenFail", error: "Tokens are not valid!");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "UpdateAccessTokenFail", error: "Tokens not found!");
             }
 
             bool removeResult = await _tokenDbService.RemoveTokensAsync(accessTokenJTI);

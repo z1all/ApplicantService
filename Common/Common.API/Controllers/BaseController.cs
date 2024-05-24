@@ -10,12 +10,19 @@ namespace Common.API.Controllers
     [ValidateModelState]
     public abstract class BaseController : ControllerBase
     {
-        protected BadRequestObjectResult BadRequest(ExecutionResult executionResult, string? otherMassage = null)
+        protected ObjectResult ExecutionResultHandlerAsync(ExecutionResult executionResult, string? otherMassage = null)
         {
-            return BadRequest(new ErrorResponse()
+            //return BadRequest(new ErrorResponse()
+            //{
+            //    Title = otherMassage ?? "One or more errors occurred.",
+            //    Status = 400,
+            //    Errors = executionResult.Errors,
+            //});
+
+            return StatusCode((int)executionResult.StatusCode, new ErrorResponse()
             {
                 Title = otherMassage ?? "One or more errors occurred.",
-                Status = 400,
+                Status = (int)executionResult.StatusCode,
                 Errors = executionResult.Errors,
             });
         }
@@ -24,12 +31,12 @@ namespace Common.API.Controllers
         {
             if (!HttpContext.TryGetUserId(out Guid userId))
             {
-                return BadRequest(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
+                return ExecutionResultHandlerAsync(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
             }
 
             ExecutionResult<TResult> response = await operation(userId);
 
-            if (!response.IsSuccess) return BadRequest(response);
+            if (!response.IsSuccess) return ExecutionResultHandlerAsync(response);
             return Ok(response.Result!);
         }
 
@@ -37,7 +44,7 @@ namespace Common.API.Controllers
         {
             ExecutionResult<TResult> response = await operation();
 
-            if (!response.IsSuccess) return BadRequest(response);
+            if (!response.IsSuccess) return ExecutionResultHandlerAsync(response);
             return Ok(response.Result!);
         }
 
@@ -45,12 +52,12 @@ namespace Common.API.Controllers
         {
             if (!HttpContext.TryGetUserId(out Guid userId))
             {
-                return BadRequest(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
+                return ExecutionResultHandlerAsync(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
             }
 
             ExecutionResult response = await operation(userId);
 
-            if (!response.IsSuccess) return BadRequest(response);
+            if (!response.IsSuccess) return ExecutionResultHandlerAsync(response);
             return NoContent();
         }
     }
