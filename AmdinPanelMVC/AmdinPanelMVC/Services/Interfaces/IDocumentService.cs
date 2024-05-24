@@ -1,5 +1,4 @@
 ﻿using AmdinPanelMVC.DTOs;
-using ApplicantService.Core.Application.DTOs;
 using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 

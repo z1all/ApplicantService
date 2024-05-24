@@ -51,7 +51,7 @@ document.getElementById("educationDocumentFormId")?.addEventListener('submit', (
 
     const changeEducationDocument = (data) => {
         if (data.status !== 200) {
-            let = "Ошибка при отправке запроса на обновление документа об образовании";
+            let mess = "Ошибка при отправке запроса на обновление документа об образовании";
 
             if (data.body.errors.NoEditPermission) {
                 mess = "Вы не можете редактировать данные студента, так как не являетесь его менеджером"

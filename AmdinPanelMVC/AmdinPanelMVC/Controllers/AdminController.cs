@@ -70,7 +70,7 @@ namespace AmdinPanelMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateManager(CreateManagerViewModel manager)
+        public async Task<IActionResult> CreateManager(CreateAndChangeManagerViewModel manager)
         {
             if(!ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace AmdinPanelMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeManager(CreateManagerViewModel manager)
+        public async Task<IActionResult> ChangeManager(CreateAndChangeManagerViewModel manager)
         {
             if(manager.Id is null)
             {

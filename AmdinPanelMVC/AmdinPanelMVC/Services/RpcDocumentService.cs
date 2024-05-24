@@ -1,7 +1,6 @@
 ﻿using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Services.Base;
 using AmdinPanelMVC.Services.Interfaces;
-using ApplicantService.Core.Application.DTOs;
 using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests;

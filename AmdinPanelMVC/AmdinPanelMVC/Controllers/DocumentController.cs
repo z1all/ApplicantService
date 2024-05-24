@@ -7,7 +7,6 @@ using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Controllers.Base;
 using AmdinPanelMVC.Models;
 using Common.API.Attributes;
-using ApplicantService.Core.Application.DTOs;
 using Microsoft.CodeAnalysis;
 
 namespace AmdinPanelMVC.Controllers

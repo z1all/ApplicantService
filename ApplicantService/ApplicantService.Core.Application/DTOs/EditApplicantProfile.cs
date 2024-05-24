@@ -13,7 +13,7 @@ namespace ApplicantService.Core.Application.DTOs
         public required Gender Gender { get; set; }
         [MinLength(5)]
         public required string Citizenship { get; set; }
-        [MinLength(5)]
+        [PhoneNumber(ErrorMessage = "The phone number should start with +7 or 8 and end with 10 digits")]
         public required string PhoneNumber { get; set; }
     }
 }

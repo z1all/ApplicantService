@@ -1,5 +1,4 @@
-﻿using ApplicantService.Core.Application.DTOs;
-using ApplicantService.Core.Application.Interfaces.Services;
+﻿using ApplicantService.Core.Application.Interfaces.Services;
 using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 using Common.ServiceBus.EasyNetQRPC;
