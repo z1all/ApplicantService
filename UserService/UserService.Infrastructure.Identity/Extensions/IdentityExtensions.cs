@@ -20,12 +20,12 @@ namespace UserService.Infrastructure.Identity.Extensions
 
         public static ExecutionResult ToExecutionResultError(this IdentityResult identityResult)
         {
-            return new() { Errors = identityResult.Errors.ToErrorDictionary() };
+            return new(StatusCodeExecutionResult.BadRequest, errors: identityResult.Errors.ToErrorDictionary());
         }
 
         public static ExecutionResult<T> ToExecutionResultError<T>(this IdentityResult identityResult) where T : class
         {
-            return new() { Errors = identityResult.Errors.ToErrorDictionary() };
+            return new(StatusCodeExecutionResult.BadRequest, errors: identityResult.Errors.ToErrorDictionary());
         }
     }
 }

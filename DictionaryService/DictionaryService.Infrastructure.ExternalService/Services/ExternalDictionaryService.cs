@@ -43,13 +43,10 @@ namespace DictionaryService.Infrastructure.ExternalService.Services
                 = await _httpClient.GetFromJsonAsync<ProgramListExternalDTO>(_externalOptions.EducationProgramRoute);
             if (programListExternal is null)
             {
-                return new("GetEducationProgramFail", error: "Unknown error");
+                return new(StatusCodeExecutionResult.InternalServer, "GetEducationProgramFail", error: "Unknown error");
             }
 
-            return new()
-            {
-                Result = programListExternal.Programs,
-            };
+            return new(result: programListExternal.Programs);
         }
 
         private async Task<ExecutionResult<TResult>> GetAsync<TResult>(string route, string keyError)
@@ -58,13 +55,10 @@ namespace DictionaryService.Infrastructure.ExternalService.Services
                 = await _httpClient.GetFromJsonAsync<TResult>(route);
             if (result is null)
             {
-                return new(keyError, error: "Unknown error");
+                return new(StatusCodeExecutionResult.InternalServer, keyError, error: "Unknown error");
             }
 
-            return new()
-            {
-                Result = result,
-            };
+            return new(result: result);
         }
     }
 }

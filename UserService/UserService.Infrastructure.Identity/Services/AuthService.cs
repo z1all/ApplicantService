@@ -32,7 +32,7 @@ namespace UserService.Infrastructure.Identity.Services
             {
                 FullName = registrationDTO.FullName,
                 Email = registrationDTO.Email,
-                UserName = registrationDTO.Email //$"{registrationDTO.Email}_{Guid.NewGuid()}",
+                UserName = registrationDTO.Email
             };
 
             IdentityResult creationResult = await _userManager.CreateAsync(user, registrationDTO.Password);
@@ -52,7 +52,7 @@ namespace UserService.Infrastructure.Identity.Services
             });
             if (!sendingResult.IsSuccess)
             {
-                return new() { Errors = sendingResult.Errors };
+                return new(sendingResult.StatusCode, errors: sendingResult.Errors);
             }
 
             return creatingTokenResult;
@@ -73,19 +73,19 @@ namespace UserService.Infrastructure.Identity.Services
             CustomUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
             if (user == null)
             {
-                return new(keyError: "LoginFail", error: "Invalid email or password.");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "LoginFail", error: "Invalid email or password.");
             }
 
             SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if (!signInResult.Succeeded)
             {
-                return new(keyError: "LoginFail", error: "Invalid email or password.");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "LoginFail", error: "Invalid email or password.");
             }
 
             IList<string> userRoles = await _userManager.GetRolesAsync(user);
             if (!UserHaveRole(userRoles, loginFor))
             {
-                return new(keyError: "LoginFail", error: "Invalid email or password.");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "LoginFail", error: "Invalid email or password.");
             }
 
             return await GetTokensAsync(user);
@@ -105,7 +105,7 @@ namespace UserService.Infrastructure.Identity.Services
             bool result = await _tokenDbService.RemoveTokensAsync(accessTokenJTI);
             if(!result)
             {
-                return new(keyError: "LogoutFail", error: "The tokens have already been deleted.");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "LogoutFail", error: "The tokens have already been deleted.");
             }
             return new(true);
         }
@@ -115,19 +115,19 @@ namespace UserService.Infrastructure.Identity.Services
             bool tokenExist = await _tokenDbService.TokensExist(refresh, accessTokenJTI);
             if (!tokenExist)
             {
-                return new(keyError: "UpdateAccessTokenFail", error: "Tokens are not valid!");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "UpdateAccessTokenFail", error: "Tokens not found!");
             }
 
             bool removeResult = await _tokenDbService.RemoveTokensAsync(accessTokenJTI);
             if (!removeResult)
             {
-                return new(keyError: "UpdateAccessTokenFail", error: "Unknow error");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "UpdateAccessTokenFail", error: "Unknow error");
             }
 
             CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
-                return new(keyError: "UpdateAccessTokenFail", error: "Unknow error");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "UpdateAccessTokenFail", error: "Unknow error");
             }
 
             return await GetTokensAsync(user);
@@ -141,7 +141,7 @@ namespace UserService.Infrastructure.Identity.Services
             bool saveTokenResult = await _tokenDbService.SaveTokensAsync(refreshToken, tokenJTI);
             if (!saveTokenResult)
             {
-                return new(keyError: "UnknowError", error: "Unknown error");
+                return new(StatusCodeExecutionResult.InternalServer, keyError: "UnknowError", error: "Unknown error");
             }
 
             return new()

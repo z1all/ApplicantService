@@ -8,9 +8,15 @@
 
     const changePassport = (data) => {
         if (data.status !== 200) {
+            let mess = "Ошибка при отправке запроса на обновление паспортных данных";
+
+            if (data.body.errors.NoEditPermission) {
+                mess = "Вы не можете редактировать данные студента, так как не являетесь его менеджером"
+            }
+
             showErrorToast(
                 "Обновление паспортных данных",
-                "Ошибка при отправке запроса на обновление паспортных данных"
+                mess
             );
 
             if (data.body.errors.SeriesNumber) {
@@ -45,9 +51,15 @@ document.getElementById("educationDocumentFormId")?.addEventListener('submit', (
 
     const changeEducationDocument = (data) => {
         if (data.status !== 200) {
+            let = "Ошибка при отправке запроса на обновление документа об образовании";
+
+            if (data.body.errors.NoEditPermission) {
+                mess = "Вы не можете редактировать данные студента, так как не являетесь его менеджером"
+            }
+
             showErrorToast(
                 "Обновление документа об образовании",
-                "Ошибка при отправке запроса на обновление документа об образовании"
+                mess
             );
 
             if (data.body.errors.Name) {
@@ -77,8 +89,8 @@ function addListeners() {
             const loadScan = (data) => {
                 if (data.status !== 200) {
                     showErrorToast(
-                        "Удаление скана",
-                        "Ошибка при отправке запроса на удаление скана"
+                        "Загрузка скана",
+                        "Ошибка при отправке запроса на загрузку скана"
                     );
                 }
                 else {
@@ -107,9 +119,15 @@ function addListeners() {
 
             const deleteScan = (data) => {
                 if (data.status !== 200) {
+                    let = "Ошибка при отправке запроса на удаление скана";
+
+                    if (data.body.errors.NoEditPermission) {
+                        mess = "Вы не можете редактировать данные студента, так как не являетесь его менеджером"
+                    }
+
                     showErrorToast(
                         "Удаление скана",
-                        "Ошибка при отправке запроса на удаление скана"
+                        mess
                     );
                 }
                 else {
@@ -128,9 +146,15 @@ function addListeners() {
 
         const addFile = (data) => {
             if (data.status !== 200) {
+                let = "Ошибка при отправке запроса на добавление скана";
+
+                if (data.body.errors.NoEditPermission) {
+                    mess = "Вы не можете редактировать данные студента, так как не являетесь его менеджером"
+                }
+
                 showErrorToast(
                     "Добавление скана",
-                    "Ошибка при отправке запроса на добавление скана"
+                    mess
                 );
 
                 if (data.body.errors.File) {

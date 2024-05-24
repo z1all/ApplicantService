@@ -48,7 +48,7 @@ namespace NotificationService.Services
 
             if (!resultApplicantNotification.IsSuccess || !resultManagerNotification.IsSuccess)
             {
-                return new() { Errors = resultApplicantNotification.Errors.AddRange(resultManagerNotification.Errors) };
+                return new(errors: resultApplicantNotification.Errors.AddRange(resultManagerNotification.Errors));
             }
 
             return new(isSuccess: true);

@@ -49,12 +49,12 @@ namespace AdmissioningService.Core.Application.Helpers
             {
                 bool isNotClose = await CheckAdmissionStatusIsCloseAsync(applicantId);
                 if (isNotClose) return new(isSuccess: true);
-                return new(keyError: "AdmissionClosed", error: "You cannot change the data when the current admission is closed!");
+                return new(StatusCodeExecutionResult.Forbid, keyError: "AdmissionClosed", error: "You cannot change the data when the current admission is closed!");
             }
 
             bool managerCanEdit = await CheckManagerEditPermissionAsync(applicantId, (Guid)managerId);
             if (managerCanEdit) return new(isSuccess: true);
-            return new(keyError: "NoEditPermission", error: $"Manager with id {managerId} doesn't have permission to edit applicant with id {applicantId}");
+            return new(StatusCodeExecutionResult.Forbid, keyError: "NoEditPermission", error: $"Manager with id {managerId} doesn't have permission to edit applicant with id {applicantId}");
         }
 
         private async Task<bool> CheckManagerEditPermissionAsync(Guid applicantId, Guid managerId)
@@ -89,7 +89,7 @@ namespace AdmissioningService.Core.Application.Helpers
             if (applicant is null)
             {
                 ExecutionResult<GetApplicantResponse> result = await _requestService.GetApplicantAsync(applicantId);
-                if (!result.IsSuccess) return new() { Errors = result.Errors };
+                if (!result.IsSuccess) return new(result.StatusCode, errors: result.Errors);
                 GetApplicantResponse applicantResponse = result.Result!;
 
                 applicant = new()
@@ -117,30 +117,36 @@ namespace AdmissioningService.Core.Application.Helpers
             int currentCountPrograms = admissionProgramsCache.Count;
             if (currentCountPrograms >= _admissionOptions.MaxCountAdmissionPrograms)
             {
-                return new(keyError: "MaxCountAdmissionPrograms", error: $"An applicant can have a maximum of {_admissionOptions.MaxCountAdmissionPrograms} admission programs");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "MaxCountAdmissionPrograms", error: $"An applicant can have a maximum of {_admissionOptions.MaxCountAdmissionPrograms} admission programs");
             }
 
             EducationProgramCache? program = await _educationProgramCacheRepository.GetByIdWithoutLevelAsync(programId);
             if (program is null)
             {
-                return new(keyError: "EducationProgramNotFound", error: $"Education program with id {programId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "EducationProgramNotFound", error: $"Education program with id {programId} not found!");
             }
 
             bool programAlreadyExist = admissionProgramsCache.Any(admissionProgram => admissionProgram.EducationProgramId == programId);
             if (programAlreadyExist)
             {
-                return new(keyError: "ProgramAlreadyExist", error: $"An applicant already have education program with id {programId}!");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "ProgramAlreadyExist", error: $"An applicant already have education program with id {programId}!");
             }
 
             ExecutionResult checkingExistRightDocumentTypeResult = await CheckExistRightDocumentTypeAsync(applicantId, program.EducationLevelId);
-            if (!checkingExistRightDocumentTypeResult.IsSuccess) return new() { Errors = checkingExistRightDocumentTypeResult.Errors };
+            if (!checkingExistRightDocumentTypeResult.IsSuccess)
+            {
+                return new(checkingExistRightDocumentTypeResult.StatusCode, errors: checkingExistRightDocumentTypeResult.Errors);
+            }
 
             if (admissionProgramsCache.Count > 0)
             {
                 Guid firstProgramsId = admissionProgramsCache.First().EducationProgramId;
 
                 ExecutionResult checkingDocumentTypesOnCommonStageResult = await CheckDocumentTypesOnCommonStageAsync(firstProgramsId, program.EducationLevelId);
-                if (!checkingDocumentTypesOnCommonStageResult.IsSuccess) return new() { Errors = checkingDocumentTypesOnCommonStageResult.Errors };
+                if (!checkingDocumentTypesOnCommonStageResult.IsSuccess)
+                {
+                    return new(checkingDocumentTypesOnCommonStageResult.StatusCode, errors: checkingDocumentTypesOnCommonStageResult.Errors);
+                }
             }
 
             AdmissionProgram? lastPriority = admissionProgramsCache.OrderBy(admissionProgram => admissionProgram.Priority).LastOrDefault();
@@ -156,7 +162,7 @@ namespace AdmissioningService.Core.Application.Helpers
             ApplicantCache? applicant = await _applicantCacheRepository.GetByIdWithDocumentTypeAndLevelsAsync(applicantId);
             if (applicant is null)
             {
-                return new(keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
             }
 
             foreach (var addedDocumentType in applicant.AddedDocumentTypes)
@@ -175,7 +181,7 @@ namespace AdmissioningService.Core.Application.Helpers
                 }
             }
 
-            return new(keyError: "NoRequiredDocument", error: "There is no required document!");
+            return new(StatusCodeExecutionResult.BadRequest, keyError: "NoRequiredDocument", error: "There is no required document!");
         }
 
         private async Task<ExecutionResult> CheckDocumentTypesOnCommonStageAsync(Guid firstProgramsId, Guid addingDocumentTypeLevelId)
@@ -183,7 +189,7 @@ namespace AdmissioningService.Core.Application.Helpers
             EducationProgramCache? program = await _educationProgramCacheRepository.GetByIdWithLevelAsync(firstProgramsId);
             if (program is null)
             {
-                return new(keyError: "EducationProgramNotFound", error: $"Education program with id {firstProgramsId} not found");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "EducationProgramNotFound", error: $"Education program with id {firstProgramsId} not found");
             }
 
             EducationLevelCache level = program.EducationLevel!;
@@ -199,7 +205,7 @@ namespace AdmissioningService.Core.Application.Helpers
                 }
             }
 
-            return new(keyError: "DocumentTypeNotOnCommonStage", error: $"Programs from different stages!");
+            return new(StatusCodeExecutionResult.BadRequest, keyError: "DocumentTypeNotOnCommonStage", error: $"Programs from different stages!");
         }
 
         #endregion
@@ -245,7 +251,7 @@ namespace AdmissioningService.Core.Application.Helpers
         public ExecutionResult<List<AdmissionProgram>> GetNewProgramsOrder(List<Guid> newProgramPrioritiesOrder, List<AdmissionProgram> admissionPrograms)
         {
             ExecutionResult result = CheckDuplicate(newProgramPrioritiesOrder);
-            if (!result.IsSuccess) return new() { Errors = result.Errors };
+            if (!result.IsSuccess) return new(result.StatusCode, errors: result.Errors);
 
             List<string> comments = [];
             List<AdmissionProgram> newAdmissionProgramsPriorities = [];
@@ -268,7 +274,7 @@ namespace AdmissioningService.Core.Application.Helpers
 
             if (comments.Count > 0)
             {
-                return new(keyError: "ProgramNotFound", error: comments.ToArray());
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ProgramNotFound", error: comments.ToArray());
             }
 
             return new() { Result = newAdmissionProgramsPriorities };
@@ -282,7 +288,7 @@ namespace AdmissioningService.Core.Application.Helpers
                 {
                     if (newProgramPrioritiesOrder[i] == newProgramPrioritiesOrder[j])
                     {
-                        return new(keyError: "DuplicateProgramIDs", error: $"ProgramId {newProgramPrioritiesOrder[i]} is duplicated!");
+                        return new(StatusCodeExecutionResult.BadRequest, keyError: "DuplicateProgramIDs", error: $"ProgramId {newProgramPrioritiesOrder[i]} is duplicated!");
                     }
                 }
             }

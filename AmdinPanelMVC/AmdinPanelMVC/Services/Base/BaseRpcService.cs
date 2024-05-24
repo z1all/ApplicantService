@@ -12,7 +12,7 @@ namespace AmdinPanelMVC.Services.Base
             ExecutionResult<TFromResult> response,
             Func<TFromResult, TToResult> mapper)
         {
-            if (!response.IsSuccess) return new() { Errors = response.Errors };
+            if (!response.IsSuccess) return new(response.StatusCode, errors: response.Errors);
 
             return new() { Result = mapper(response.Result!) };
         }

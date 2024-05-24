@@ -4,7 +4,6 @@ using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Application.Mapper;
 using ApplicantService.Core.Domain;
 using Common.Models.DTOs.Applicant;
-using Common.Models.Enums;
 using Common.Models.Models;
 
 namespace ApplicantService.Core.Application.Services
@@ -31,10 +30,10 @@ namespace ApplicantService.Core.Application.Services
             Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
             if (applicant == null)
             {
-                return new(keyError: "GetProfileFail", error: "Applicant not found! Try again later.");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ProfileNotFound", error: "Applicant not found! Try again later.");
             }
 
-            return new() { Result = applicant.ToApplicantProfile() };
+            return new(result:  applicant.ToApplicantProfile());
         }
 
         public async Task<ExecutionResult> EditApplicantProfileAsync(EditApplicantProfile applicantProfile, Guid applicantId, Guid? managerId)
@@ -42,13 +41,13 @@ namespace ApplicantService.Core.Application.Services
             ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
-                return new() { Errors = canEdit.Errors };
+                return new(canEdit.StatusCode, errors: canEdit.Errors);
             }
 
             Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
             if (applicant == null)
             {
-                return new(keyError: "GetProfileFail", error: "Applicant not found! Try again later.");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ProfileNotFound", error: "Applicant not found! Try again later.");
             }
 
             applicant.Birthday = applicantProfile.Birthday;
@@ -66,7 +65,7 @@ namespace ApplicantService.Core.Application.Services
             Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
             if (applicant is null)
             {
-                return new(keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
             }
 
             List<EducationDocument> educationDocuments = await _educationDocumentRepository.GetAllByApplicantIdAsync(applicantId);
@@ -111,10 +110,10 @@ namespace ApplicantService.Core.Application.Services
             Applicant? applicant = await _applicantRepository.GetByIdWithDocumentsAsync(applicantId);
             if (applicant is null)
             {
-                return new(keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
             }
 
-            return new() { Result = applicant.ToApplicantInfo() };
+            return new(result: applicant.ToApplicantInfo());
         }
     }
 }

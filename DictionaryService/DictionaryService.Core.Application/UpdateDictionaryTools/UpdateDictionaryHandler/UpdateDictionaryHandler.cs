@@ -21,11 +21,11 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 
             // Получаем данные из внешнего сервиса
             ExecutionResult<List<TExternalEntity>> getExternalEntityResult = await actions.GetExternalEntityAsync();
-            if (!getExternalEntityResult.IsSuccess) 
+            if (!getExternalEntityResult.IsSuccess)
             {
                 await actions.AfterLoadingErrorAsync(getExternalEntityResult.Errors.Values.FirstOrDefault()?[0] ?? "Unknow error");
-                return new() { Errors = getExternalEntityResult.Errors }; 
-            } 
+                return new(getExternalEntityResult.StatusCode, errors: getExternalEntityResult.Errors);
+            }
             List<TExternalEntity> externalEntities = getExternalEntityResult.Result!;
 
             await actions.BeforeUpdatingAsync();
@@ -33,10 +33,10 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
             // Пробуем обновлять и добавлять записи
             ExecutionResult<Dictionary<Guid, TEntity>> updatingAndAddingResult
                 = await DoUpdateAndAddEntitiesAsync(actions.ToUpdateAndAddActions(), externalEntities, existEntities, changedEntities, addedEntities);
-            if (!updatingAndAddingResult.IsSuccess) 
+            if (!updatingAndAddingResult.IsSuccess)
             {
                 await actions.AfterUpdatingErrorAsync(updatingAndAddingResult.Errors.Values.FirstOrDefault()?[0] ?? "Unknow error");
-                return new() { Errors = updatingAndAddingResult.Errors }; 
+                return new(updatingAndAddingResult.StatusCode, errors: updatingAndAddingResult.Errors);
             }
             Dictionary<Guid, TEntity> existEntitiesForRemove = updatingAndAddingResult.Result!;
 
@@ -45,7 +45,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
             if (!deletingResult.IsSuccess)
             {
                 await actions.AfterUpdatingErrorAsync(updatingAndAddingResult.Errors.Values.FirstOrDefault()?[0] ?? "Unknow error");
-                return new() { Errors = deletingResult.Errors }; 
+                return new(deletingResult.StatusCode, errors: deletingResult.Errors);
             }
             changedEntities.AddRange(existEntitiesForRemove.Values);
 
@@ -53,12 +53,12 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 
             await actions.AfterUpdateAsync();
 
-            return new() { Result = new(changedEntities, addedEntities) };
+            return new(result: new(changedEntities, addedEntities));
         }
 
         private static async Task<ExecutionResult<Dictionary<Guid, TEntity>>> DoUpdateAndAddEntitiesAsync(
             UpdateAndAddDictionaryActions<TEntity, TExternalEntity> actions,
-            List<TExternalEntity> externalEntities, List<TEntity> existEntities, 
+            List<TExternalEntity> externalEntities, List<TEntity> existEntities,
             List<TEntity> changedEntities, List<TEntity> addedEntities)
         {
             // Словарь для хранения тех сущностей, которые существуют только в нашей бд, то есть были удалены во внешнем сервисе
@@ -78,7 +78,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 
                     // Обновляем запись...
                     bool changed = actions.UpdateEntity(existEntity, externalEntity);
-                    if(changed) changedEntities.Add(existEntity);
+                    if (changed) changedEntities.Add(existEntity);
                     existEntitiesForRemove.Remove(existEntity.Id);
                 }
                 else
@@ -99,12 +99,13 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
             if (thereAreNotRelated)
             {
                 return new(
+                    StatusCodeExecutionResult.BadRequest,
                     keyError: "UpdateOrAddEntityError",
                     error: $"It is not possible to update or add a record because it refers to a non-existent record.\n{string.Join('\n', comments.Take(20))}"
                 );
             }
 
-            return new() { Result = existEntitiesForRemove };
+            return new(result: existEntitiesForRemove);
         }
 
         private static async Task<ExecutionResult> DoDeleteEntitiesAsync(
@@ -122,7 +123,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
                 TEntity? entity = await actions.Repository.GetByIdAsync(entityForRemove.Id);
                 if (entity is null)
                 {
-                    return new(keyError: "UnknownError", error: "Unknown error.");
+                    return new(StatusCodeExecutionResult.InternalServer, keyError: "UnknownError", error: "Unknown error.");
                 }
 
                 // Удаляем запись...
@@ -133,6 +134,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
             if (!deleteRelatedEntities && thereAreRelated)
             {
                 return new(
+                    StatusCodeExecutionResult.BadRequest,
                     keyError: "DeleteEntityError",
                     error: $"It is not possible to delete a record because it is referenced by other records.\n{string.Join('\n', comments.Take(20))}"
                 );
