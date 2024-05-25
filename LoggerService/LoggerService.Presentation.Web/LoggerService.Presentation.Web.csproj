@@ -11,14 +11,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.API\Common.API.csproj" />
     <ProjectReference Include="..\LoggerService.Core.Application\LoggerService.Core.Application.csproj" />
     <ProjectReference Include="..\LoggerService.Infrastructure.Persistence\LoggerService.Infrastructure.Persistence.csproj" />
   </ItemGroup>

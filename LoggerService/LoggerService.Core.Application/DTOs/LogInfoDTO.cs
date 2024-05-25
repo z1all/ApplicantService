@@ -9,5 +9,6 @@ namespace LoggerService.Core.Application.DTOs
         public required string LogMessage { get; set; }
         public required LogLevel LogLevel { get; set; }
         public required string LoggerName { get; set; }
+        public required string ServiceName { get; set; }
     }
 }

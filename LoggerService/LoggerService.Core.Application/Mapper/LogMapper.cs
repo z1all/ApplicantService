@@ -27,6 +27,7 @@ namespace LoggerService.Core.Application.Mapper
                 LoggerName = log.LoggerName,
                 LogLevel = log.LogLevel,
                 LogMessage = log.LogMessage,
+                ServiceName = log.ServiceName,
             };
         }
     }

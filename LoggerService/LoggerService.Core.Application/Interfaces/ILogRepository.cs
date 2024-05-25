@@ -7,5 +7,6 @@ namespace LoggerService.Core.Application.Interfaces
     public interface ILogRepository : IBaseWithBaseEntityRepository<Log>
     {
         Task<List<Log>> GetAllByFiler(LogFilterDTO filter);
+        Task<int> GetCountByFiler(LogFilterDTO filter);
     }
 }
