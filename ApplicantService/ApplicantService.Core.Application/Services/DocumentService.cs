@@ -153,7 +153,7 @@ namespace ApplicantService.Core.Application.Services
             return new() { Result = educationDocument.ToEducationDocumentInfo() };
         }
 
-        public async Task<ExecutionResult> AddApplicantEducationDocumentAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId) 
+        public async Task<ExecutionResult> AddApplicantEducationDocumentAsync(Guid applicantId, AddEducationDocumentInfo documentInfo, Guid? managerId) 
         {
             ExecutionResult<EducationDocumentTypeCache> executionResult 
                 = await CheckPermissionsAndEducationDocumentTypeAsync(applicantId, documentInfo, managerId);
@@ -180,14 +180,20 @@ namespace ApplicantService.Core.Application.Services
             return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
 
-        public async Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
+        public async Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditEducationDocumentInfo documentInfo, Guid? managerId)
         {
-            ExecutionResult<EducationDocumentTypeCache> executionResult 
-                = await CheckPermissionsAndEducationDocumentTypeAsync(applicantId, documentInfo, managerId);
-            if (!executionResult.IsSuccess)
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
+            if (!canEdit.IsSuccess)
             {
-                return new(executionResult.StatusCode, errors: executionResult.Errors);
+                return new(canEdit.StatusCode, errors: canEdit.Errors);
             }
+
+            //ExecutionResult<EducationDocumentTypeCache> executionResult 
+            //    = await CheckPermissionsAndEducationDocumentTypeAsync(applicantId, documentInfo, managerId);
+            //if (!executionResult.IsSuccess)
+            //{
+            //    return new(executionResult.StatusCode, errors: executionResult.Errors);
+            //}
 
             EducationDocument? educationDocument = await _educationDocumentRepository.GetByIdAsync(documentId);
             if (educationDocument is null)
@@ -195,26 +201,26 @@ namespace ApplicantService.Core.Application.Services
                 return new(StatusCodeExecutionResult.NotFound, keyError: "EducationDocumentNotFound", error: $"The applicant does not have a education document with Id {documentId}");
             }
 
-            bool documentExist = await _educationDocumentRepository.AnyByDocumentTypeIdAndApplicantIdAsync(documentInfo.EducationDocumentTypeId, applicantId);
-            if (educationDocument.EducationDocumentTypeId != documentInfo.EducationDocumentTypeId && documentExist)
-            {
-                return new(StatusCodeExecutionResult.BadRequest, keyError: "EducationDocumentAlreadyExist", error: "Applicant already has the education document with this type!");
-            }
+            //bool documentExist = await _educationDocumentRepository.AnyByDocumentTypeIdAndApplicantIdAsync(documentInfo.EducationDocumentTypeId, applicantId);
+            //if (educationDocument.EducationDocumentTypeId != documentInfo.EducationDocumentTypeId && documentExist)
+            //{
+            //    return new(StatusCodeExecutionResult.BadRequest, keyError: "EducationDocumentAlreadyExist", error: "Applicant already has the education document with this type!");
+            //}
 
-            Guid LastEducationDocumentTypeId = educationDocument.EducationDocumentTypeId;
+            //Guid LastEducationDocumentTypeId = educationDocument.EducationDocumentTypeId;
 
-            educationDocument.EducationDocumentTypeId = documentInfo.EducationDocumentTypeId;
+            //educationDocument.EducationDocumentTypeId = documentInfo.EducationDocumentTypeId;
             educationDocument.Name = documentInfo.Name;
-            educationDocument.Comments = executionResult.Result!.Name;
+            //educationDocument.Comments = executionResult.Result!.Name;
 
             await _educationDocumentRepository.UpdateAsync(educationDocument);
 
-            ExecutionResult notificationResult 
-                = await _notificationService.ChangeEducationDocumentTypeAsync(applicantId, LastEducationDocumentTypeId, documentInfo.EducationDocumentTypeId);
-            if (!notificationResult.IsSuccess)
-            {
-                return new(notificationResult.StatusCode, errors: notificationResult.Errors);
-            }
+            //ExecutionResult notificationResult 
+            //    = await _notificationService.ChangeEducationDocumentTypeAsync(applicantId, LastEducationDocumentTypeId, documentInfo.EducationDocumentTypeId);
+            //if (!notificationResult.IsSuccess)
+            //{
+            //    return new(notificationResult.StatusCode, errors: notificationResult.Errors);
+            //}
 
             return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
@@ -241,7 +247,7 @@ namespace ApplicantService.Core.Application.Services
             return new(true, educationDocument.EducationDocumentTypeId);
         }
 
-        private async Task<ExecutionResult<EducationDocumentTypeCache>> CheckPermissionsAndEducationDocumentTypeAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
+        private async Task<ExecutionResult<EducationDocumentTypeCache>> CheckPermissionsAndEducationDocumentTypeAsync(Guid applicantId, AddEducationDocumentInfo documentInfo, Guid? managerId)
         {
             ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)

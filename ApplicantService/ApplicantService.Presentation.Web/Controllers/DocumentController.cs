@@ -84,7 +84,7 @@ namespace ApplicantService.Presentation.Web.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> EditEducationDocument([FromRoute] Guid documentId, EditAddEducationDocumentInfo documentInfo)
+        public async Task<ActionResult> EditEducationDocument([FromRoute] Guid documentId, EditEducationDocumentInfo documentInfo)
         {
             return await ExecutionResultHandlerAsync(async userId =>
                 await _documentService.UpdateApplicantEducationDocumentAsync(documentId, userId, documentInfo));
@@ -93,7 +93,7 @@ namespace ApplicantService.Presentation.Web.Controllers
         [HttpPost("education")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> AddEducationDocument(EditAddEducationDocumentInfo documentInfo)
+        public async Task<ActionResult> AddEducationDocument(AddEducationDocumentInfo documentInfo)
         {
             return await ExecutionResultHandlerAsync(async userId =>
                await _documentService.AddApplicantEducationDocumentAsync(userId, documentInfo));

@@ -2,11 +2,9 @@
 
 namespace ApplicantService.Core.Application.DTOs
 {
-    public class EditAddEducationDocumentInfo
+    public class EditEducationDocumentInfo
     {
         [MinLength(5)]
         public required string Name { get; set; }
-        [Required]
-        public required Guid EducationDocumentTypeId { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace DictionaryService.Infrastructure.ExternalService.Services
             _httpClient = httpClient;
 
             _httpClient.BaseAddress = new Uri(_externalOptions.BaseUrl);
-            
+
             _httpClient.DefaultRequestHeaders
                 .Add(HeaderNames.Accept, "text/plain");
 
@@ -34,19 +34,29 @@ namespace DictionaryService.Infrastructure.ExternalService.Services
         public async Task<ExecutionResult<List<EducationLevelExternalDTO>>> GetEducationLevelsAsync() =>
              await GetAsync<List<EducationLevelExternalDTO>>(_externalOptions.EducationLevelRoute, "GetEducationLevelsFail");
 
-        public async Task<ExecutionResult<List<FacultyExternalDTO>>> GetFacultiesAsync() => 
-             await GetAsync<List<FacultyExternalDTO>> (_externalOptions.FacultiesRoute, "GetFacultiesFail");
+        public async Task<ExecutionResult<List<FacultyExternalDTO>>> GetFacultiesAsync() =>
+             await GetAsync<List<FacultyExternalDTO>>(_externalOptions.FacultiesRoute, "GetFacultiesFail");
 
         public async Task<ExecutionResult<List<EducationProgramExternalDTO>>> GetEducationProgramAsync()
         {
-            ProgramListExternalDTO? programListExternal
-                = await _httpClient.GetFromJsonAsync<ProgramListExternalDTO>(_externalOptions.EducationProgramRoute);
-            if (programListExternal is null)
+            List<EducationProgramExternalDTO> Programs = new();
+
+            int pages = 1;
+            for (int i = 0; i < pages; i++)
             {
-                return new(StatusCodeExecutionResult.InternalServer, "GetEducationProgramFail", error: "Unknown error");
+                string route = $"{_externalOptions.EducationProgramRoute}?page={i + 1}&size={_externalOptions.EducationProgramCountOnPage}";
+
+                var programListExternal = await _httpClient.GetFromJsonAsync<ProgramListExternalDTO>(route);
+                if (programListExternal is null)
+                {
+                    return new(StatusCodeExecutionResult.InternalServer, "GetEducationProgramFail", error: "Unknown error");
+                }
+                Programs.AddRange(programListExternal.Programs);
+
+                pages = programListExternal.Pagination.Count;
             }
 
-            return new(result: programListExternal.Programs);
+            return new(result: Programs);
         }
 
         private async Task<ExecutionResult<TResult>> GetAsync<TResult>(string route, string keyError)

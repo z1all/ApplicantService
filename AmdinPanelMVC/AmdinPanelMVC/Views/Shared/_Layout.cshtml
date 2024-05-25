@@ -26,7 +26,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admission" asp-action="Index">Заявки абитуриентов</a>
                             </li>
-                            if(User.IsInRole(Role.Admin))
+                            if (User.IsInRole(Role.Admin) || User.IsInRole(Role.MainManager))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Settings">Настройки</a>

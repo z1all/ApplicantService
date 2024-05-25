@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
 using AmdinPanelMVC.Models;
 using AmdinPanelMVC.Services.Interfaces;

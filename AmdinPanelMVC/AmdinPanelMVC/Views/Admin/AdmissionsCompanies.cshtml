@@ -1,4 +1,5 @@
-﻿@model AmdinPanelMVC.Models.CreateAdmissionCompany
+﻿@using Common.Models.Enums
+@model AmdinPanelMVC.Models.CreateAdmissionCompany
 
 @{
     ViewData["Title"] = "Работа с приемными компаниями";
@@ -9,11 +10,14 @@
         <h2>Работа с приемными компаниями</h2>
         <hr />
 
-        <div class="d-flex justify-content-end">
-            <button id="createAdmissionCompanyButtonId" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#admissionCompanyModelId">Создать приемную компанию</button>
-        </div>
+        @if (User.IsInRole(Role.Admin))
+        {
+            <div class="d-flex justify-content-end">
+                <button id="createAdmissionCompanyButtonId" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#admissionCompanyModelId">Создать приемную компанию</button>
+            </div>
 
-        <hr />
+            <hr />
+        }
 
         <div id="admissionCompanyContainerId">
             @await Component.InvokeAsync("AdmissionCompany")

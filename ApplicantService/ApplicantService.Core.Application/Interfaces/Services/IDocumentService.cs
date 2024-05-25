@@ -14,8 +14,8 @@ namespace ApplicantService.Core.Application.Interfaces.Services
         Task<ExecutionResult> AddApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId, Guid? managerId = null);
 
         Task<ExecutionResult<EducationDocumentInfo>> GetApplicantEducationDocumentAsync(Guid documentId, Guid applicantId);
-        Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId = null);
-        Task<ExecutionResult> AddApplicantEducationDocumentAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId = null);
+        Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditEducationDocumentInfo documentInfo, Guid? managerId = null);
+        Task<ExecutionResult> AddApplicantEducationDocumentAsync(Guid applicantId, AddEducationDocumentInfo documentInfo, Guid? managerId = null);
 
         Task<ExecutionResult<List<ScanInfo>>> GetScansInfoAsync(Guid applicantId, Guid documentId);
         Task UpdateEducationDocumentType(UpdateEducationDocumentTypeDTO newDocumentType);
