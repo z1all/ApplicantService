@@ -92,7 +92,7 @@
 
     @if (!ViewData.ModelState.IsValid)
     {
-        @if (Model.Id is null)
+        @if (Model?.Id is null)
         {
             <script>viewCreateForm();</script>
         }
