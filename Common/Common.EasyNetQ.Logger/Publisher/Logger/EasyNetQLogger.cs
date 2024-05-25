@@ -6,11 +6,13 @@ namespace Common.EasyNetQ.Logger
 {
     public class EasyNetQLogger : ILogger
     {
+        private readonly string _serviceName;
         private readonly IBus _bus;
         private readonly EasyNetQLoggerOptions _easyNetQLoggerOptions;
 
-        public EasyNetQLogger(IBus bus, EasyNetQLoggerOptions easyNetQLoggerOptions)
+        public EasyNetQLogger(string serviceName, IBus bus, EasyNetQLoggerOptions easyNetQLoggerOptions)
         {
+            _serviceName = serviceName;
             _bus = bus;
             _easyNetQLoggerOptions = easyNetQLoggerOptions;
         }
@@ -42,6 +44,7 @@ namespace Common.EasyNetQ.Logger
                         LogDateTime = DateTime.Now,
                         LogLevel = logLevel,
                         LoggerName = eventId.Name ?? "",
+                        ServiceName = _serviceName,
                     });
                 }
                 catch (Exception ex)

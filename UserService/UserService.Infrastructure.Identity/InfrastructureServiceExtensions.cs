@@ -33,7 +33,7 @@ namespace UserService.Infrastructure.Identity
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<ITokenDbService, TokenRedisService>();
             services.AddEasyNetQServices();
-            services.AddPublisherEasyNetQLogger();
+            services.AddPublisherEasyNetQLogger("UserService");
 
             return services;
         }

@@ -7,7 +7,7 @@ namespace Common.EasyNetQ.Logger.Publisher
 {
     public static class PublisherServiceExtensions
     {
-        public static IServiceCollection AddPublisherEasyNetQLogger(this IServiceCollection services, bool addEasyNetQBus = false)
+        public static IServiceCollection AddPublisherEasyNetQLogger(this IServiceCollection services, string serviceName, bool addEasyNetQBus = false)
         {
             if (addEasyNetQBus)
             {
@@ -20,7 +20,7 @@ namespace Common.EasyNetQ.Logger.Publisher
             {
                 IServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
 
-                builder.AddProvider(new EasyNetQLoggerProvider(serviceProvider));
+                builder.AddProvider(new EasyNetQLoggerProvider(serviceName, serviceProvider));
             });
 
             return services;

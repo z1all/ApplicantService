@@ -8,10 +8,12 @@ namespace Common.EasyNetQ.Logger
 {
     public class EasyNetQLoggerProvider : ILoggerProvider
     {
+        private readonly string _serviceName;
         private readonly IServiceProvider _serviceProvider;
-        
-        public EasyNetQLoggerProvider(IServiceProvider serviceProvider)
+
+        public EasyNetQLoggerProvider(string serviceName, IServiceProvider serviceProvider)
         {
+            _serviceName = serviceName;
             _serviceProvider = serviceProvider;
         }
 
@@ -20,7 +22,7 @@ namespace Common.EasyNetQ.Logger
             var bus = _serviceProvider.GetRequiredService<IBus>();
             var options = _serviceProvider.GetRequiredService<IOptions<EasyNetQLoggerOptions>>();
 
-            return new EasyNetQLogger(bus, options.Value);
+            return new EasyNetQLogger(_serviceName, bus, options.Value);
         }
 
         public void Dispose() { }
