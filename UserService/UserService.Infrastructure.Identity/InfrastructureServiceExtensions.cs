@@ -10,6 +10,7 @@ using UserService.Infrastructure.Identity.Configurations.Authorization;
 using UserService.Infrastructure.Identity.Configurations.Other;
 using Common.API.Configurations;
 using Common.ServiceBus.Configurations;
+using Common.EasyNetQ.Logger.Publisher;
 using EasyNetQ;
 using StackExchange.Redis;
 
@@ -32,6 +33,7 @@ namespace UserService.Infrastructure.Identity
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<ITokenDbService, TokenRedisService>();
             services.AddEasyNetQServices();
+            services.AddPublisherEasyNetQLogger();
 
             return services;
         }
