@@ -5,6 +5,7 @@ namespace UserService.Core.Application.DTOs
     public class CreateAdminRequestDTO
     {
         [Required]
+        [MinLength(5)]
         public required string FullName { get; init; } 
         [Required]
         [EmailAddress]

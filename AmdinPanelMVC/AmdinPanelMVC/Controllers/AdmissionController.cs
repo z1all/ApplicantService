@@ -3,12 +3,12 @@ using AmdinPanelMVC.Filters;
 using AmdinPanelMVC.Models;
 using AmdinPanelMVC.Services.Interfaces;
 using AmdinPanelMVC.DTOs;
+using AmdinPanelMVC.Controllers.Base;
 using Common.Models.Models;
 using Common.Models.DTOs.Admission;
 using Common.Models.DTOs.Applicant;
 using Common.Models.Enums;
 using Common.API.Attributes;
-using AmdinPanelMVC.Controllers.Base;
 
 namespace AmdinPanelMVC.Controllers
 {

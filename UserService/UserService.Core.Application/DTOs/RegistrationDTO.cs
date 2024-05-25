@@ -5,6 +5,7 @@ namespace UserService.Core.Application.DTOs
     public class RegistrationDTO
     {
         [Required]
+        [MinLength(5)]
         public string FullName { get; init; } = null!;
         [Required]
         [EmailAddress]

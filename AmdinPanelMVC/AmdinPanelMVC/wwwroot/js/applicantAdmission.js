@@ -122,6 +122,7 @@ document.getElementById("applicantAdditionDataFormId")?.addEventListener('submit
 
     $('#applicantBirthdayId').next().text("");
     $('#applicantCitizenshipId').next().text("");
+    $('#applicantGenderId').next().text("");
     $('#applicantPhoneNumberId').next().text("");
 
     const changeAdditionInfo = (data) => {
@@ -137,6 +138,10 @@ document.getElementById("applicantAdditionDataFormId")?.addEventListener('submit
 
             if (data.body.errors.Citizenship) {
                 $('#applicantCitizenshipId').next().text(data.body.errors.Citizenship[0]);
+            }
+
+            if (data.body.errors.Gender) {
+                $('#applicantGenderId').next().text(data.body.errors.Gender[0]);
             }
 
             if (data.body.errors.PhoneNumber) {

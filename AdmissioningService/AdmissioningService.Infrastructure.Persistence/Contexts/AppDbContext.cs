@@ -58,7 +58,7 @@ namespace AdmissioningService.Infrastructure.Persistence.Contexts
             // Applicant
             modelBuilder.Entity<ApplicantCache>()
                 .HasMany(applicant => applicant.AddedDocumentTypes)
-                .WithMany();
+                .WithMany(documents => documents.ApplicantCache);
 
             // EducationProgram
             modelBuilder.Entity<EducationProgramCache>()

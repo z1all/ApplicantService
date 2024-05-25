@@ -87,7 +87,7 @@ namespace AdmissioningService.Core.Application.Helpers
         public async Task<ExecutionResult<EducationDocumentTypeCache>> GetEducationDocumentTypeAsync(Guid documentTypeId)
         {
             ExecutionResult<GetEducationDocumentTypeResponse> result = await _requestService.GetEducationDocumentTypeAsync(documentTypeId);
-            if (!result.IsSuccess) return new() { Errors = result.Errors };
+            if (!result.IsSuccess) return new(result.StatusCode, errors: result.Errors);
             EducationDocumentTypeDTO documentType = result.Result!.EducationDocumentType;
 
             await CheckNextEducationLevelsAsync(documentType.NextEducationLevel);

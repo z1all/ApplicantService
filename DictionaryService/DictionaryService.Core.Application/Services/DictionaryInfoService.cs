@@ -4,6 +4,7 @@ using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Mappers;
 using Common.Models.Models;
 using Common.Models.DTOs.Dictionary;
+using EasyNetQ.Internals;
 
 namespace DictionaryService.Core.Application.Services
 {
@@ -29,7 +30,7 @@ namespace DictionaryService.Core.Application.Services
         {
             if (filter.Page < 1)
             {
-                return new(keyError: "InvalidPageError", error: "Number of page can't be less than 1.");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "InvalidPageError", error: "Number of page can't be less than 1.");
             }
 
             int countPrograms = await _educationProgramRepository.GetAllCountAsync(filter, getDeprecated: false);
@@ -38,7 +39,7 @@ namespace DictionaryService.Core.Application.Services
             int countPage = (countPrograms / filter.Size) + (countPrograms % filter.Size == 0 ? 0 : 1);
             if (filter.Page > countPage) 
             {
-                return new(keyError: "InvalidPageError", error: $"Number of page can be from 1 to {countPage}.");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "InvalidPageError", error: $"Number of page can be from 1 to {countPage}.");
             }
 
             List<EducationProgram> educationPrograms = await _educationProgramRepository.GetAllByFiltersAsync(filter, getDeprecated: false);
@@ -92,10 +93,10 @@ namespace DictionaryService.Core.Application.Services
             EducationDocumentType? documentType = await _educationDocumentTypeRepository.GetByIdAsync(documentTypeId, false);
             if(documentType is null)
             {
-                return new(keyError: "DocumentTypeNotFoundError", error: $"Document type with id {documentTypeId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "DocumentTypeNotFoundError", error: $"Document type with id {documentTypeId} not found!");
             }
 
-            return new() {  Result = documentType.ToEducationDocumentTypeDTO() };
+            return new(result: documentType.ToEducationDocumentTypeDTO());
         }
 
         public async Task<ExecutionResult<FacultyDTO>> GetFacultyAsync(Guid facultyId)
@@ -103,10 +104,10 @@ namespace DictionaryService.Core.Application.Services
             Faculty? faculty =  await _facultyRepository.GetByIdAsync(facultyId);
             if(faculty is null)
             {
-                return new(keyError: "FacultyNotFound", error: $"Faculty with id {facultyId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "FacultyNotFound", error: $"Faculty with id {facultyId} not found!");
             }
 
-            return new() { Result = faculty.ToFacultyDTO() };
+            return new(result: faculty.ToFacultyDTO());
         }
 
         public async Task<ExecutionResult<EducationProgramDTO>> GetEducationProgramByIdAsync(Guid programId)
@@ -114,10 +115,10 @@ namespace DictionaryService.Core.Application.Services
             EducationProgram? program = await _educationProgramRepository.GetByIdWithFacultyAndLevelAsync(programId);
             if (program is null)
             {
-                return new(keyError: "ProgramNotFound", error: $"Education program with id {programId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ProgramNotFound", error: $"Education program with id {programId} not found!");
             }
 
-            return new() { Result = program.ToEducationProgramDTO() };
+            return new(result: program.ToEducationProgramDTO());
         }
     }
 }

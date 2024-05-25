@@ -1,4 +1,4 @@
-﻿namespace ApplicantService.Core.Application.DTOs
+﻿namespace Common.Models.DTOs.Applicant
 {
     public class EducationDocumentTypeInfo
     {

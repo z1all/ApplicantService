@@ -11,5 +11,7 @@ namespace AdmissioningService.Core.Domain
         public EducationLevelCache? EducationLevel { get; set; }
 
         public IEnumerable<EducationLevelCache> NextEducationLevel { get; set; } = null!;
+
+        public IEnumerable<ApplicantCache> ApplicantCache { get; set; } = null!;
     }
 }

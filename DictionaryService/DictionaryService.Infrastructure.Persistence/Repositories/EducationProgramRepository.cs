@@ -45,7 +45,7 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                                            (filter.EducationForm != null ? educationProgram.EducationForm.ToLower().Contains(filter.EducationForm.ToLower()) : true) &&
                                            (filter.Language != null ? educationProgram.Language.ToLower().Contains(filter.Language.ToLower()) : true) && 
                                            (filter.CodeOrNameProgram != null ? educationProgram.Code.Contains(filter.CodeOrNameProgram.ToLower()) 
-                                                                            || educationProgram.Name.Contains(filter.CodeOrNameProgram.ToLower()) : true) &&
+                                                                            || educationProgram.Name.ToLower().Contains(filter.CodeOrNameProgram.ToLower()) : true) &&
                                            (filter.EducationLevel != null ? filter.EducationLevel.Contains(educationProgram.EducationLevel!.Id) : true) &&
                                            (getDeprecated ? true : !educationProgram.Deprecated && !educationProgram.EducationLevel!.Deprecated && !educationProgram.Faculty!.Deprecated)) 
                 .Skip((filter.Page - 1) * filter.Size)
@@ -60,7 +60,7 @@ namespace DictionaryService.Infrastructure.Persistence.Repositories
                                            (filter.EducationForm != null ? educationProgram.EducationForm.ToLower().Contains(filter.EducationForm.ToLower()) : true) &&
                                            (filter.Language != null ? educationProgram.Language.ToLower().Contains(filter.Language.ToLower()) : true) &&
                                            (filter.CodeOrNameProgram != null ? educationProgram.Code.Contains(filter.CodeOrNameProgram.ToLower())
-                                                                            || educationProgram.Name.Contains(filter.CodeOrNameProgram.ToLower()) : true) &&
+                                                                            || educationProgram.Name.ToLower().Contains(filter.CodeOrNameProgram.ToLower()) : true) &&
                                            (filter.EducationLevel != null ? filter.EducationLevel.Contains(educationProgram.EducationLevel!.Id) : true) &&
                                            (getDeprecated ? true : !educationProgram.Deprecated && !educationProgram.EducationLevel!.Deprecated && !educationProgram.Faculty!.Deprecated));
         }

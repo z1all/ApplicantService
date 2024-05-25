@@ -73,7 +73,7 @@ namespace AdmissioningService.Core.Application.Services
             Manager? manager = await _managerRepository.GetByIdWithUserAsync(managerId);
             if (manager is null)
             {
-                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
             }
 
             manager.FacultyId = changeManager.FacultyId;
@@ -90,7 +90,7 @@ namespace AdmissioningService.Core.Application.Services
             UserCache? user = await _userCacheRepository.GetByIdAsync(managerId);
             if (user is null)
             {
-                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
             }
 
             List<ApplicantAdmission> managerAdmissions = await _applicantAdmissionRepository.GetAllByManagerIdAsync(managerId);
@@ -106,7 +106,7 @@ namespace AdmissioningService.Core.Application.Services
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdWithApplicantAsync(admissionId);
             if (applicantAdmission is null)
             {
-                return new(keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {admissionId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {admissionId} not found!");
             }
 
             if (managerId is null)
@@ -119,7 +119,7 @@ namespace AdmissioningService.Core.Application.Services
                 Manager? manager = await _managerRepository.GetByIdWithUserAsync((Guid)managerId);
                 if (manager is null)
                 {
-                    return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+                    return new(StatusCodeExecutionResult.NotFound, keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
                 }
 
                 await _applicantAdmissionStateMachin.AddManagerAsync(applicantAdmission, manager);
@@ -134,22 +134,22 @@ namespace AdmissioningService.Core.Application.Services
             Manager? manager = await _managerRepository.GetByIdWithUserAsync(managerId);
             if (manager is null)
             {
-                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
             }
 
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdWithApplicantAsync(admissionId);
             if (applicantAdmission is null)
             {
-                return new(keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {admissionId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {admissionId} not found!");
             }
 
             if (applicantAdmission.ManagerId is not null && applicantAdmission.ManagerId != managerId)
             {
-                return new(keyError: "ManagerAlreadyExist", error: "This applicant admission was taken by other manager!");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "ManagerAlreadyExist", error: "This applicant admission was taken by other manager!");
             }
             else if (applicantAdmission.ManagerId == managerId)
             {
-                return new(keyError: "ApplicantAdmissionAlreadyTaken", error: "This applicant admission was taken by this manager!");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "ApplicantAdmissionAlreadyTaken", error: "This applicant admission was taken by this manager!");
             }
 
             await _applicantAdmissionStateMachin.AddManagerAsync(applicantAdmission, manager);
@@ -163,18 +163,18 @@ namespace AdmissioningService.Core.Application.Services
             Manager? manager = await _managerRepository.GetByIdAsync(managerId);
             if (manager is null)
             {
-                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
             }
 
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdAsync(admissionId);
             if (applicantAdmission is null)
             {
-                return new(keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {managerId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ApplicantAdmissionFound", error: $"Applicant admission with id {managerId} not found!");
             }
 
             if (applicantAdmission.ManagerId != managerId)
             {
-                return new(keyError: "ApplicantAdmissionNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "ApplicantAdmissionNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
             }
 
             await _applicantAdmissionStateMachin.DeleteManagerAsync(applicantAdmission);
@@ -197,7 +197,7 @@ namespace AdmissioningService.Core.Application.Services
             Manager? manager = await _managerRepository.GetByIdWithFacultyAndUserAsync(managerId);
             if (manager is null)
             {
-                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
             }
 
             return new() { Result = manager.ToManagerDTO() };
@@ -224,18 +224,18 @@ namespace AdmissioningService.Core.Application.Services
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdAsync(admissionId);
             if (applicantAdmission is null)
             {
-                return new(keyError: "AdmissionNotFound", error: $"Admission with id {admissionId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "AdmissionNotFound", error: $"Admission with id {admissionId} not found!");
             }
 
             Manager? manager = await _managerRepository.GetByIdAsync(managerId);
             if (manager is null)
             {
-                return new(keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
             }
 
             if (manager.FacultyId is not null && managerId != applicantAdmission.ManagerId)
             {
-                return new(keyError: "ApplicantAdmissionNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "ApplicantAdmissionNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
             }
 
             await _applicantAdmissionStateMachin.ChangeAdmissionStatusAsync(applicantAdmission, changeAdmissionStatus);

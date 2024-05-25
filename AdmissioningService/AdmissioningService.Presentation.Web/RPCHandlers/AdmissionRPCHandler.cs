@@ -31,6 +31,12 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
 
             _bus.Rpc.Respond<DeleteProgramFromCurrentAdmissionRequest, ExecutionResult>(async (request) =>
               await ExceptionHandlerAsync(async (service) => await DeleteAdmissionProgramAsync(service, request)));
+
+            _bus.Rpc.Respond<GetAdmissionCompaniesRequest, ExecutionResult<GetAdmissionCompaniesResponse>>(async (request) =>
+              await ExceptionHandlerAsync(async (service) => await GetAdmissionCompaniesAsync(service, request)));
+
+            _bus.Rpc.Respond<CreateAdmissionCompanyRequest, ExecutionResult>(async (request) =>
+              await ExceptionHandlerAsync(async (service) => await CreateAdmissionCompanyAsync(service, request)));
         }
 
         public async Task<ExecutionResult> CheckPermissionsAsync(IServiceProvider service, CheckPermissionsRequest request)
@@ -77,6 +83,22 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
             var _admissionService = service.GetRequiredService<IAdmissionService>();
 
             return await _admissionService.DeleteAdmissionProgramAsync(request.ApplicantId, request.ProgramId, request.ManagerId);
+        }
+
+        public async Task<ExecutionResult<GetAdmissionCompaniesResponse>> GetAdmissionCompaniesAsync(IServiceProvider service, GetAdmissionCompaniesRequest _)
+        {
+            var _admissionService = service.GetRequiredService<IAdmissionService>();
+
+            ExecutionResult<List<AdmissionCompanyDTO>> result = await _admissionService.GetAdmissionCompaniesAsync();
+
+            return ResponseHandler(result, admissions => new GetAdmissionCompaniesResponse() { AdmissionCompanies = admissions });
+        }
+
+        public async Task<ExecutionResult> CreateAdmissionCompanyAsync(IServiceProvider service, CreateAdmissionCompanyRequest request)
+        {
+            var _admissionService = service.GetRequiredService<IAdmissionService>();
+
+            return await _admissionService.CreateAdmissionCompanyAsync(request.Year);
         }
     }
 }

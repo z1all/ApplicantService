@@ -21,16 +21,16 @@ namespace Common.ServiceBus.EasyNetQRPC
            ExecutionResult<TFromResult> response,
            Func<TFromResult, TToResult> mapper)
         {
-            if (!response.IsSuccess) return new() { Errors = response.Errors };
+            if (!response.IsSuccess) return new(response.StatusCode, errors: response.Errors);
 
             return new() { Result = mapper(response.Result!) };
         }
 
         protected async Task<ExecutionResult> ExceptionHandlerAsync(Func<IServiceProvider, Task<ExecutionResult>> operationAsync) =>
-             await ExceptionHandlerAsync(operationAsync, () => new(keyError: "UnknownError", error: "Unknown error"));
+             await ExceptionHandlerAsync(operationAsync, () => new(StatusCodeExecutionResult.InternalServer, keyError: "UnknownError", error: "Unknown error"));
 
         protected async Task<ExecutionResult<TResponse>> ExceptionHandlerAsync<TResponse>(Func<IServiceProvider, Task<ExecutionResult<TResponse>>> operationAsync) =>
-             await ExceptionHandlerAsync(operationAsync, () => new(keyError: "UnknownError", error: "Unknown error"));
+             await ExceptionHandlerAsync(operationAsync, () => new(StatusCodeExecutionResult.InternalServer, keyError: "UnknownError", error: "Unknown error"));
 
         private async Task<TResponse> ExceptionHandlerAsync<TResponse>(Func<IServiceProvider, Task<TResponse>> operationAsync, Func<TResponse> errorResponse)
         {

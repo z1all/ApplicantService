@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Common.Models.DTOs.Admission.AdmissionCompanyDTO>
+
+<div class="d-flex flex-column pb-3">
+    @foreach (var company in Model)
+    {
+        <div class="list-group-item d-flex">
+            <div class="h-100 align-self-center col-6">
+                <span class="text-secondary">Год: </span> @company.EventYear
+            </div>
+            <div class="h-100 align-self-center col-6">
+                <span class="text-secondary">Текущая приемная компания: </span> @(company.IsCurrent ? "Да" : "Нет")
+            </div>
+        </div>
+    }
+</div>

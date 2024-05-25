@@ -10,9 +10,15 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
     {
         public AdmissionCompanyRepository(AppDbContext dbContext) : base(dbContext) { }
 
-        public Task<List<AdmissionCompany>> GetAllWithApplicantAdmissionAsync(Guid applicantId)
+        public async Task<List<AdmissionCompany>> GetAllAsync()
         {
-            return _dbContext.AdmissionCompanies
+            return await _dbContext.AdmissionCompanies
+                .ToListAsync();
+        }
+
+        public async Task<List<AdmissionCompany>> GetAllWithApplicantAdmissionAsync(Guid applicantId)
+        {
+            return await _dbContext.AdmissionCompanies
                 .Include(admissionCompanies => admissionCompanies.ApplicantAdmissions
                                                 .Where(admission => admission.ApplicantId == applicantId))
                 .ToListAsync();

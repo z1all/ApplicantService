@@ -52,7 +52,7 @@ namespace UserService.Infrastructure.Identity.Services
         {
             if (!result)
             {
-                return new("SendNotificationFail", errorMassage);
+                return new(StatusCodeExecutionResult.InternalServer, "SendNotificationFail", errorMassage);
             }
             return new(isSuccess: true);
         }
