@@ -1,7 +1,7 @@
 ﻿using NotificationService.Services.Interfaces;
-using EasyNetQ.AutoSubscribe;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService.Notifications;
 using Common.ServiceBus.ServiceBusDTOs.FromAdmissioningService.Notifications;
+using EasyNetQ.AutoSubscribe;
 
 namespace NotificationService.BackgroundServices
 {
