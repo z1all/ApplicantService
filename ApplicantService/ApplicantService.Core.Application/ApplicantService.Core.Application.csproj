@@ -8,12 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common.ServiceBus\Common.ServiceBus.csproj" />
-    <ProjectReference Include="..\ApplicantService.Core.Domain\ApplicantService.Core.Domain.csproj" />
+    <Compile Remove="Validation\**" />
+    <EmbeddedResource Remove="Validation\**" />
+    <None Remove="Validation\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Validation\" />
+    <ProjectReference Include="..\..\Common\Common.ServiceBus\Common.ServiceBus.csproj" />
+    <ProjectReference Include="..\ApplicantService.Core.Domain\ApplicantService.Core.Domain.csproj" />
   </ItemGroup>
 
 </Project>

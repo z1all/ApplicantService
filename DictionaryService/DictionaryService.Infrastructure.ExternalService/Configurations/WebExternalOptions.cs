@@ -9,5 +9,6 @@
         public required string DocumentTypeRoute { get; set; }
         public required string FacultiesRoute { get; set; }
         public required string EducationProgramRoute { get; set; }
+        public required int EducationProgramCountOnPage { get; set; }
     }
 }

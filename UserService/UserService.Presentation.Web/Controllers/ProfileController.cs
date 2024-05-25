@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
@@ -7,11 +8,17 @@ using Common.API.Helpers;
 using Common.Models.Models;
 using Common.Models.DTOs.User;
 using Common.Models.Enums;
+using Common.API.DTOs;
 
 namespace UserService.Presentation.Web.Controllers
 {
     [Route("api/user")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Role.Applicant}, {Role.Admin}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(TokensResponseDTO), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(TokensResponseDTO), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
     public class ProfileController : BaseController
     {
         private readonly IProfileService _profileService;
@@ -22,7 +29,6 @@ namespace UserService.Presentation.Web.Controllers
         }
 
         [HttpPatch("email")]
-        [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
         public async Task<ActionResult> ChangeEmailAsync(ChangeEmailRequestDTO changeEmail)
         {
             return await ChangeHandlerAsync(async (Guid userId) =>
@@ -30,7 +36,6 @@ namespace UserService.Presentation.Web.Controllers
         }
 
         [HttpPatch("password")]
-        [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
         public async Task<ActionResult> ChangePasswordAsync(ChangePasswordDTO changePassword)
         {
             return await ChangeHandlerAsync(async (Guid userId) =>
@@ -38,45 +43,26 @@ namespace UserService.Presentation.Web.Controllers
         }
 
         [HttpPatch("profile")]
-        [Authorize(Roles = $"{Role.Applicant}, {Role.Admin}")]
         public async Task<ActionResult> ChangeProfileAsync(ChangeProfileRequestDTO changeProfile)
         {
             return await ChangeHandlerAsync(async (Guid userId) =>
                  await _profileService.ChangeProfileAsync(changeProfile, userId));
         }
 
-        private async Task<ActionResult> ChangeHandlerAsync(ChangeOperationAsync changeOperation)
+        private async Task<ActionResult> ChangeHandlerAsync(Func<Guid, Task<ExecutionResult>> changeOperationAsync)
         {
             if (!HttpContext.TryGetUserId(out Guid userId))
             {
-                return BadRequest(new ExecutionResult("UnknowError", "Unknow error"));
+                return ExecutionResultHandlerAsync(new ExecutionResult(StatusCodeExecutionResult.InternalServer, "UnknowError", "Unknow error"));
             }
 
-            ExecutionResult changingResult = await changeOperation(userId);
+            ExecutionResult changingResult = await changeOperationAsync(userId);
             if (!changingResult.IsSuccess)
             {
-                return BadRequest(changingResult);
+                return ExecutionResultHandlerAsync(changingResult);
             }
 
             return NoContent();
         }
-
-        private delegate Task<ExecutionResult> ChangeOperationAsync(Guid userId);
-
-        //[HttpPost("manager")]
-        //public async Task<ActionResult> CreateManagerAsync(CreateManagerRequestDTO manager)
-        //{
-        //    var res = await _profileService.CreateManagerAsync(manager);
-
-        //    return Ok(res);
-        //}
-
-        //[HttpDelete("manager")]
-        //public async Task<ActionResult> DeleteManagerAsync([FromQuery] Guid managerId)
-        //{
-        //    var res = await _profileService.DeleteManagerAsync(managerId);
-
-        //    return Ok(res);
-        //}
     }
 }

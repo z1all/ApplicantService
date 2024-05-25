@@ -7,7 +7,6 @@ using Common.Models.Models;
 
 namespace AdmissioningService.Core.Application.StateMachines
 {
-
     public class ApplicantAdmissionStateMachin : IApplicantAdmissionStateMachin
     {
         private readonly IApplicantAdmissionRepository _applicantAdmissionRepository;
@@ -183,7 +182,7 @@ namespace AdmissioningService.Core.Application.StateMachines
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByIdAsync(admissionId);
             if (applicantAdmission is null)
             {
-                return new(keyError: "AdmissionNotFound", error: $"Admission with id {admissionId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "AdmissionNotFound", error: $"Admission with id {admissionId} not found!");
             }
 
             (AdmissionStatus newStatus, AdmissionStatus oldStatus) = UpdateAdmissionStatusFromRejectedAndConfirmed(applicantAdmission);
@@ -217,7 +216,7 @@ namespace AdmissioningService.Core.Application.StateMachines
             ApplicantCache? applicantCache = await _applicantCacheRepository.GetByIdAsync(applicantId);
             if (applicantCache is null)
             {
-                return new(keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
             }
 
             return await _notificationService.UpdatedAdmissionStatusAsync(newStatus, new()

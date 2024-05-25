@@ -1,5 +1,4 @@
-﻿using ApplicantService.Core.Application.DTOs;
-using ApplicantService.Core.Application.Interfaces.Services;
+﻿using ApplicantService.Core.Application.Interfaces.Services;
 using Common.Models.DTOs.Applicant;
 using Common.Models.Models;
 using Common.ServiceBus.EasyNetQRPC;
@@ -111,7 +110,7 @@ namespace ApplicantService.Presentation.Web.RPCHandlers
             return await _documentService.UpdateApplicantEducationDocumentAsync(
                 request.DocumentId, 
                 request.ApplicantId,
-                new() { Name = request.Name, EducationDocumentTypeId = request.EducationDocumentTypeId},
+                new() { Name = request.Name, /*EducationDocumentTypeId = request.EducationDocumentTypeId*/ },
                 request.ManagerId);
         }
     }

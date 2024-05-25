@@ -54,5 +54,20 @@ namespace AmdinPanelMVC.Services
             return await RequestHandlerAsync<ExecutionResult, ChangeAdmissionStatusRequest>(
                 new() { AdmissionId = admissionId, NewStatus = changeStatus, ManagerId = managerId }, "ChangeAdmissionStatusFail");
         }
+
+        public async Task<ExecutionResult<List<AdmissionCompanyDTO>>> GetAdmissionsCompaniesAsync()
+        {
+            ExecutionResult<GetAdmissionCompaniesResponse> response
+                = await RequestHandlerAsync<ExecutionResult<GetAdmissionCompaniesResponse>, GetAdmissionCompaniesRequest>(
+                     new(), "GetAdmissionsCompaniesFail");
+
+            return ResponseHandler(response, companies => companies.AdmissionCompanies);
+        }
+
+        public async Task<ExecutionResult> CreateAdmissionCompanyAsync(int year)
+        {
+            return await RequestHandlerAsync<ExecutionResult, CreateAdmissionCompanyRequest>(
+                new() { Year = year }, "CreateAdmissionCompanyFail");
+        }
     }
 }

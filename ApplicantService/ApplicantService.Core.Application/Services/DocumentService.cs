@@ -44,20 +44,20 @@ namespace ApplicantService.Core.Application.Services
             ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
-                return new() { Errors = canEdit.Errors };
+                return new(canEdit.StatusCode, errors: canEdit.Errors);
             }
 
             Document? document = await _documentRepository.GetByDocumentIdAndApplicantIdAsync(documentId, applicantId);
             if (document is null)
             {
-                return new(keyError: "DeleteDocumentFail", error: $"The applicant does not have a document with Id {documentId}.");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "DeleteDocumentFail", error: $"The applicant does not have a document with Id {documentId}.");
             }
 
             Guid educationDocumentTypeId = Guid.Empty;
             if (document.DocumentType == DocumentType.EducationDocument &&
                 !(await TryGetEducationDocumentTypeIdAsync(documentId)).TryOut(out educationDocumentTypeId))
             {
-                return new(keyError: "UnknowError", error: "Unknow error.");
+                return new(StatusCodeExecutionResult.InternalServer, keyError: "UnknowError", error: "Unknow error.");
             }
 
             await _fileRepository.DeleteAllFromDocumentAsync(documentId);
@@ -92,10 +92,10 @@ namespace ApplicantService.Core.Application.Services
             Passport? passport = await _passportRepository.GetByApplicantIdAsync(applicantId);
             if(passport is null)
             {
-                return new(keyError: "PassportNotFound", error: "Applicant doesn't have a passport");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "PassportNotFound", error: "Applicant doesn't have a passport");
             }
 
-            return new() { Result = passport.ToPassportInfo() };
+            return new(result: passport.ToPassportInfo());
         }
 
         public async Task<ExecutionResult> AddApplicantPassportAsync(EditAddPassportInfo documentInfo, Guid applicantId, Guid? managerId)
@@ -103,13 +103,13 @@ namespace ApplicantService.Core.Application.Services
             ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
-                return new() { Errors = canEdit.Errors };
+                return new(canEdit.StatusCode, errors: canEdit.Errors);
             }
 
             bool passportExist = await _passportRepository.AnyByApplicantIdAsync(applicantId);
             if (passportExist)
             {
-                return new(keyError: "PassportAlreadyExist", error: "Applicant already have a passport");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "PassportAlreadyExist", error: "Applicant already have a passport");
             }
 
             Passport passport = documentInfo.ToPassport(applicantId);
@@ -123,13 +123,13 @@ namespace ApplicantService.Core.Application.Services
             ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
-                return new() { Errors = canEdit.Errors };
+                return new(canEdit.StatusCode, errors: canEdit.Errors);
             }
 
             Passport? passport = await _passportRepository.GetByApplicantIdAsync(applicantId);
             if (passport is null)
             {
-                return new(keyError: "PassportNotFound", error: "Applicant doesn't have a passport");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "PassportNotFound", error: "Applicant doesn't have a passport");
             }
 
             passport.BirthPlace = documentInfo.BirthPlace;
@@ -147,25 +147,25 @@ namespace ApplicantService.Core.Application.Services
             EducationDocument? educationDocument = await _educationDocumentRepository.GetByDocumentIdAndApplicantIdAsync(documentId, applicantId);
             if (educationDocument is null)
             {
-                return new(keyError: "EducationDocumentNotFound", error: $"The applicant does not have a education document with Id {documentId}");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "EducationDocumentNotFound", error: $"The applicant does not have a education document with Id {documentId}");
             }
 
             return new() { Result = educationDocument.ToEducationDocumentInfo() };
         }
 
-        public async Task<ExecutionResult> AddApplicantEducationDocumentAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
+        public async Task<ExecutionResult> AddApplicantEducationDocumentAsync(Guid applicantId, AddEducationDocumentInfo documentInfo, Guid? managerId) 
         {
             ExecutionResult<EducationDocumentTypeCache> executionResult 
                 = await CheckPermissionsAndEducationDocumentTypeAsync(applicantId, documentInfo, managerId);
             if (!executionResult.IsSuccess)
             {
-                return new() { Errors = executionResult.Errors };
+                return new(executionResult.StatusCode, errors: executionResult.Errors);
             }
 
             bool documentExist = await _educationDocumentRepository.AnyByDocumentTypeIdAndApplicantIdAsync(documentInfo.EducationDocumentTypeId, applicantId);
             if (documentExist)
             {
-                return new(keyError: "EducationDocumentAlreadyExist", error: "Applicant already has the education document with this type!");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "EducationDocumentAlreadyExist", error: "Applicant already has the education document with this type!");
             }
 
             EducationDocument educationDocument = documentInfo.ToEducationDocument(applicantId, executionResult.Result!.Name);
@@ -174,47 +174,53 @@ namespace ApplicantService.Core.Application.Services
             ExecutionResult notificationResult = await _notificationService.AddedEducationDocumentTypeAsync(applicantId, documentInfo.EducationDocumentTypeId);
             if (!notificationResult.IsSuccess)
             {
-                return new() { Errors = notificationResult.Errors };
+                return new(notificationResult.StatusCode, errors: notificationResult.Errors);
             }
 
             return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
 
-        public async Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
+        public async Task<ExecutionResult> UpdateApplicantEducationDocumentAsync(Guid documentId, Guid applicantId, EditEducationDocumentInfo documentInfo, Guid? managerId)
         {
-            ExecutionResult<EducationDocumentTypeCache> executionResult 
-                = await CheckPermissionsAndEducationDocumentTypeAsync(applicantId, documentInfo, managerId);
-            if (!executionResult.IsSuccess)
+            ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
+            if (!canEdit.IsSuccess)
             {
-                return new() { Errors = executionResult.Errors };
+                return new(canEdit.StatusCode, errors: canEdit.Errors);
             }
+
+            //ExecutionResult<EducationDocumentTypeCache> executionResult 
+            //    = await CheckPermissionsAndEducationDocumentTypeAsync(applicantId, documentInfo, managerId);
+            //if (!executionResult.IsSuccess)
+            //{
+            //    return new(executionResult.StatusCode, errors: executionResult.Errors);
+            //}
 
             EducationDocument? educationDocument = await _educationDocumentRepository.GetByIdAsync(documentId);
             if (educationDocument is null)
             {
-                return new(keyError: "EducationDocumentNotFound", error: $"The applicant does not have a education document with Id {documentId}");
+                return new(StatusCodeExecutionResult.NotFound, keyError: "EducationDocumentNotFound", error: $"The applicant does not have a education document with Id {documentId}");
             }
 
-            bool documentExist = await _educationDocumentRepository.AnyByDocumentTypeIdAndApplicantIdAsync(documentInfo.EducationDocumentTypeId, applicantId);
-            if (educationDocument.EducationDocumentTypeId != documentInfo.EducationDocumentTypeId && documentExist)
-            {
-                return new(keyError: "EducationDocumentAlreadyExist", error: "Applicant already has the education document with this type!");
-            }
+            //bool documentExist = await _educationDocumentRepository.AnyByDocumentTypeIdAndApplicantIdAsync(documentInfo.EducationDocumentTypeId, applicantId);
+            //if (educationDocument.EducationDocumentTypeId != documentInfo.EducationDocumentTypeId && documentExist)
+            //{
+            //    return new(StatusCodeExecutionResult.BadRequest, keyError: "EducationDocumentAlreadyExist", error: "Applicant already has the education document with this type!");
+            //}
 
-            Guid LastEducationDocumentTypeId = educationDocument.EducationDocumentTypeId;
+            //Guid LastEducationDocumentTypeId = educationDocument.EducationDocumentTypeId;
 
-            educationDocument.EducationDocumentTypeId = documentInfo.EducationDocumentTypeId;
+            //educationDocument.EducationDocumentTypeId = documentInfo.EducationDocumentTypeId;
             educationDocument.Name = documentInfo.Name;
-            educationDocument.Comments = executionResult.Result!.Name;
+            //educationDocument.Comments = executionResult.Result!.Name;
 
             await _educationDocumentRepository.UpdateAsync(educationDocument);
 
-            ExecutionResult notificationResult 
-                = await _notificationService.ChangeEducationDocumentTypeAsync(applicantId, LastEducationDocumentTypeId, documentInfo.EducationDocumentTypeId);
-            if (!notificationResult.IsSuccess)
-            {
-                return new() { Errors = notificationResult.Errors };
-            }
+            //ExecutionResult notificationResult 
+            //    = await _notificationService.ChangeEducationDocumentTypeAsync(applicantId, LastEducationDocumentTypeId, documentInfo.EducationDocumentTypeId);
+            //if (!notificationResult.IsSuccess)
+            //{
+            //    return new(notificationResult.StatusCode, errors: notificationResult.Errors);
+            //}
 
             return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
         }
@@ -241,15 +247,14 @@ namespace ApplicantService.Core.Application.Services
             return new(true, educationDocument.EducationDocumentTypeId);
         }
 
-        private async Task<ExecutionResult<EducationDocumentTypeCache>> CheckPermissionsAndEducationDocumentTypeAsync(Guid applicantId, EditAddEducationDocumentInfo documentInfo, Guid? managerId)
+        private async Task<ExecutionResult<EducationDocumentTypeCache>> CheckPermissionsAndEducationDocumentTypeAsync(Guid applicantId, AddEducationDocumentInfo documentInfo, Guid? managerId)
         {
             ExecutionResult canEdit = await _requestService.CheckPermissionsAsync(applicantId, managerId);
             if (!canEdit.IsSuccess)
             {
-                return new() { Errors = canEdit.Errors };
+                return new(canEdit.StatusCode, errors: canEdit.Errors);
             }
 
-            // bool educationDocumentTypeExist = await _educationDocumentTypeCacheRepository.AnyByIdAsync(documentInfo.EducationDocumentTypeId, false);
             EducationDocumentTypeCache? educationDocumentTypeExist
                 = await _educationDocumentTypeCacheRepository.GetByIdAsync(documentInfo.EducationDocumentTypeId);
             if (educationDocumentTypeExist is null)
@@ -258,14 +263,14 @@ namespace ApplicantService.Core.Application.Services
                     = await _requestService.GetEducationDocumentTypeAsync(documentInfo.EducationDocumentTypeId);
                 if (!educationDocumentTypeExternal.IsSuccess)
                 {
-                    return new() { Errors = educationDocumentTypeExternal.Errors };
+                    return new(educationDocumentTypeExternal.StatusCode, errors: educationDocumentTypeExternal.Errors);
                 }
                 await _educationDocumentTypeCacheRepository.AddAsync(educationDocumentTypeExternal.Result!);
 
                 educationDocumentTypeExist = educationDocumentTypeExternal.Result!;
             }
 
-            return new() { Result = educationDocumentTypeExist };
+            return new(result: educationDocumentTypeExist);
         }
 
         public async Task<ExecutionResult<List<ScanInfo>>> GetScansInfoAsync(Guid applicantId, Guid documentId)

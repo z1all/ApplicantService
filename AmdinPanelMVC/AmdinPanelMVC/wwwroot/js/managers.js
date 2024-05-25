@@ -49,7 +49,7 @@ function execute() {
             form.elements["Email"].value = store.getAttribute("user-email");
             form.elements["FacultyId"].value = store.getAttribute("user-faculty-id") === null
                 ? "" : store.getAttribute("user-faculty-id");
-            form.elements["Password"].value = "1234";
+            form.elements["Password"].value = "stringA1";
 
             cleanErrors();
             viewChangeForm(store);

@@ -13,10 +13,18 @@
             </div>
             <div class="col-12">
                 <label for="documentTypeId" class="form-label">Тип документа</label>
-                <select id="documentTypeId" name="educationDocumentTypeId" class="form-control">
-                    @await Component.InvokeAsync("DocumentTypes", Model.EducationDocument.EducationDocumentType.Id)
+                <select id="documentTypeId" name="educationDocumentTypeId" class="form-control" disabled>
+                    <option value="@Model.EducationDocument.EducationDocumentType.Id" selected>@Model.EducationDocument.EducationDocumentType.Name</option>
+                    @* @await Component.InvokeAsync("DocumentTypes", Model.EducationDocument.EducationDocumentType.Id) *@
                 </select>
+                <span class="text-danger"></span>
             </div>
+@*             <div class="col-12">
+                <div><span class="text-secondary">Текущий уровень образования:</span> </div>
+            </div>
+            <div class="col-12">
+                <div><span class="text-secondary">Следующие уровни образования:</span> </div>
+            </div> *@
             <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary">Сохранить</button>
             </div>

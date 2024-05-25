@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AmdinPanelMVC.Services.Interfaces;
 using AmdinPanelMVC.Filters;
-using Common.Models.Models;
-using Common.Models.DTOs.Applicant;
 using AmdinPanelMVC.DTOs;
 using AmdinPanelMVC.Controllers.Base;
 using AmdinPanelMVC.Models;
+using Common.Models.Models;
+using Common.Models.DTOs.Applicant;
 using Common.API.Attributes;
-using ApplicantService.Core.Application.DTOs;
-using Microsoft.CodeAnalysis;
 
 namespace AmdinPanelMVC.Controllers
 {

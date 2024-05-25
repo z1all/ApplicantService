@@ -12,7 +12,7 @@ namespace AdmissioningService.Core.Application.Mappers
                 Id = admissionCompany.Id,
                 EventYear = admissionCompany.EventYear,
                 IsCurrent = admissionCompany.IsCurrent,
-                ApplicantAdmissioningId = admissionCompany.ApplicantAdmissions.FirstOrDefault()?.Id ?? null,
+                ApplicantAdmissioningId = admissionCompany.ApplicantAdmissions?.FirstOrDefault()?.Id ?? null,
             };
         }
     }

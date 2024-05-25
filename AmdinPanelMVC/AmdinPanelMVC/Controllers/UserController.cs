@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
 using AmdinPanelMVC.Models;
 using AmdinPanelMVC.Services.Interfaces;
@@ -145,7 +144,7 @@ namespace AmdinPanelMVC.Controllers
             }
 
             ExecutionResult response = await _userService.ChangePasswordAsync(managerId, 
-                new() { CurrentPassword = profile.CurrentPassword, NewPassword = profile.NewPassword});
+                new() { CurrentPassword = profile.CurrentPassword!, NewPassword = profile.NewPassword!});
             if (!response.IsSuccess)
             {
                 foreach (var error in response.Errors)
@@ -180,14 +179,14 @@ namespace AmdinPanelMVC.Controllers
                     return Redirect("Login");
                 }
 
-                if (result.Errors["LogoutFail"] is not null)
+                if (result.Errors.TryGetKey("LogoutFail", out _))
                 {
                     HttpContext.Response.Cookies.RemoveTokens();
                 }
             }
 
             StringValues from = HttpContext.Request.Headers["Referer"];
-            return Redirect(from.IsNullOrEmpty() ? "/" : from);
+            return Redirect("/InternalServer");
         }
 
     }

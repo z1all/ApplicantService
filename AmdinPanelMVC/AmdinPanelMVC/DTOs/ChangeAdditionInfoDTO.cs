@@ -14,7 +14,7 @@ namespace AmdinPanelMVC.DTOs
         public required Gender Gender { get; set; }
         [MinLength(5, ErrorMessage = "Минимальная длина составляет 5 символов")]
         public required string Citizenship { get; set; }
-        [MinLength(5, ErrorMessage = "Минимальная длина составляет 5 символов")]
+        [PhoneNumber(ErrorMessage = "Номер телефона должен начинаться с +7 или 8 и заканчиваться 10 цифрами")]
         public required string PhoneNumber { get; set; } 
     }
 }

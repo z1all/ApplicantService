@@ -51,7 +51,7 @@ namespace UserService.Infrastructure.Identity.Services
             {
                 if (task.Status == TaskStatus.Canceled)
                 {
-                    return new("CreateManagerFail", "Unknown error!");
+                    return new(StatusCodeExecutionResult.InternalServer, "CreateManagerFail", "Unknown error!");
                 }
 
                 return task.Result;

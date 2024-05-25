@@ -5,6 +5,7 @@ namespace UserService.Core.Application.DTOs
     public class CreateManagerRequestDTO
     {
         [Required]
+        [MinLength(5)]
         public string FullName { get; init; } = null!;
         [Required]
         [EmailAddress]

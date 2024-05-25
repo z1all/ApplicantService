@@ -45,7 +45,7 @@ namespace DictionaryService.Core.Application.Services
             bool existOtherUpdating = await _updateStatusRepository.TryBeganUpdatingForAllDictionaryAsync();
             if (existOtherUpdating)
             {
-                return new(keyError: "ExistOtherUpdating", error: "Another dictionary update is already underway, try it later.");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "ExistOtherUpdating", error: "Another dictionary update is already underway, try it later.");
             }
 
             return await UpdateDictionaryHandlerAsync(async () =>
@@ -85,7 +85,7 @@ namespace DictionaryService.Core.Application.Services
             bool existOtherUpdating = await _updateStatusRepository.TryBeganUpdatingForDictionaryAsync(dictionaryType);
             if (existOtherUpdating)
             {
-                return new(keyError: "ExistOtherUpdating", error: "Another dictionary update is already underway, try it later.");
+                return new(StatusCodeExecutionResult.BadRequest, keyError: "ExistOtherUpdating", error: "Another dictionary update is already underway, try it later.");
             }
 
             return await UpdateDictionaryHandlerAsync(async () =>
@@ -100,7 +100,7 @@ namespace DictionaryService.Core.Application.Services
                         await UpdateEducationLevelAsync(), _notificationService.ChangedEducationLevelAsync, SendLAddedEducationLevelsNotificationAsync),
                     DictionaryType.EducationDocumentType => await SendNotificationHandlerAsync(
                         await UpdateEducationDocumentTypeAsync(), _notificationService.ChangedEducationDocumentTypeAsync, SendLAddedEducationDocumentTypeNotificationAsync),
-                    _ => new(keyError: "WrongDictionaryType", error: "Wrong dictionary type"),
+                    _ => new(StatusCodeExecutionResult.BadRequest, keyError: "WrongDictionaryType", error: "Wrong dictionary type"),
                 };
 
                 return a;

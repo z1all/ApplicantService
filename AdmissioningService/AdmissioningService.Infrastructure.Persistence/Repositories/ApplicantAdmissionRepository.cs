@@ -63,7 +63,8 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
                     (admission.AdmissionCompany!.IsCurrent) &&
                     (fullName != null ? admission.Applicant!.FullName.ToLower().Contains(fullName) : true) &&
                     (codeOrNameProgram != null ? admission.AdmissionPrograms
-                                                    .Any(program => program.EducationProgram!.Name.ToLower().Contains(codeOrNameProgram)) : true) &&
+                                                    .Any(program => program.EducationProgram!.Code.Contains(codeOrNameProgram) || 
+                                                                    program.EducationProgram!.Name.ToLower().Contains(codeOrNameProgram)) : true) &&
                     (filter.FacultiesId != null ? admission.AdmissionPrograms
                                                     .Any(program => filter.FacultiesId.Contains(program.EducationProgram!.FacultyId)) : true) &&
                     (filter.AdmissionStatus != null ? admission.AdmissionStatus == filter.AdmissionStatus : true) &&
@@ -93,7 +94,8 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
                     (admission.AdmissionCompany!.IsCurrent) &&
                     (fullName != null ? admission.Applicant!.FullName.ToLower().Contains(fullName) : true) &&
                     (codeOrNameProgram != null ? admission.AdmissionPrograms
-                                                    .Any(program => program.EducationProgram!.Name.ToLower().Contains(codeOrNameProgram)) : true) &&
+                                                    .Any(program => program.EducationProgram!.Code.Contains(codeOrNameProgram) || 
+                                                                    program.EducationProgram!.Name.ToLower().Contains(codeOrNameProgram)) : true) &&
                     (filter.FacultiesId != null ? admission.AdmissionPrograms
                                                     .Any(program => filter.FacultiesId.Contains(program.EducationProgram!.FacultyId)) : true) &&
                     (filter.AdmissionStatus != null ? admission.AdmissionStatus == filter.AdmissionStatus : true) &&

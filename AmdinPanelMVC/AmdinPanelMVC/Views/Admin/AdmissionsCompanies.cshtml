@@ -1,0 +1,67 @@
+﻿@using Common.Models.Enums
+@model AmdinPanelMVC.Models.CreateAdmissionCompany
+
+@{
+    ViewData["Title"] = "Работа с приемными компаниями";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-12 col-lg-8">
+        <h2>Работа с приемными компаниями</h2>
+        <hr />
+
+        @if (User.IsInRole(Role.Admin))
+        {
+            <div class="d-flex justify-content-end">
+                <button id="createAdmissionCompanyButtonId" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#admissionCompanyModelId">Создать приемную компанию</button>
+            </div>
+
+            <hr />
+        }
+
+        <div id="admissionCompanyContainerId">
+            @await Component.InvokeAsync("AdmissionCompany")
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="admissionCompanyModelId" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <form asp-controller="Admin" asp-action="CreateAdmissionsCompanies" method="post" id="companyFormId">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Year" class="col-form-label">Год проведения</label>
+                        <input asp-for="Year" type="number" class="form-control" required>
+                        <span asp-validation-for="Year" class="text-danger"></span>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button id="createCompanyButtonFormId"
+                        type="submit"
+                        class="btn btn-primary"
+                        form="companyFormId">
+                    Создать
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/admissionCompany.js"></script>
+
+    @* <script>
+        const applicant = @Html.Raw(Json.Serialize(Model.ApplicantId));
+        setApplicantId(applicant);
+
+        const educationDocument = @Html.Raw(Json.Serialize(Model.EducationDocument.Id));
+        setDocumentId(educationDocument);
+    </script> *@
+}

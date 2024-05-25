@@ -1,13 +1,14 @@
-﻿@model IEnumerable<Common.Models.DTOs.Admission.ManagerProfileDTO>
+﻿@using Common.Models.Enums
+@model IEnumerable<Common.Models.DTOs.Admission.ManagerProfileDTO>
 
-@foreach(var manager in Model)
+@foreach (var manager in Model)
 {
     <div class="d-sm-flex p-2">
         <div class="flex-grow-1">
 
             <div>ФИО: @manager.FullName</div>
             <div>Email: @manager.Email</div>
-            @if(manager.Faculty is not null)
+            @if (manager.Faculty is not null)
             {
                 <div class="text-secondary">Факультет: @manager.Faculty.Name</div>
             }
@@ -22,8 +23,12 @@
                  user-email="@manager.Email"
                  user-faculty-id="@manager.Faculty?.Id"
                  class="d-none"></div>
-            <button class="btn btn-danger mb-1 delete-user">Удалить</button>
-            <button class="btn btn-warning edit-user" data-bs-toggle="modal" data-bs-target="#managerModelId">Редактировать</button>
+
+            @if (User.IsInRole(Role.Admin))
+            {
+                <button class="btn btn-danger mb-1 delete-user">Удалить</button>
+                <button class="btn btn-warning edit-user" data-bs-toggle="modal" data-bs-target="#managerModelId">Редактировать</button>
+            }
         </div>
     </div>
 }

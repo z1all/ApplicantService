@@ -1,4 +1,5 @@
-﻿@model AmdinPanelMVC.Models.CreateManagerViewModel
+﻿@using Common.Models.Enums
+@model AmdinPanelMVC.Models.CreateAndChangeManagerViewModel
 
 @{
     ViewData["Title"] = "Работа с менеджерами";
@@ -9,11 +10,14 @@
         <h2>Работа с менеджерами</h2>
         <hr />
 
-        <div class="d-flex justify-content-end">
-            <button id="createManagerButtonId" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#managerModelId">Создать менеджера</button>
-        </div>
+        @if (User.IsInRole(Role.Admin))
+        {
+            <div class="d-flex justify-content-end">
+                <button id="createManagerButtonId" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#managerModelId">Создать менеджера</button>
+            </div>
 
-        <hr />
+            <hr />
+        }
 
         <div id="managersContainerId">
             @await Component.InvokeAsync("ManagerList")
