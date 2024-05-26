@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System.Collections.Immutable;
 using System.Net;
 using Common.API.DTOs;
 
 namespace Common.API.Middlewares
 {
-    public class ExceptionsHandlerMiddleware(RequestDelegate next)
+    public class ExceptionsHandlerMiddleware(RequestDelegate next, ILogger<ExceptionsHandlerMiddleware> logger)
     {
+        private readonly ILogger<ExceptionsHandlerMiddleware> _logger = logger;
         private readonly RequestDelegate _next = next;
 
         public async Task InvokeAsync(HttpContext httpContext)
@@ -33,6 +35,8 @@ namespace Common.API.Middlewares
                 };
 
                 await httpContext.Response.WriteAsJsonAsync(error);
+
+                _logger.LogError(ex, "Unknown error in ExceptionsHandlerMiddleware");
             }
         }
     }
