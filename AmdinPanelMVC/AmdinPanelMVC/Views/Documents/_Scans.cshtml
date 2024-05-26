@@ -1,29 +1,38 @@
-﻿@model IEnumerable<Common.Models.DTOs.Applicant.ScanInfo>
+﻿@model AmdinPanelMVC.Models.ScansViewModel;
+@* @model IEnumerable<Common.Models.DTOs.Applicant.ScanInfo> *@
 
 <div class="d-flex flex-column pb-3">
-    @foreach (var scan in Model)
+    @foreach (var scan in Model.Scans)
     {
         <div class="list-group-item d-flex">
             <a class="h-100 align-self-center admissionLink loadScan flex-fill" scanId="@scan.Id">
                 <span class="text-secondary">Название: </span>
                 @scan.Name@scan.Type
              </a>
-            <div class=" h-100 align-self-center ms-4">
-                <button type="button" class="btn btn-danger deleteScan" scanId="@scan.Id">Удалить</button>
-            </div>
+            @if (Model.CanEdit)
+            {
+                <div class=" h-100 align-self-center ms-4">
+                    <button type="button" class="btn btn-danger deleteScan" scanId="@scan.Id">Удалить</button>
+                </div>
+            }
         </div>
     }
 </div>
 
-<form id="addScanFormId">
-    <div class="col-12">
-        <input name="file" class="form-control " type="file" id="formFileId" required>
-        <span class="text-danger"></span>
-    </div>
-    <div class="d-flex justify-content-end mt-3">
-        <button type="submit" class="btn btn-primary">Добавить</button>
-    </div>
-</form>
+@if (Model.CanEdit)
+{
+    <form id="addScanFormId">
+        <div class="col-12">
+            <input name="file" class="form-control " type="file" id="formFileId" required>
+            <span class="text-danger"></span>
+        </div>
+        <div class="d-flex justify-content-end mt-3">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </div>
+    </form>
+}
+
+
 
 <script>
 

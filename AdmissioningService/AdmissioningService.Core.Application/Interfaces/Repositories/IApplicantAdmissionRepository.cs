@@ -21,6 +21,7 @@ namespace AdmissioningService.Core.Application.Interfaces.Repositories
         Task<ApplicantAdmission?> GetByAdmissionCompanyIdAndApplicantId(Guid admissionCompanyId, Guid applicantId);
         Task<ApplicantAdmission?> GetCurrentByApplicantIdAsync(Guid applicantId);
         Task<ApplicantAdmission?> GetCurrentByApplicantIdWithManagerAsync(Guid applicantId);
+        Task<ApplicantAdmission?> GetCurrentByApplicantIdWithProgramsAsync(Guid applicantId);
         Task<ApplicantAdmission?> GetByApplicantIdAndAdmissionIdAsync(Guid applicantId, Guid admissionId);
         Task<int> CountAllAsync(ApplicantAdmissionFilterDTO admissionFilter, Guid managerId);
         Task<List<ApplicantAdmission>> GetAllByFiltersWithCompanyAndProgramsAsync(ApplicantAdmissionFilterDTO admissionFilter, Guid managerId);

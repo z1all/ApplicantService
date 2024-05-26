@@ -13,6 +13,15 @@ namespace AmdinPanelMVC.Services
         public RpcAdmissionService(ILogger<RpcAdmissionService> logger, IBus bus) 
             : base(logger, bus) { }
 
+        public async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
+        {
+            return await RequestHandlerAsync<ExecutionResult, CheckPermissionsRequest>(new()
+            {
+                ApplicantId = applicantId,
+                ManagerId = managerId
+            }, "CheckPermissionsFail");
+        }
+
         public async Task<ExecutionResult<ApplicantAdmissionPagedDTO>> GetAdmissionsAsync(ApplicantAdmissionFilterDTO applicantAdmission, Guid managerId)
         {
             ExecutionResult<GetAdmissionsResponse> response

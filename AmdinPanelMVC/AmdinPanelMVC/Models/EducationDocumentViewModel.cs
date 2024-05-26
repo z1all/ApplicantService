@@ -6,5 +6,6 @@ namespace AmdinPanelMVC.Models
     {
         public required Guid ApplicantId { get; set; }
         public required EducationDocumentInfo EducationDocument { get; set; }
+        public required bool CanEdit { get; set; }
     }
 }
