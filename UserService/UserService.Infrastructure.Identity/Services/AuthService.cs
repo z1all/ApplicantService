@@ -169,6 +169,8 @@ namespace UserService.Infrastructure.Identity.Services
                 return new(StatusCodeExecutionResult.InternalServer, keyError: "UnknowError", error: "Unknown error");
             }
 
+            _logger.LogInformation($"Created new tokens for user with id {user.Id}");
+
             return new()
             {
                 Result = new TokensResponseDTO()
