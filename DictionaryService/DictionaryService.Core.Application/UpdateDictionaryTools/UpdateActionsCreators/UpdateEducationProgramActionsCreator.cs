@@ -1,4 +1,5 @@
-﻿using DictionaryService.Core.Application.DTOs;
+﻿using Microsoft.Extensions.Logging;
+using DictionaryService.Core.Application.DTOs;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base;
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Interfaces.Repositories;
@@ -20,15 +21,22 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         private List<Faculty>? facultiesCache = null;
         private UpdateStatus? _updateStatusCache = null;
 
+        private readonly ILogger<EducationProgram> _logger;
+
         protected override UpdateStatus UpdateStatusCache => _updateStatusCache!;
         protected override IUpdateStatusRepository UpdateStatusRepository => _updateStatusRepository;
         protected override IBaseWithBaseEntityRepository<EducationProgram> Repository => _educationProgramRepository;
 
+        protected override ILogger<EducationProgram> Logger => _logger;
+
         public UpdateEducationProgramActionsCreator(
+            ILogger<EducationProgram> logger,
             IFacultyRepository facultyRepository, IEducationLevelRepository educationLevelRepository, 
             IEducationProgramRepository educationProgramRepository, IExternalDictionaryService externalDictionaryService,
             IUpdateStatusRepository updateStatusRepository) 
         {
+            _logger = logger;
+
             _facultyRepository = facultyRepository;
             _educationLevelRepository = educationLevelRepository;
             _educationProgramRepository = educationProgramRepository;

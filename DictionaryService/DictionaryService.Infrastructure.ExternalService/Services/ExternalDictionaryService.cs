@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http.Json;
 using DictionaryService.Core.Application.DTOs;
@@ -10,11 +11,13 @@ namespace DictionaryService.Infrastructure.ExternalService.Services
 {
     public class ExternalDictionaryService : IExternalDictionaryService
     {
+        private readonly ILogger<ExternalDictionaryService> _logger;
         private readonly WebExternalOptions _externalOptions;
         private readonly HttpClient _httpClient;
 
-        public ExternalDictionaryService(HttpClient httpClient, IOptions<WebExternalOptions> externalOptions)
+        public ExternalDictionaryService(ILogger<ExternalDictionaryService> logger, HttpClient httpClient, IOptions<WebExternalOptions> externalOptions)
         {
+            _logger = logger;
             _externalOptions = externalOptions.Value;
             _httpClient = httpClient;
 
@@ -41,19 +44,28 @@ namespace DictionaryService.Infrastructure.ExternalService.Services
         {
             List<EducationProgramExternalDTO> Programs = new();
 
-            int pages = 1;
-            for (int i = 0; i < pages; i++)
+            try
             {
-                string route = $"{_externalOptions.EducationProgramRoute}?page={i + 1}&size={_externalOptions.EducationProgramCountOnPage}";
-
-                var programListExternal = await _httpClient.GetFromJsonAsync<ProgramListExternalDTO>(route);
-                if (programListExternal is null)
+                int pages = 1;
+                for (int i = 0; i < pages; i++)
                 {
-                    return new(StatusCodeExecutionResult.InternalServer, "GetEducationProgramFail", error: "Unknown error");
-                }
-                Programs.AddRange(programListExternal.Programs);
+                    string route = $"{_externalOptions.EducationProgramRoute}?page={i + 1}&size={_externalOptions.EducationProgramCountOnPage}";
 
-                pages = programListExternal.Pagination.Count;
+                    var programListExternal = await _httpClient.GetFromJsonAsync<ProgramListExternalDTO>(route);
+                    if (programListExternal is null)
+                    {
+                        _logger.LogError($"Unknown error when requesting directory {typeof(ProgramListExternalDTO).Name} from an external service");
+                        return new(StatusCodeExecutionResult.InternalServer, "GetEducationProgramFail", error: "Unknown error");
+                    }
+                    Programs.AddRange(programListExternal.Programs);
+
+                    pages = programListExternal.Pagination.Count;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unknown error when requesting directory {typeof(ProgramListExternalDTO).Name} from an external service");
+                throw;
             }
 
             return new(result: Programs);
@@ -61,14 +73,23 @@ namespace DictionaryService.Infrastructure.ExternalService.Services
 
         private async Task<ExecutionResult<TResult>> GetAsync<TResult>(string route, string keyError)
         {
-            TResult? result
-                = await _httpClient.GetFromJsonAsync<TResult>(route);
-            if (result is null)
+            try
             {
-                return new(StatusCodeExecutionResult.InternalServer, keyError, error: "Unknown error");
-            }
+                TResult? result
+                = await _httpClient.GetFromJsonAsync<TResult>(route);
+                if (result is null)
+                {
+                    _logger.LogError($"Unknown error when requesting directory {typeof(TResult).Name} from an external service");
+                    return new(StatusCodeExecutionResult.InternalServer, keyError, error: "Unknown error");
+                }
 
-            return new(result: result);
+                return new(result: result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unknown error when requesting directory {typeof(TResult).Name} from an external service");
+                throw;
+            }
         }
     }
 }

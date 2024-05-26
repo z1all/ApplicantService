@@ -1,4 +1,5 @@
-﻿using DictionaryService.Core.Application.DTOs;
+﻿using Microsoft.Extensions.Logging;
+using DictionaryService.Core.Application.DTOs;
 using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Application.Interfaces.Transaction;
@@ -13,6 +14,7 @@ namespace DictionaryService.Core.Application.Services
 {
     public class UpdateDictionaryService : IUpdateDictionaryService
     {
+        private readonly ILogger<UpdateDictionaryService> _logger;
         private readonly IUpdateStatusRepository _updateStatusRepository;
         private readonly ITransactionProvider _transactionProvider;
         private readonly INotificationService _notificationService;
@@ -23,13 +25,14 @@ namespace DictionaryService.Core.Application.Services
         private readonly UpdateActionsCreator<EducationDocumentType, EducationDocumentTypeExternalDTO> _updateEducationDocumentTypeActionsCreator;
 
         public UpdateDictionaryService(
-            IUpdateStatusRepository updateStatusRepository, ITransactionProvider transactionProvider,
-            INotificationService notificationService,
+            ILogger<UpdateDictionaryService> logger, IUpdateStatusRepository updateStatusRepository, 
+            ITransactionProvider transactionProvider, INotificationService notificationService,
             UpdateActionsCreator<Faculty, FacultyExternalDTO> updateFacultyActionsCreator,
             UpdateActionsCreator<EducationLevel, EducationLevelExternalDTO> updateEducationLevelActionsCreator,
             UpdateActionsCreator<EducationProgram, EducationProgramExternalDTO> updateEducationProgramActionsCreator,
             UpdateActionsCreator<EducationDocumentType, EducationDocumentTypeExternalDTO> updateEducationDocumentTypeActionsCreator)
         {
+            _logger = logger;
             _updateStatusRepository = updateStatusRepository;
             _transactionProvider = transactionProvider;
             _notificationService = notificationService;
@@ -45,6 +48,7 @@ namespace DictionaryService.Core.Application.Services
             bool existOtherUpdating = await _updateStatusRepository.TryBeganUpdatingForAllDictionaryAsync();
             if (existOtherUpdating)
             {
+                _logger.LogWarning("Parallel request for updating directories");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "ExistOtherUpdating", error: "Another dictionary update is already underway, try it later.");
             }
 
@@ -85,6 +89,7 @@ namespace DictionaryService.Core.Application.Services
             bool existOtherUpdating = await _updateStatusRepository.TryBeganUpdatingForDictionaryAsync(dictionaryType);
             if (existOtherUpdating)
             {
+                _logger.LogWarning("Parallel request for updating directories");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "ExistOtherUpdating", error: "Another dictionary update is already underway, try it later.");
             }
 
