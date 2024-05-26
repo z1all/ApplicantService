@@ -6,6 +6,8 @@ namespace AmdinPanelMVC.Services.Interfaces
 {
     public interface IAdmissionService
     {
+        Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId);
+
         Task<ExecutionResult<List<AdmissionCompanyDTO>>> GetAdmissionsCompaniesAsync();
         Task<ExecutionResult> CreateAdmissionCompanyAsync(int year);
         Task<ExecutionResult<ApplicantAdmissionPagedDTO>> GetAdmissionsAsync(ApplicantAdmissionFilterDTO applicantAdmission, Guid managerId);

@@ -7,6 +7,7 @@ using AmdinPanelMVC.Models;
 using Common.Models.Models;
 using Common.Models.DTOs.Applicant;
 using Common.API.Attributes;
+using Common.API.Helpers;
 
 namespace AmdinPanelMVC.Controllers
 {
@@ -14,14 +15,21 @@ namespace AmdinPanelMVC.Controllers
     public class DocumentsController : BaseController
     {
         private readonly IDocumentService _documentService;
+        private readonly IAdmissionService _admissionService;
 
-        public DocumentsController(IDocumentService documentService) 
+        public DocumentsController(IDocumentService documentService, IAdmissionService admissionService) 
         {
             _documentService = documentService;
+            _admissionService = admissionService;
         }
 
         public async Task<IActionResult> Passport(Guid applicantId)
         {
+            if (!HttpContext.TryGetUserId(out Guid managerId))
+            {
+                return Redirect("/InternalServer");
+            }
+
             ExecutionResult<PassportInfo> passport = await _documentService.GetPassportAsync(applicantId);
 
             if (!passport.IsSuccess)
@@ -34,10 +42,13 @@ namespace AmdinPanelMVC.Controllers
                 return Redirect("/NotFound");
             }
 
+            ExecutionResult editPermission = await _admissionService.CheckPermissionsAsync(applicantId, managerId);
+
             return View(new PassportViewModel()
             {
                 ApplicantId = applicantId,
-                Passport = passport.Result!
+                Passport = passport.Result!,
+                CanEdit = editPermission.IsSuccess,
             });
         }
 
@@ -74,6 +85,11 @@ namespace AmdinPanelMVC.Controllers
 
         public async Task<IActionResult> EducationDocument(Guid applicantId, Guid documentId)
         {
+            if (!HttpContext.TryGetUserId(out Guid managerId))
+            {
+                return Redirect("/InternalServer");
+            }
+
             ExecutionResult<EducationDocumentInfo> document = await _documentService.GetEducationDocumentAsync(applicantId, documentId);
 
             if (!document.IsSuccess)
@@ -86,10 +102,13 @@ namespace AmdinPanelMVC.Controllers
                 return Redirect("/NotFound");
             }
 
+            ExecutionResult editPermission = await _admissionService.CheckPermissionsAsync(applicantId, managerId);
+
             return View(new EducationDocumentViewModel()
             {
                 ApplicantId = applicantId,
-                EducationDocument = document.Result!
+                EducationDocument = document.Result!,
+                CanEdit = editPermission.IsSuccess,
             });
         }
 
@@ -100,7 +119,7 @@ namespace AmdinPanelMVC.Controllers
                 => _documentService.ChangeEducationDocumentAsync(changeEducationDocument, managerId));
         }
 
-        public async Task<IActionResult> Scans(Guid applicantId, Guid documentId)
+        public async Task<IActionResult> Scans(Guid applicantId, Guid documentId, bool canEdit)
         {
             ExecutionResult<List<ScanInfo>> scans = await _documentService.GetDocumentScansAsync(applicantId, documentId);
 
@@ -114,7 +133,7 @@ namespace AmdinPanelMVC.Controllers
                 return Redirect("/NotFound");
             }
 
-            return PartialView("_Scans", scans.Result);
+            return PartialView("_Scans", new ScansViewModel() { Scans = scans.Result!, CanEdit = canEdit });
         }
 
         public async Task<IActionResult> LoadScans(Guid applicantId, Guid documentId, Guid scanId)

@@ -9,6 +9,7 @@ using Common.Models.DTOs.Admission;
 using Common.Models.DTOs.Applicant;
 using Common.Models.Enums;
 using Common.API.Attributes;
+using Common.API.Helpers;
 
 namespace AmdinPanelMVC.Controllers
 {
@@ -44,6 +45,11 @@ namespace AmdinPanelMVC.Controllers
 
         public async Task<IActionResult> ApplicantAdmission(Guid applicantId, Guid admissionId)
         {
+            if(!HttpContext.TryGetUserId(out Guid managerId))
+            {
+                return Redirect("/InternalServer");
+            }
+
             ExecutionResult<ApplicantAdmissionDTO> admission = await _admissionService.GetApplicantAdmissionAsync(applicantId, admissionId);
             if (!admission.IsSuccess)
             {
@@ -56,10 +62,13 @@ namespace AmdinPanelMVC.Controllers
                 return Redirect("/NotFound");
             }
 
+            ExecutionResult editPermission = await _admissionService.CheckPermissionsAsync(applicantId, managerId);
+
             return View("ApplicantAdmission", new ApplicantAdmissionViewModel()
             {
                 ApplicantAdmission = admission.Result!,
-                ApplicantInfo = applicant.Result!
+                ApplicantInfo = applicant.Result!,
+                CanEdit = editPermission.IsSuccess,
             });
         }
 

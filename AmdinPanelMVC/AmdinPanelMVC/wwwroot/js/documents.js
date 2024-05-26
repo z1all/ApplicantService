@@ -87,7 +87,7 @@ document.getElementById("educationDocumentFormId")?.addEventListener('submit', (
 addListeners();
 function addListeners() {
     const loadScanButtons = document.querySelectorAll('.loadScan');
-    loadScanButtons.forEach(button => {
+    loadScanButtons?.forEach(button => {
         button.addEventListener('click', function (event) {
             const scanId = $(event.target).attr('scanId');
 
@@ -118,7 +118,7 @@ function addListeners() {
     });
 
     const deleteButtons = document.querySelectorAll('.deleteScan');
-    deleteButtons.forEach(button => {
+    deleteButtons?.forEach(button => {
         button.addEventListener('click', function (event) {
             const scanId = $(event.target).attr('scanId');
 
@@ -220,7 +220,7 @@ function updateScans() {
         }
     }
 
-    request(`/Documents/Scans?documentId=${getDocumentId()}&&applicantId=${getApplicantId()}`, 'GET', getScans);
+    request(`/Documents/Scans?documentId=${getDocumentId()}&&applicantId=${getApplicantId()}&&canEdit=${getCanEdit()}`, 'GET', getScans);
 }
 
 let applicantId = null;
@@ -230,3 +230,7 @@ const getApplicantId = () => applicantId;
 let documentId = null;
 const setDocumentId = (id) => documentId = id;
 const getDocumentId = () => documentId;
+
+let canEdit = true;
+const setCanEdit = (flag) => canEdit = flag;
+const getCanEdit = () => canEdit;
