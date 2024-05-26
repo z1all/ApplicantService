@@ -1,4 +1,5 @@
-﻿using ApplicantService.Core.Application.Interfaces.Repositories;
+﻿using Microsoft.Extensions.Logging;
+using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Application.Mapper;
 using ApplicantService.Core.Domain;
@@ -9,15 +10,18 @@ namespace ApplicantService.Core.Application.Services
 {
     public class FileService : IFileService
     {
+        private readonly ILogger<FileService> _logger;
         private readonly IFileRepository _fileRepository;
         private readonly IDocumentRepository _documentRepository;
         private readonly IRequestService _requestService;
         private readonly INotificationService _notificationService;
 
         public FileService(
+            ILogger<FileService> logger,
             IFileRepository fileRepository, IDocumentRepository documentRepository,
             IRequestService requestService, INotificationService notificationService)
         {
+            _logger = logger;
             _fileRepository = fileRepository;
             _documentRepository = documentRepository;
             _requestService = requestService;
@@ -36,6 +40,7 @@ namespace ApplicantService.Core.Application.Services
             FileEntity? fileEntity = await _fileRepository.GetFileAsync(documentFileInfo);
             if (fileEntity is null)
             {
+                _logger.LogInformation($"Applicant with id {applicantId} doesn't have file of scan with id {scanId} in document with id {documentId}");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "FileScanNotFound", error: $"Applicant doesn't have file of scan with id {scanId} in document with id {documentId}");
             }
 
@@ -73,6 +78,7 @@ namespace ApplicantService.Core.Application.Services
             bool documentExist = await _documentRepository.AnyByDocumentIdAndApplicantIdAsync(documentId, applicantId);
             if (!documentExist)
             {
+                _logger.LogInformation($"Applicant with id {applicantId} doesn't have document with id {documentId}");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "DocumentNotFound", error: $"Applicant doesn't have document with id {documentId}");
             }
 
@@ -87,12 +93,14 @@ namespace ApplicantService.Core.Application.Services
             bool documentExist = await _documentRepository.AnyByDocumentIdAndApplicantIdAsync(documentId, applicantId);
             if (!documentExist)
             {
+                _logger.LogInformation($"Applicant with id {applicantId} doesn't have document with id {documentId}");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "DocumentNotFound", error: $"Applicant doesn't have document with id {documentId}");
             }
 
             DocumentFileInfo? documentFileInfo = await _fileRepository.GetInfoByFileIdAndDocumentIdAsync(scanId, documentId);
             if (documentFileInfo is null)
             {
+                _logger.LogInformation($"Applicant with id {applicantId} doesn't have file of scan with id {scanId} in document with id {documentId}");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "ScanNotFound", error: $"Applicant doesn't have scan with id {scanId} in document with id {documentId}");
             }
 
