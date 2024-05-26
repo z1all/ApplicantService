@@ -14,7 +14,8 @@ namespace AmdinPanelMVC.Services
 {
     public class ServiceBusAdminService : BaseRpcService, IAdminService
     {
-        public ServiceBusAdminService(IBus bus) : base(bus) { }
+        public ServiceBusAdminService(ILogger<ServiceBusAdminService> logger, IBus bus) 
+            : base(logger, bus) { }
 
         public async Task<ExecutionResult<List<UpdateStatusDTO>>> GetUpdateStatusesAsync()
         {

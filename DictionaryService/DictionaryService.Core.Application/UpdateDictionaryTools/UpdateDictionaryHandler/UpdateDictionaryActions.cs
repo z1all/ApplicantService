@@ -1,4 +1,5 @@
-﻿using DictionaryService.Core.Domain;
+﻿using Microsoft.Extensions.Logging;
+using DictionaryService.Core.Domain;
 using Common.Repositories;
 using Common.Models.Models;
 
@@ -7,6 +8,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
     public class UpdateDictionaryActions<TEntity, TExternalEntity> where TEntity : BaseDictionaryEntity
     {
         public required IBaseWithBaseEntityRepository<TEntity> Repository { get; set; }
+        public required ILogger<TEntity> Logger { get; set; }
 
         public required Func<Task> BeforeActionsAsync { get; init; }
         public required Func<string, Task> AfterLoadingErrorAsync { get; init; }

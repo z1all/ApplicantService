@@ -1,4 +1,5 @@
-﻿using UserService.Core.Application.DTOs;
+﻿using Microsoft.Extensions.Logging;
+using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromUserService.Requests;
@@ -10,7 +11,8 @@ namespace UserService.Infrastructure.Identity.Services
 {
     internal class EasyNetQRequestService : BaseEasyNetQRPCustomer, IRequestService
     {
-        public EasyNetQRequestService(IBus bus) : base(bus) { }
+        public EasyNetQRequestService(ILogger<EasyNetQRequestService> logger, IBus bus) 
+            : base(logger, bus) { }
 
         public async Task<ExecutionResult> ChangeManagerAsync(Manager manager)
         {

@@ -1,5 +1,4 @@
-﻿using AmdinPanelMVC.DTOs;
-using AmdinPanelMVC.Services.Base;
+﻿using AmdinPanelMVC.Services.Base;
 using AmdinPanelMVC.Services.Interfaces;
 using Common.Models.DTOs.Admission;
 using Common.Models.Enums;
@@ -11,7 +10,8 @@ namespace AmdinPanelMVC.Services
 {
     public class RpcAdmissionService : BaseRpcService, IAdmissionService
     {
-        public RpcAdmissionService(IBus bus) : base(bus) { }
+        public RpcAdmissionService(ILogger<RpcAdmissionService> logger, IBus bus) 
+            : base(logger, bus) { }
 
         public async Task<ExecutionResult<ApplicantAdmissionPagedDTO>> GetAdmissionsAsync(ApplicantAdmissionFilterDTO applicantAdmission, Guid managerId)
         {

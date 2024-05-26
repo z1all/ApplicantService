@@ -2,6 +2,7 @@
 using AmdinPanelMVC.Services.Interfaces;
 using Common.API.Configurations;
 using Common.ServiceBus.Configurations;
+using Common.EasyNetQ.Logger.Publisher;
 
 namespace AmdinPanelMVC
 {
@@ -16,6 +17,7 @@ namespace AmdinPanelMVC
             services.AddScoped<IDocumentService, RpcDocumentService>();
             services.AddScoped<IDictionaryService, RpcDictionaryService>();
             services.AddEasyNetQ();
+            services.AddPublisherEasyNetQLogger("AdminPanelMVC");
 
             services.AddJwtBearerOptions();
 

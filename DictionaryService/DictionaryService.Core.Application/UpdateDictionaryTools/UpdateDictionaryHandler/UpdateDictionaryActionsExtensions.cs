@@ -9,6 +9,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
         {
             return new()
             {
+                Logger = actions.Logger,
                 Repository = actions.Repository,
                 CompareKey = actions.CompareKey,
                 UpdateEntity = actions.UpdateEntity,
@@ -22,6 +23,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
         {
             return new()
             {
+                Logger = actions.Logger,
                 Repository = actions.Repository,    
                 DeleteEntityAsync = actions.DeleteEntityAsync,
             };

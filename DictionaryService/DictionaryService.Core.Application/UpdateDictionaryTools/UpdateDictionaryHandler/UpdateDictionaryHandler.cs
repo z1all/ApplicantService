@@ -1,5 +1,6 @@
 ﻿using DictionaryService.Core.Domain;
 using Common.Models.Models;
+using Microsoft.Extensions.Logging;
 
 namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler
 {
@@ -53,6 +54,8 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 
             await actions.AfterUpdateAsync();
 
+            actions.Logger.LogInformation($"Dictionary {typeof(TEntity).Name} was updated");
+            
             return new(result: new(changedEntities, addedEntities));
         }
 
@@ -98,10 +101,12 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 
             if (thereAreNotRelated)
             {
+                string error = $"It is not possible to update or add a record because it refers to a non-existent record.\n{string.Join('\n', comments.Take(20))}";
+                actions.Logger.LogWarning(error);
                 return new(
                     StatusCodeExecutionResult.BadRequest,
                     keyError: "UpdateOrAddEntityError",
-                    error: $"It is not possible to update or add a record because it refers to a non-existent record.\n{string.Join('\n', comments.Take(20))}"
+                    error: error
                 );
             }
 
@@ -133,10 +138,12 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDiction
 
             if (!deleteRelatedEntities && thereAreRelated)
             {
+                string error = $"It is not possible to delete a record because it is referenced by other records.\n{string.Join('\n', comments.Take(20))}";
+                actions.Logger.LogWarning(error);
                 return new(
                     StatusCodeExecutionResult.BadRequest,
                     keyError: "DeleteEntityError",
-                    error: $"It is not possible to delete a record because it is referenced by other records.\n{string.Join('\n', comments.Take(20))}"
+                    error: error
                 );
             }
 

@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.API\Common.API.csproj" />
+    <ProjectReference Include="..\..\Common\Common.EasyNetQ.Logger\Common.EasyNetQ.Logger.csproj" />
     <ProjectReference Include="..\ApplicantService.Infrastructure.Persistence\ApplicantService.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 

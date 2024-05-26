@@ -1,14 +1,17 @@
-﻿using Common.Models.Models;
+﻿using Microsoft.Extensions.Logging;
+using Common.Models.Models;
 using EasyNetQ;
 
 namespace Common.ServiceBus.EasyNetQRPC
 {
     public abstract class BaseEasyNetQRPCustomer
     {
+        protected readonly ILogger _logger;
         protected readonly IBus _bus;
 
-        public BaseEasyNetQRPCustomer(IBus bus)
+        public BaseEasyNetQRPCustomer(ILogger logger, IBus bus)
         {
+            _logger = logger;
             _bus = bus;
         }
 
@@ -21,7 +24,8 @@ namespace Common.ServiceBus.EasyNetQRPC
                 {
                     if (task.Status == TaskStatus.Canceled)
                     {
-                        return (TResponse)Activator.CreateInstance(typeof(TResponse), keyError, "Unknown error!")!;
+                        _logger.LogError(task.Exception, "Unknown error in BaseEasyNetQRPCustomer");
+                        return (TResponse)Activator.CreateInstance(typeof(TResponse), StatusCodeExecutionResult.InternalServer, keyError, "Unknown error!")!;
                     }
 
                     return task.Result;

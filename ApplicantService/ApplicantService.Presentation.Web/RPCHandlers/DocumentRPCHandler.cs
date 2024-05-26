@@ -9,7 +9,8 @@ namespace ApplicantService.Presentation.Web.RPCHandlers
 {
     public class DocumentRPCHandler : BaseEasyNetQRPCHandler
     {
-        public DocumentRPCHandler(IServiceProvider serviceProvider, IBus bus) : base(serviceProvider, bus) { }
+        public DocumentRPCHandler(ILogger<DocumentRPCHandler> logger, IServiceProvider serviceProvider, IBus bus) 
+            : base(logger, serviceProvider, bus) { }
 
         public override void CreateRequestListeners()
         {

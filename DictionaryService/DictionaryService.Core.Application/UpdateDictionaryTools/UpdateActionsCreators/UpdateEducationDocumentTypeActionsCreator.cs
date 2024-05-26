@@ -1,4 +1,5 @@
-﻿using DictionaryService.Core.Application.DTOs;
+﻿using Microsoft.Extensions.Logging;
+using DictionaryService.Core.Application.DTOs;
 using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActionsCreators.Base;
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Interfaces.Repositories;
@@ -11,6 +12,8 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
 {
     internal class UpdateEducationDocumentTypeActionsCreator : UpdateActionsCreator<EducationDocumentType, EducationDocumentTypeExternalDTO>
     {
+        private readonly ILogger<EducationDocumentType> _logger;
+
         private readonly IEducationLevelRepository _educationLevelRepository;
         private readonly IEducationDocumentTypeRepository _educationDocumentTypeRepository;
         private readonly IExternalDictionaryService _externalDictionaryService;
@@ -22,10 +25,14 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         protected override IUpdateStatusRepository UpdateStatusRepository => _updateStatusRepository;
         protected override IBaseWithBaseEntityRepository<EducationDocumentType> Repository => _educationDocumentTypeRepository;
 
+        protected override ILogger<EducationDocumentType> Logger => _logger;
+
         public UpdateEducationDocumentTypeActionsCreator(
+            ILogger<EducationDocumentType> logger,
             IEducationLevelRepository educationLevelRepository, IEducationDocumentTypeRepository educationDocumentTypeRepository, 
             IExternalDictionaryService externalDictionaryService, IUpdateStatusRepository updateStatusRepository)
         {
+            _logger = logger;
             _educationLevelRepository = educationLevelRepository;
             _educationDocumentTypeRepository = educationDocumentTypeRepository;
             _externalDictionaryService = externalDictionaryService;
