@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Identity;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Domain.Entities;
@@ -12,34 +13,50 @@ namespace UserService.Infrastructure.Identity.Services
 {
     internal class ProfileService : IProfileService
     {
+        private readonly ILogger<ProfileService> _logger;
         private readonly UserManager<CustomUser> _userManager;
         private readonly IServiceBusProvider _serviceBusProvider;
 
-        public ProfileService(UserManager<CustomUser> userManager, IServiceBusProvider serviceBusProvider)
+        public ProfileService(ILogger<ProfileService> logger, UserManager<CustomUser> userManager, IServiceBusProvider serviceBusProvider)
         {
+            _logger = logger;
             _userManager = userManager;
             _serviceBusProvider = serviceBusProvider;
         }
 
         public async Task<ExecutionResult> ChangeEmailAsync(ChangeEmailRequestDTO changeEmail, Guid userId, Guid? managerId)
         {
-            return await ChangeHandlerAsync(userId, managerId, (user) =>
+            var changeResult = await ChangeHandlerAsync(userId, managerId, (user) =>
             {
                 if (user.Email == changeEmail.NewEmail) return false;
                 user.Email = changeEmail.NewEmail;
                 user.UserName = changeEmail.NewEmail;
                 return true;
             });
+
+            if (changeResult.IsSuccess)
+            {
+                _logger.LogInformation($"User with id {userId} change email");
+            }
+
+            return changeResult;
         }
 
         public async Task<ExecutionResult> ChangeProfileAsync(ChangeProfileRequestDTO changeProfile, Guid userId, Guid? managerId)
         {
-            return await ChangeHandlerAsync(userId, managerId, (user) =>
+            var changeResult = await ChangeHandlerAsync(userId, managerId, (user) =>
             {
                 if (user.FullName == changeProfile.NewFullName) return false;
                 user.FullName = changeProfile.NewFullName;
                 return true;
             });
+
+            if (changeResult.IsSuccess)
+            {
+                _logger.LogInformation($"User with id {userId} change profile");
+            }
+
+            return changeResult;
         }
 
         public async Task<ExecutionResult> ChangePasswordAsync(ChangePasswordDTO changePassword, Guid userId)
@@ -52,6 +69,11 @@ namespace UserService.Infrastructure.Identity.Services
 
             IdentityResult changingResult = await _userManager.ChangePasswordAsync(user, changePassword.CurrentPassword, changePassword.NewPassword);
             if (!changingResult.Succeeded) return changingResult.ToExecutionResultError();
+
+            if(changingResult.Succeeded)
+            {
+                _logger.LogInformation($"User with id {userId} change password");
+            }
 
             return new(isSuccess: true);
         }
@@ -83,6 +105,8 @@ namespace UserService.Infrastructure.Identity.Services
 
             sendNotification = await _serviceBusProvider.Notification.CreatedManagerAsync(MapCustomUserToUser(user), createAdmin.Password);
             if (!sendNotification.IsSuccess) return sendNotification;
+
+            _logger.LogInformation($"A new admin has been created with id {user.Id}");
 
             return new(isSuccess: true);
         }
@@ -116,6 +140,8 @@ namespace UserService.Infrastructure.Identity.Services
                         .ToErrorDictionary()
                         .AddRange(creatingRequestResult.Errors));
             }
+
+            _logger.LogInformation($"A new manager has been created with id {user.Id}");
 
             return creatingRequestResult;
         }
@@ -158,6 +184,8 @@ namespace UserService.Infrastructure.Identity.Services
                 return creatingRequestResult;
             }
 
+            _logger.LogInformation($"Manager with id {manager.Id} change profile");
+
             return new(isSuccess: true);
         }
 
@@ -177,6 +205,8 @@ namespace UserService.Infrastructure.Identity.Services
 
             IdentityResult deletingResult = await _userManager.DeleteAsync(user);
             if (!deletingResult.Succeeded) return deletingResult.ToExecutionResultError();
+
+            _logger.LogInformation($"Manager with id {managerId} was deleted");
 
             return new(isSuccess: true);
         }

@@ -1,4 +1,5 @@
-﻿using ApplicantService.Core.Application.Interfaces.Services;
+﻿using Microsoft.Extensions.Logging;
+using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Domain;
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
@@ -10,7 +11,8 @@ namespace ApplicantService.Core.Application.Services
 {
     public class EasyNetQRequestService : BaseEasyNetQRPCustomer, IRequestService
     {
-        public EasyNetQRequestService(IBus bus) : base(bus) { }
+        public EasyNetQRequestService(ILogger<EasyNetQRequestService> logger, IBus bus) 
+            : base(logger, bus) { }
 
         public async Task<ExecutionResult> CheckPermissionsAsync(Guid applicantId, Guid? managerId)
         {

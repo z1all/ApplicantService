@@ -1,4 +1,5 @@
-﻿using ApplicantService.Core.Application.DTOs;
+﻿using Microsoft.Extensions.Logging;
+using ApplicantService.Core.Application.DTOs;
 using ApplicantService.Core.Application.Interfaces.Repositories;
 using ApplicantService.Core.Application.Interfaces.Services;
 using ApplicantService.Core.Application.Mapper;
@@ -10,15 +11,18 @@ namespace ApplicantService.Core.Application.Services
 {
     public class ApplicantProfileService : IApplicantProfileService
     {
+        private readonly ILogger<ApplicantProfileService> _logger;
         private readonly IApplicantRepository _applicantRepository;
         private readonly IEducationDocumentRepository _educationDocumentRepository;
         private readonly IRequestService _requestService;
         private readonly INotificationService _notificationService;
 
         public ApplicantProfileService(
+            ILogger<ApplicantProfileService> logger,
             IApplicantRepository profileRepository, IEducationDocumentRepository educationDocumentRepository,
             IRequestService requestService, INotificationService notificationService)
         {
+            _logger = logger;
             _applicantRepository = profileRepository;
             _educationDocumentRepository = educationDocumentRepository;
             _requestService = requestService;
@@ -30,10 +34,11 @@ namespace ApplicantService.Core.Application.Services
             Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
             if (applicant == null)
             {
+                _logger.LogWarning($"Applicant with id {applicantId} not found");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "ProfileNotFound", error: "Applicant not found! Try again later.");
             }
 
-            return new(result:  applicant.ToApplicantProfile());
+            return new(result: applicant.ToApplicantProfile());
         }
 
         public async Task<ExecutionResult> EditApplicantProfileAsync(EditApplicantProfile applicantProfile, Guid applicantId, Guid? managerId)
@@ -47,6 +52,7 @@ namespace ApplicantService.Core.Application.Services
             Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
             if (applicant == null)
             {
+                _logger.LogWarning($"Applicant with id {applicantId} not found");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "ProfileNotFound", error: "Applicant not found! Try again later.");
             }
 
@@ -57,7 +63,14 @@ namespace ApplicantService.Core.Application.Services
 
             await _applicantRepository.UpdateAsync(applicant);
 
-            return await _notificationService.UpdatedApplicantInfoAsync(applicantId);
+            var updateResult = await _notificationService.UpdatedApplicantInfoAsync(applicantId);
+
+            if(updateResult.IsSuccess)
+            {
+                _logger.LogInformation($"Applicant with id {applicantId} was updated");
+            }
+
+            return updateResult;
         }
 
         public async Task<ExecutionResult<ApplicantAndAddedDocumentTypesDTO>> GetApplicantAndAddedDocumentTypesAsync(Guid applicantId)
@@ -65,6 +78,7 @@ namespace ApplicantService.Core.Application.Services
             Applicant? applicant = await _applicantRepository.GetByIdAsync(applicantId);
             if (applicant is null)
             {
+                _logger.LogWarning($"Applicant with id {applicantId} not found");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
             }
 
@@ -92,6 +106,8 @@ namespace ApplicantService.Core.Application.Services
             };
 
             await _applicantRepository.AddAsync(applicant);
+
+            _logger.LogInformation($"Applicant with id {user.Id} was created");
         }
 
         public async Task UpdateApplicantAsync(UserDTO newUser)
@@ -103,6 +119,8 @@ namespace ApplicantService.Core.Application.Services
             applicant.Email = newUser.Email;
 
             await _applicantRepository.UpdateAsync(applicant);
+
+            _logger.LogInformation($"Applicant with id {newUser.Id} was updated");
         }
 
         public async Task<ExecutionResult<ApplicantInfo>> GetApplicantInfoAsync(Guid applicantId)
@@ -110,6 +128,7 @@ namespace ApplicantService.Core.Application.Services
             Applicant? applicant = await _applicantRepository.GetByIdWithDocumentsAsync(applicantId);
             if (applicant is null)
             {
+                _logger.LogWarning($"Applicant with id {applicantId} not found");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "ApplicantNotFound", error: $"Applicant with id {applicantId} not found!");
             }
 

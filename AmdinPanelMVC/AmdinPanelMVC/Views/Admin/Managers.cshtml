@@ -76,23 +76,13 @@
     </div>
 </div>
 
-@* 
-
-    +++ Список менеджеров с факультетами
-    +++Создание менеджера
-    +++ Удаление менеджера
-
-    Редактирование менеджера
-
-*@
-
 @section Scripts {
 
     <script src="~/js/managers.js"></script>
 
     @if (!ViewData.ModelState.IsValid)
     {
-        @if (Model.Id is null)
+        @if (Model?.Id is null)
         {
             <script>viewCreateForm();</script>
         }

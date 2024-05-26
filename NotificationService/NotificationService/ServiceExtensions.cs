@@ -1,10 +1,11 @@
-﻿using Common.ServiceBus.Configurations;
-using Common.ServiceBus.EasyNetQAutoSubscriber;
+﻿using System.Reflection;
 using NotificationService.BackgroundServices;
 using NotificationService.Configurations;
 using NotificationService.Services;
 using NotificationService.Services.Interfaces;
-using System.Reflection;
+using Common.ServiceBus.Configurations;
+using Common.ServiceBus.EasyNetQAutoSubscriber;
+using Common.EasyNetQ.Logger.Publisher;
 
 namespace NotificationService
 {
@@ -13,7 +14,8 @@ namespace NotificationService
         public static IServiceCollection AddService(this IServiceCollection services)
         {
             services.AddEasyNetQ();
-            services.AddEasyNetQAutoSubscriber("ApplicantService");
+            services.AddEasyNetQAutoSubscriber("NotificationService");
+            services.AddPublisherEasyNetQLogger("NotificationService");
 
             services.AddScoped<NotificationBackgroundListener>();
             services.AddSingleton<IEmailService, EmailService>();

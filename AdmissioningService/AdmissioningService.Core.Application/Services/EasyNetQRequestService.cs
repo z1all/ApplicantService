@@ -1,4 +1,5 @@
-﻿using AdmissioningService.Core.Application.Interfaces.Services;
+﻿using Microsoft.Extensions.Logging;
+using AdmissioningService.Core.Application.Interfaces.Services;
 using Common.Models.Models;
 using Common.ServiceBus.EasyNetQRPC;
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Requests;
@@ -9,7 +10,8 @@ namespace AdmissioningService.Core.Application.Services
 {
     public class EasyNetQRequestService : BaseEasyNetQRPCustomer, IRequestService
     {
-        public EasyNetQRequestService(IBus bus) : base(bus) { }
+        public EasyNetQRequestService(ILogger<EasyNetQRequestService> logger, IBus bus) 
+            : base(logger, bus) { }
 
         public async Task<ExecutionResult<GetApplicantResponse>> GetApplicantAsync(Guid applicantId)
         {
