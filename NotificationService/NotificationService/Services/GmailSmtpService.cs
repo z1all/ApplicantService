@@ -9,10 +9,12 @@ namespace NotificationService.Services
 {
     public class GmailSmtpService : ISmtpService
     {
+        private readonly ILogger<GmailSmtpService> _logger;
         private readonly GmailSmtpOptions _smtpOptions;
 
-        public GmailSmtpService(IOptions<GmailSmtpOptions> options) 
+        public GmailSmtpService(ILogger<GmailSmtpService> logger, IOptions<GmailSmtpOptions> options) 
         {
+            _logger = logger;
             _smtpOptions = options.Value;
         }
 
@@ -35,6 +37,8 @@ namespace NotificationService.Services
 
                 await client.DisconnectAsync(true);
             }
+
+            _logger.LogInformation($"A message has been sent to the user's {recipientEmail} email address. Message: {html}");
 
             return new(isSuccess: true);
         }

@@ -8,7 +8,8 @@ namespace DictionaryService.Presentation.Web.RPCHandlers
 {
     public class DictionaryInfoRPCHandler : BaseEasyNetQRPCHandler
     {
-        public DictionaryInfoRPCHandler(IServiceProvider serviceProvider, IBus bus) : base(serviceProvider, bus) { }
+        public DictionaryInfoRPCHandler(ILogger<DictionaryInfoRPCHandler> logger, IServiceProvider serviceProvider, IBus bus) 
+            : base(logger, serviceProvider, bus) { }
 
         public override void CreateRequestListeners()
         {

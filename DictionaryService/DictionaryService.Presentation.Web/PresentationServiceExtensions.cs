@@ -1,6 +1,7 @@
 ﻿using DictionaryService.Presentation.Web.BackgroundServices;
 using Common.API.Configurations;
 using Common.ServiceBus.Configurations;
+using Common.EasyNetQ.Logger.Publisher;
 
 namespace DictionaryService.Presentation.Web
 {
@@ -11,6 +12,7 @@ namespace DictionaryService.Presentation.Web
             services.AddJwtAuthentication();
             services.AddSwaggerConfigure();
             services.AddEasyNetQ();
+            services.AddPublisherEasyNetQLogger("DictionaryService");
             services.AddModalStateConfigure();
 
             services.AddScoped<UpdateDictionaryBackgroundListener>();

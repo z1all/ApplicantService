@@ -10,7 +10,8 @@ namespace AdmissioningService.Presentation.Web.RPCHandlers
 {
     public class AdmissionRPCHandler : BaseEasyNetQRPCHandler
     {
-        public AdmissionRPCHandler(IServiceProvider serviceProvider, IBus bus) : base(serviceProvider, bus) { }
+        public AdmissionRPCHandler(ILogger<AdmissionRPCHandler> logger, IServiceProvider serviceProvider, IBus bus) 
+            : base(logger, serviceProvider, bus) { }
 
         public override void CreateRequestListeners()
         {

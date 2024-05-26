@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Common.Models.Models;
 using EasyNetQ;
 
@@ -6,11 +7,13 @@ namespace Common.ServiceBus.EasyNetQRPC
 {
     public abstract class BaseEasyNetQRPCHandler
     {
+        private readonly ILogger _logger;
         private readonly IServiceProvider _serviceProvider;
         protected readonly IBus _bus;
 
-        public BaseEasyNetQRPCHandler(IServiceProvider serviceProvider, IBus bus)
+        public BaseEasyNetQRPCHandler(ILogger logger, IServiceProvider serviceProvider, IBus bus)
         {
+            _logger = logger;
             _serviceProvider = serviceProvider;
             _bus = bus;
         }
@@ -41,8 +44,9 @@ namespace Common.ServiceBus.EasyNetQRPC
                     return await operationAsync(scope.ServiceProvider);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Unknow error in BaseEasyNetQRPCHandler");
                 return errorResponse();
             }
         }

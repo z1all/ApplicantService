@@ -11,7 +11,8 @@ namespace ApplicantService.Presentation.Web.RPCHandlers
 {
     public class ApplicantRPCHandler : BaseEasyNetQRPCHandler
     {
-        public ApplicantRPCHandler(IServiceProvider serviceProvider, IBus bus) : base(serviceProvider, bus) { }
+        public ApplicantRPCHandler(ILogger<ApplicantRPCHandler> logger, IServiceProvider serviceProvider, IBus bus) 
+            : base(logger, serviceProvider, bus) { }
 
         public override void CreateRequestListeners()
         {

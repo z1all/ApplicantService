@@ -1,25 +1,28 @@
-﻿using DictionaryService.Core.Application.Interfaces.Services;
+﻿using Microsoft.Extensions.Logging;
+using DictionaryService.Core.Application.Interfaces.Services;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Mappers;
 using Common.Models.Models;
 using Common.Models.DTOs.Dictionary;
-using EasyNetQ.Internals;
 
 namespace DictionaryService.Core.Application.Services
 {
     public class DictionaryInfoService : IDictionaryInfoService
     {
+        private readonly ILogger<DictionaryInfoService> _logger;
         private readonly IEducationProgramRepository _educationProgramRepository;
         private readonly IEducationLevelRepository _educationLevelRepository;
         private readonly IEducationDocumentTypeRepository _educationDocumentTypeRepository;
         private readonly IFacultyRepository _facultyRepository;
 
         public DictionaryInfoService(
+            ILogger<DictionaryInfoService> logger,
             IEducationProgramRepository educationProgramRepository, IEducationLevelRepository educationLevelRepository,
             IEducationDocumentTypeRepository educationDocumentTypeRepository, IFacultyRepository facultyRepository
         ) 
         { 
+            _logger = logger;
             _educationProgramRepository = educationProgramRepository;
             _educationLevelRepository = educationLevelRepository;
             _educationDocumentTypeRepository = educationDocumentTypeRepository;
@@ -30,6 +33,7 @@ namespace DictionaryService.Core.Application.Services
         {
             if (filter.Page < 1)
             {
+                _logger.LogTrace($"Requesting programs with invalid pagination parameters. Filter page {filter.Page} < 1");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "InvalidPageError", error: "Number of page can't be less than 1.");
             }
 
@@ -39,6 +43,7 @@ namespace DictionaryService.Core.Application.Services
             int countPage = (countPrograms / filter.Size) + (countPrograms % filter.Size == 0 ? 0 : 1);
             if (filter.Page > countPage) 
             {
+                _logger.LogTrace($"Requesting programs with invalid pagination parameters. Filter page {filter.Page} > count page {countPage}");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "InvalidPageError", error: $"Number of page can be from 1 to {countPage}.");
             }
 
@@ -93,6 +98,7 @@ namespace DictionaryService.Core.Application.Services
             EducationDocumentType? documentType = await _educationDocumentTypeRepository.GetByIdAsync(documentTypeId, false);
             if(documentType is null)
             {
+                _logger.LogTrace($"Request for a non-existent document type with id {documentTypeId}");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "DocumentTypeNotFoundError", error: $"Document type with id {documentTypeId} not found!");
             }
 
@@ -104,6 +110,7 @@ namespace DictionaryService.Core.Application.Services
             Faculty? faculty =  await _facultyRepository.GetByIdAsync(facultyId);
             if(faculty is null)
             {
+                _logger.LogTrace($"Request for a non-existent faculty with id {facultyId}");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "FacultyNotFound", error: $"Faculty with id {facultyId} not found!");
             }
 
@@ -115,6 +122,7 @@ namespace DictionaryService.Core.Application.Services
             EducationProgram? program = await _educationProgramRepository.GetByIdWithFacultyAndLevelAsync(programId);
             if (program is null)
             {
+                _logger.LogTrace($"Request for a non-existent program with id {programId}");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "ProgramNotFound", error: $"Education program with id {programId} not found!");
             }
 

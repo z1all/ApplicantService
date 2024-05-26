@@ -9,7 +9,8 @@ namespace AmdinPanelMVC.Services
 {
     public class RpcDictionaryService : BaseRpcService, IDictionaryService
     {
-        public RpcDictionaryService(IBus bus) : base(bus) { }
+        public RpcDictionaryService(ILogger<RpcDictionaryService> logger, IBus bus) 
+            : base(logger, bus) { }
 
         public async Task<ExecutionResult<List<EducationDocumentTypeDTO>>> GetEducationDocumentTypesAsync()
         {

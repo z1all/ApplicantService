@@ -1,4 +1,5 @@
-﻿using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
+﻿using Microsoft.Extensions.Logging;
+using DictionaryService.Core.Application.UpdateDictionaryTools.UpdateDictionaryHandler;
 using DictionaryService.Core.Domain;
 using DictionaryService.Core.Application.Interfaces.Repositories;
 using Common.Repositories;
@@ -14,6 +15,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
         protected abstract UpdateStatus UpdateStatusCache { get; }
         protected abstract IUpdateStatusRepository UpdateStatusRepository { get; }
         protected abstract IBaseWithBaseEntityRepository<TEntity> Repository { get; }
+        protected abstract ILogger<TEntity> Logger { get; }
 
         protected abstract bool CompareKey(TEntity entity, TExternalEntity externalEntity);
         protected abstract Task<List<TEntity>> GetEntityAsync();
@@ -31,7 +33,6 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
             UpdateStatusCache.Comments = null;
             await UpdateStatusRepository.UpdateAsync(UpdateStatusCache);
         }
-
         protected virtual async Task AfterLoadingErrorAsync(string comments)
         {
             UpdateStatusCache.Status = UpdateStatusEnum.ErrorInLoading;
@@ -63,6 +64,7 @@ namespace DictionaryService.Core.Application.UpdateDictionaryTools.UpdateActions
             return new()
             {
                 Repository = Repository,
+                Logger = Logger,
 
                 BeforeActionsAsync = BeforeActionsAsync,
                 AfterLoadingErrorAsync = AfterLoadingErrorAsync,

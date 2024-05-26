@@ -13,7 +13,8 @@ namespace AmdinPanelMVC.Services
 {
     public class RpcAuthService : BaseRpcService, IAuthService
     {
-        public RpcAuthService(IBus bus) : base(bus) { }
+        public RpcAuthService(ILogger<RpcAuthService> logger, IBus bus) 
+            : base(logger, bus) { }
 
         public async Task<ExecutionResult<ManagerProfileDTO>> GetManagerProfileAsync(Guid managerId)
         {

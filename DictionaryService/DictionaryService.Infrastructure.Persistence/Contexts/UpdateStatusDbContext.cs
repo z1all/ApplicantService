@@ -1,5 +1,5 @@
-﻿using DictionaryService.Core.Domain;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using DictionaryService.Core.Domain;
 
 namespace DictionaryService.Infrastructure.Persistence.Contexts
 {

@@ -1,4 +1,5 @@
-﻿using AdmissioningService.Core.Application.Interfaces.Repositories;
+﻿using Microsoft.Extensions.Logging;
+using AdmissioningService.Core.Application.Interfaces.Repositories;
 using AdmissioningService.Core.Application.Interfaces.Services;
 using AdmissioningService.Core.Application.Interfaces.StateMachines;
 using AdmissioningService.Core.Application.Mappers;
@@ -11,6 +12,7 @@ namespace AdmissioningService.Core.Application.Services
 {
     public class AdmissionService : IAdmissionService
     {
+        private readonly ILogger<AdmissionService> _logger;
         private readonly IAdmissionCompanyRepository _companyRepository;
         private readonly IAdmissionProgramRepository _admissionProgramRepository;
         private readonly IApplicantAdmissionRepository _applicantAdmissionRepository;
@@ -20,12 +22,14 @@ namespace AdmissioningService.Core.Application.Services
         private readonly AdmissionHelper _admissionHelper;
 
         public AdmissionService(
+            ILogger<AdmissionService> logger,
             IAdmissionCompanyRepository companyRepository,
             IAdmissionProgramRepository admissionProgramRepository,
             IApplicantAdmissionRepository applicantAdmissionRepository,
             IApplicantAdmissionStateMachin applicantAdmissionStateMachin,
             DictionaryHelper dictionaryHelper, AdmissionHelper admissionHelper)
         {
+            _logger = logger;
             _companyRepository = companyRepository;
             _admissionProgramRepository = admissionProgramRepository;
             _applicantAdmissionRepository = applicantAdmissionRepository;
@@ -75,6 +79,8 @@ namespace AdmissioningService.Core.Application.Services
             };
             await _companyRepository.AddAsync(newCompany);
 
+            _logger.LogInformation($"Created new admission company {year}");
+
             return new(isSuccess: true);
         }
 
@@ -83,12 +89,14 @@ namespace AdmissioningService.Core.Application.Services
             AdmissionCompany? admissionCompany = await _companyRepository.GetCurrentAsync();
             if (admissionCompany is null)
             {
+                _logger.LogInformation($"There is no current admissions company at the moment. Applicant id {applicantId}");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "NotExistCurrentAdmission", error: "There is no current admissions company at the moment. Try again later!");
             }
 
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetByAdmissionCompanyIdAndApplicantId(admissionCompany.Id, applicantId);
             if (applicantAdmission is not null)
             {
+                _logger.LogInformation($"Applicant with id {applicantId} already has an admission in the current admission company");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "AdmissionAlreadyExist", error: "The applicant already has an admission in the current admission company!");
             }
 
@@ -105,6 +113,7 @@ namespace AdmissioningService.Core.Application.Services
             ApplicantAdmission? admission = await _applicantAdmissionRepository.GetByApplicantIdAndAdmissionIdAsync(applicantId, admissionId);
             if (admission is null)
             {
+                _logger.LogInformation($"Applicant with id {applicantId} doesn't have admission with id {admissionId}!");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "AdmissionNotFound", error: $"Applicant with id {applicantId} doesn't have admission with id {admissionId}!");
             }
 
@@ -126,6 +135,7 @@ namespace AdmissioningService.Core.Application.Services
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
             if (applicantAdmission is null)
             {
+                _logger.LogInformation($"Applicant with id {applicantId} doesn't have admission in current company");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "AdmissionNotFound", error: $"Applicant with id {applicantId} doesn't have admission in current company!");
             }
 
@@ -142,6 +152,7 @@ namespace AdmissioningService.Core.Application.Services
             bool isSuccess = await _applicantAdmissionStateMachin.AddAdmissionProgramAsync(applicantId, admissionProgram);
             if (!isSuccess)
             {
+                _logger.LogError(new Exception(), $"An error occurred while adding the program with id {programId} to the applicant's admission with id {applicantId}");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "AddAdmissionProgramFail", error: "Unknown error.");
             }
 
@@ -156,12 +167,15 @@ namespace AdmissioningService.Core.Application.Services
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
             if (applicantAdmission is null)
             {
+                _logger.LogInformation($"Applicant with id {applicantId} doesn't have admission in current company");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "AdmissionNotFound", error: $"Applicant with id {applicantId} doesn't have admission in current company!");
             }
 
             List<AdmissionProgram> admissionPrograms = await _admissionProgramRepository.GetAllByAdmissionIdWithOrderByPriorityAsync(applicantAdmission.Id);
             if (admissionPrograms.Count != changePriorities.NewProgramPrioritiesOrder.Count)
             {
+                //_logger.LogInformation($"Applicant with id {applicantId} already have maximum of programs. Max program: {}");
+                _logger.LogInformation($"There are {admissionPrograms.Count} programs in the applicant's admission with id {applicantAdmission.Id}");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "WrongProgramCount", error: $"There are {admissionPrograms.Count} programs in the applicant's admission!");
             }
 
@@ -172,6 +186,7 @@ namespace AdmissioningService.Core.Application.Services
             bool isSuccess = await _applicantAdmissionStateMachin.UpdateAdmissionProgramRangeAsync(applicantId, newAdmissionProgramsPriorities, applicantAdmission.Id);
             if (!isSuccess)
             {
+                _logger.LogError(new Exception(), $"An error occurred while updating programs order in the applicant's admission with id {applicantId}");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "ChangeAdmissionProgramPriorityFail", error: $"Unknown error");
             }
 
@@ -186,24 +201,28 @@ namespace AdmissioningService.Core.Application.Services
             ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
             if (applicantAdmission is null)
             {
+                _logger.LogInformation($"Applicant with id {applicantId} doesn't have admission in current company");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "AdmissionNotFound", error: $"Applicant with id {applicantId} doesn't have admission in current company!");
             }
 
             var (admissionProgramForDelete, newAdmissionProgramsPriorities) = await _admissionHelper.GetProgramForDeleteAndNewProgramsOrderAsync(applicantAdmission.Id, programId);
             if (admissionProgramForDelete is null)
             {
+                _logger.LogInformation($"Applicant with id {applicantId} in current admission doesn't have program with id {programId}");
                 return new(StatusCodeExecutionResult.NotFound, keyError: "ProgramNotFound", error: $"Applicant with id {applicantId} in current admission doesn't have program with id {programId}!");
             }
 
             bool deleteIsSuccess = await _applicantAdmissionStateMachin.DeleteAdmissionProgramAsync(applicantId, admissionProgramForDelete);
             if (!deleteIsSuccess)
             {
+                _logger.LogError(new Exception(), $"An error occurred while deleting the program with id {programId} from the applicant's admission with id {applicantId}");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "DeleteAdmissionProgramFail", error: $"Unknown error");
             }
 
             bool updateIsSuccess = await _applicantAdmissionStateMachin.UpdateAdmissionProgramRangeAsync(applicantId, newAdmissionProgramsPriorities, applicantAdmission.Id);
             if (!updateIsSuccess)
             {
+                _logger.LogError(new Exception(), $"An error occurred while deleting the program with id {programId} from the applicant's admission with id {applicantId}");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "DeleteAdmissionProgramFail", error: $"Unknown error");
             }
 
@@ -214,6 +233,7 @@ namespace AdmissioningService.Core.Application.Services
         {
             if (filter.Page < 1)
             {
+                _logger.LogTrace($"Requesting applicants admissions with invalid pagination parameters. Filter page {filter.Page} < 1");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "InvalidPageError", error: "Number of page can't be less than 1.");
             }
 
@@ -223,6 +243,7 @@ namespace AdmissioningService.Core.Application.Services
             int countPage = (countApplicantAdmission / filter.Size) + (countApplicantAdmission % filter.Size == 0 ? 0 : 1);
             if (filter.Page > countPage)
             {
+                _logger.LogTrace($"Requesting applicants admissions with invalid pagination parameters. Filter page {filter.Page} > count page {countPage}");
                 return new(StatusCodeExecutionResult.BadRequest, keyError: "InvalidPageError", error: $"Number of page can be from 1 to {countPage}.");
             }
 

@@ -2,8 +2,8 @@
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Base;
 using Common.ServiceBus.NotificationSender;
 using Common.Models.Models;
-using EasyNetQ;
 using Common.ServiceBus.ServiceBusDTOs.FromApplicantService.Notifications;
+using EasyNetQ;
 
 namespace ApplicantService.Core.Application.Services
 {

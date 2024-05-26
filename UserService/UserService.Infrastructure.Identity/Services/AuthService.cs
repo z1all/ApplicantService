@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Identity;
 using UserService.Core.Application.DTOs;
 using UserService.Core.Application.Interfaces;
 using UserService.Core.Domain.Entities;
@@ -11,14 +12,19 @@ namespace UserService.Infrastructure.Identity.Services
 {
     internal class AuthService : IAuthService
     {
+        private readonly ILogger<AuthService> _logger;
         private readonly UserManager<CustomUser> _userManager;
         private readonly SignInManager<CustomUser> _signInManager;
         private readonly ITokenDbService _tokenDbService;
         private readonly TokenHelperService _tokenHelperService;
         private readonly IServiceBusProvider _serviceBusProvider;
 
-        public AuthService(UserManager<CustomUser> userManager, ITokenDbService tokenDbService, TokenHelperService tokenHelperService, SignInManager<CustomUser> signInManager, IServiceBusProvider serviceBusProvider)
+        public AuthService(
+            ILogger<AuthService> logger, UserManager<CustomUser> userManager, 
+            ITokenDbService tokenDbService, TokenHelperService tokenHelperService, 
+            SignInManager<CustomUser> signInManager, IServiceBusProvider serviceBusProvider)
         {
+            _logger = logger;
             _userManager = userManager;
             _tokenDbService = tokenDbService;
             _tokenHelperService = tokenHelperService;
@@ -55,17 +61,33 @@ namespace UserService.Infrastructure.Identity.Services
                 return new(sendingResult.StatusCode, errors: sendingResult.Errors);
             }
 
+            _logger.LogInformation($"Registered new applicant with email ${registrationDTO.Email}");
+
             return creatingTokenResult;
         }
 
         public async Task<ExecutionResult<TokensResponseDTO>> ManagerLoginAsync(LoginDTO loginDTO)
         {
-            return await LoginAsync(loginDTO, [Role.Manager, Role.MainManager]);
+            var loginResult = await LoginAsync(loginDTO, [Role.Manager, Role.MainManager]);
+
+            if (loginResult.IsSuccess)
+            {
+                _logger.LogInformation($"A manager with email ${loginDTO.Email} is logged in");
+            }
+
+            return loginResult;
         }
 
         public async Task<ExecutionResult<TokensResponseDTO>> ApplicantLoginAsync(LoginDTO loginDTO)
         {
-            return await LoginAsync(loginDTO, [Role.Applicant]);
+            var loginResult = await LoginAsync(loginDTO, [Role.Applicant]);
+
+            if (loginResult.IsSuccess)
+            {
+                _logger.LogInformation($"An applicant with email ${loginDTO.Email} is logged in");
+            }
+
+            return loginResult;
         }
 
         private async Task<ExecutionResult<TokensResponseDTO>> LoginAsync(LoginDTO loginDTO, string[] loginFor)
@@ -121,13 +143,15 @@ namespace UserService.Infrastructure.Identity.Services
             bool removeResult = await _tokenDbService.RemoveTokensAsync(accessTokenJTI);
             if (!removeResult)
             {
-                return new(StatusCodeExecutionResult.BadRequest, keyError: "UpdateAccessTokenFail", error: "Unknow error");
+                _logger.LogError(new Exception(), $"The token could not be deleted for unknown reasons. User id: {userId}, JTI: {accessTokenJTI}");
+                return new(StatusCodeExecutionResult.InternalServer, keyError: "UpdateAccessTokenFail", error: "Unknow error");
             }
 
             CustomUser? user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
-                return new(StatusCodeExecutionResult.BadRequest, keyError: "UpdateAccessTokenFail", error: "Unknow error");
+                _logger.LogError(new Exception(), $"The user with id {userId} could not be found for unknown reasons");
+                return new(StatusCodeExecutionResult.InternalServer, keyError: "UpdateAccessTokenFail", error: "Unknow error");
             }
 
             return await GetTokensAsync(user);
@@ -141,8 +165,11 @@ namespace UserService.Infrastructure.Identity.Services
             bool saveTokenResult = await _tokenDbService.SaveTokensAsync(refreshToken, tokenJTI);
             if (!saveTokenResult)
             {
+                _logger.LogError(new Exception(), $"The tokens could not be saved for unknown reasons. User id: {user.Id}");
                 return new(StatusCodeExecutionResult.InternalServer, keyError: "UnknowError", error: "Unknown error");
             }
+
+            _logger.LogInformation($"Created new tokens for user with id {user.Id}");
 
             return new()
             {
