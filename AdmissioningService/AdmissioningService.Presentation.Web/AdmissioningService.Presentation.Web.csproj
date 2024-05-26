@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.API\Common.API.csproj" />
+    <ProjectReference Include="..\..\Common\Common.EasyNetQ.Logger\Common.EasyNetQ.Logger.csproj" />
     <ProjectReference Include="..\AdmissioningService.Core.Application\AdmissioningService.Core.Application.csproj" />
     <ProjectReference Include="..\AdmissioningService.Infrastructure.Persistence\AdmissioningService.Infrastructure.Persistence.csproj" />
   </ItemGroup>

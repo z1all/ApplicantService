@@ -2,14 +2,15 @@
 using Common.Models.Models;
 using Common.ServiceBus.ServiceBusDTOs.FromDictionaryService.Requests;
 using Common.ServiceBus.EasyNetQRPC;
-using EasyNetQ;
 using Common.Models.DTOs.Dictionary;
+using EasyNetQ;
 
 namespace DictionaryService.Presentation.Web.RPCHandlers
 {
     public class UpdateDictionaryRPCHandler : BaseEasyNetQRPCHandler
     {
-        public UpdateDictionaryRPCHandler(IServiceProvider serviceProvider, IBus bus) : base(serviceProvider, bus) { }
+        public UpdateDictionaryRPCHandler(ILogger<UpdateDictionaryRPCHandler> logger, IServiceProvider serviceProvider, IBus bus) 
+            : base(logger, serviceProvider, bus) { }
 
         public override void CreateRequestListeners()
         {

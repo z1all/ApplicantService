@@ -10,7 +10,8 @@ namespace AmdinPanelMVC.Services
 {
     public class RpcDocumentService : BaseRpcService, IDocumentService
     {
-        public RpcDocumentService(IBus bus) : base(bus) { }
+        public RpcDocumentService(ILogger<RpcDocumentService> logger, IBus bus) 
+            : base(logger, bus) { }
 
         public async Task<ExecutionResult<PassportInfo>> GetPassportAsync(Guid applicantId)
         {

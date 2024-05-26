@@ -12,7 +12,8 @@ namespace AmdinPanelMVC.Services
 {
     public class RpcApplicantService : BaseRpcService, IApplicantService
     {
-        public RpcApplicantService(IBus bus) : base(bus){ }
+        public RpcApplicantService(ILogger<RpcApplicantService> logger, IBus bus) 
+            : base(logger, bus){ }
 
         public async Task<ExecutionResult<ApplicantInfo>> GetApplicantInfoAsync(Guid applicantId)
         {

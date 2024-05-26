@@ -8,7 +8,8 @@ namespace UserService.Presentation.Web.RPCHandlers
 {
     public class UserRPCHandler : BaseEasyNetQRPCHandler
     {
-        public UserRPCHandler(IServiceProvider serviceProvider, IBus bus) : base(serviceProvider, bus) { }
+        public UserRPCHandler(ILogger<UserRPCHandler> logger, IServiceProvider serviceProvider, IBus bus) 
+            : base(logger, serviceProvider, bus) { }
 
         public override void CreateRequestListeners()
         {

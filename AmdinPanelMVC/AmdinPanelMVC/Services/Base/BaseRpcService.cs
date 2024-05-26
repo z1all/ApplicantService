@@ -6,7 +6,8 @@ namespace AmdinPanelMVC.Services.Base
 {
     public abstract class BaseRpcService : BaseEasyNetQRPCustomer
     {
-        protected BaseRpcService(IBus bus) : base(bus) { }
+        protected BaseRpcService(ILogger<BaseRpcService> logger, IBus bus) 
+            : base(logger, bus) { }
 
         protected ExecutionResult<TToResult> ResponseHandler<TToResult, TFromResult>(
             ExecutionResult<TFromResult> response,
