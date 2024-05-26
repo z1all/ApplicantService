@@ -49,6 +49,15 @@ namespace AdmissioningService.Infrastructure.Persistence.Repositories
                                                            applicantAdmission.AdmissionCompany!.IsCurrent);
         }
 
+        public async Task<ApplicantAdmission?> GetCurrentByApplicantIdWithProgramsAsync(Guid applicantId)
+        {
+            return await _dbContext.ApplicantAdmissions
+                .Include(applicantAdmissions => applicantAdmissions.AdmissionPrograms)
+                    .ThenInclude(admissionPrograms => admissionPrograms.EducationProgram)
+                .FirstOrDefaultAsync(applicantAdmission => applicantAdmission.ApplicantId == applicantId &&
+                                                           applicantAdmission.AdmissionCompany!.IsCurrent);
+        }
+
         public async Task<List<ApplicantAdmission>> GetAllByFiltersWithCompanyAndProgramsAsync(ApplicantAdmissionFilterDTO filter, Guid managerId)
         {
             string? fullName = filter.ApplicantFullName?.ToLower() ?? null;

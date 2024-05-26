@@ -57,15 +57,38 @@ namespace AdmissioningService.Core.Application.Helpers
             return new(StatusCodeExecutionResult.Forbid, keyError: "NoEditPermission", error: $"Manager with id {managerId} doesn't have permission to edit applicant with id {applicantId}");
         }
 
+        //private async Task<bool> CheckManagerEditPermissionAsync(Guid applicantId, Guid managerId)
+        //{
+        //    ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
+        //    if (applicantAdmission is null) return true;
+
+        //    Manager? manager = await _managerRepository.GetByIdAsync(managerId);
+
+        //    if (manager is not null && manager.FacultyId is null || 
+        //        applicantAdmission.ManagerId == managerId) return true;
+        //    return false;
+        //}
+
         private async Task<bool> CheckManagerEditPermissionAsync(Guid applicantId, Guid managerId)
         {
-            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdAsync(applicantId);
+            ApplicantAdmission? applicantAdmission = await _applicantAdmissionRepository.GetCurrentByApplicantIdWithProgramsAsync(applicantId);
             if (applicantAdmission is null) return true;
 
             Manager? manager = await _managerRepository.GetByIdAsync(managerId);
 
-            if (manager is not null && manager.FacultyId is null || 
-                applicantAdmission.ManagerId == managerId) return true;
+            if (manager is not null && manager.FacultyId is null ||
+                applicantAdmission.ManagerId == managerId)
+            {
+                return true;
+            }
+
+            AdmissionProgram? firstProgram = applicantAdmission.AdmissionPrograms.OrderBy(program => program.Priority).FirstOrDefault();
+            if (firstProgram is null) return false;
+
+            if (firstProgram.EducationProgram!.FacultyId == manager!.FacultyId)
+            {
+                return true;
+            }
             return false;
         }
 

@@ -9,6 +9,7 @@ using Common.Models.Models;
 using Common.Models.Enums;
 using Common.Models.DTOs.Admission;
 using Common.Models.DTOs.Dictionary;
+using AdmissioningService.Core.Application.Helpers;
 
 namespace AdmissioningService.Core.Application.Services
 {
@@ -22,13 +23,14 @@ namespace AdmissioningService.Core.Application.Services
         private readonly IApplicantAdmissionStateMachin _applicantAdmissionStateMachin;
         private readonly IRequestService _requestService;
         private readonly INotificationService _notificationService;
+        private readonly AdmissionHelper _admissionHelper;
 
         public ManagerService(
             ILogger<ManagerService> logger,
             IUserCacheRepository userCacheRepository, INotificationService notificationService,
             IFacultyCacheRepository facultyCacheRepository, IManagerRepository managerRepository,
             IApplicantAdmissionStateMachin applicantAdmissionStateMachin, IRequestService requestService,
-            IApplicantAdmissionRepository applicantAdmissionRepository)
+            IApplicantAdmissionRepository applicantAdmissionRepository, AdmissionHelper admissionHelper)
         {
             _logger = logger;
             _userCacheRepository = userCacheRepository;
@@ -38,6 +40,7 @@ namespace AdmissioningService.Core.Application.Services
             _applicantAdmissionStateMachin = applicantAdmissionStateMachin;
             _requestService = requestService;
             _notificationService = notificationService;
+            _admissionHelper = admissionHelper;
         }
 
         public async Task<ExecutionResult> CreateManagerAsync(Guid managerId, ManagerDTO createManager)
@@ -261,10 +264,13 @@ namespace AdmissioningService.Core.Application.Services
                 return new(StatusCodeExecutionResult.NotFound, keyError: "ManagerNotFound", error: $"Manager with id {managerId} not found!");
             }
 
-            if (manager.FacultyId is not null && managerId != applicantAdmission.ManagerId)
-            {
-                return new(StatusCodeExecutionResult.BadRequest, keyError: "ApplicantAdmissionNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
-            }
+            ExecutionResult canEdit = await _admissionHelper.CheckPermissionsAsync(applicantAdmission.ApplicantId, managerId);
+            if (!canEdit.IsSuccess) return canEdit;
+
+            //if (manager.FacultyId is not null && managerId != applicantAdmission.ManagerId)
+            //{
+            //    return new(StatusCodeExecutionResult.BadRequest, keyError: "ApplicantAdmissionNotAppertain", error: $"Admission with id {admissionId} doesn't appertain to this manager!");
+            //}
 
             await _applicantAdmissionStateMachin.ChangeAdmissionStatusAsync(applicantAdmission, changeAdmissionStatus);
 

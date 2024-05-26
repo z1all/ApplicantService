@@ -7,5 +7,6 @@ namespace AmdinPanelMVC.Models
     {
         public required ApplicantAdmissionDTO ApplicantAdmission { get; set; }
         public required ApplicantInfo ApplicantInfo { get; set; }
+        public required bool CanEdit { get; set; }
     }
 }

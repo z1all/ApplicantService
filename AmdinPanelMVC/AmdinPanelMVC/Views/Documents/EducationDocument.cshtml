@@ -25,16 +25,20 @@
             <div class="col-12">
                 <div><span class="text-secondary">Следующие уровни образования:</span> </div>
             </div> *@
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary">Сохранить</button>
-            </div>
+            
+            @if (Model.CanEdit)
+            {
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            }
         </form>
 
         <hr />
 
         <div id="scansContainerId">
             @{
-                await Html.RenderPartialAsync("_Scans", Model.EducationDocument.Scans);
+                await Html.RenderPartialAsync("_Scans", new ScansViewModel() { Scans = Model.EducationDocument.Scans, CanEdit = Model.CanEdit});
             }
         </div>
 
@@ -50,5 +54,8 @@
 
         const educationDocument = @Html.Raw(Json.Serialize(Model.EducationDocument.Id));
         setDocumentId(educationDocument);
+
+        const edit = @Html.Raw(Json.Serialize(Model.CanEdit));
+        setCanEdit(edit);
     </script>
 }
