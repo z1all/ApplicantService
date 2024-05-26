@@ -8,7 +8,7 @@
         <form id="educationDocumentFormId" class="row g-3">
             <div class="col-12">
                 <label for="nameId" class="form-label">Название</label>
-                <input name="name" id="nameId" type="text" class="form-control" value="@Model.EducationDocument.Name">
+                <input name="name" id="nameId" type="text" class="form-control" value="@Model.EducationDocument.Name" disabled="@(!Model.CanEdit)">
                 <span class="text-danger"></span>
             </div>
             <div class="col-12">
