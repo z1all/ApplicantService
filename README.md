@@ -1,5 +1,15 @@
 Лабораторная работа выполненная по курсу Разработка серверных приложений на .net
 
+## Стек
+* ASP.NET Core 8
+* ASP.NET Core MVC
+* Entity Framework Сore
+* ASP.NET Core Identity
+* PostgreSQL
+* RabbitMQ
+* EasyNetQ
+* Clean Architecture
+
 Выполнение работы проходило в два этапа:
 1. Проектирование системы; 
 2. Реализация спроектированной системы.
